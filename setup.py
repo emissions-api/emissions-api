@@ -5,7 +5,7 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'emissionsapi-download=emissionsapi.download:entrypoint',
+            'emissionsapi-download=emissionsapi.download:download',
             'emissionsapi-preprocess=emissionsapi.preprocess:entrypoint',
             'emissionsapi-web=emissionsapi.web:entrypoint',
         ],
