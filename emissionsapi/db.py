@@ -5,7 +5,7 @@ from sqlalchemy import create_engine, Column, Integer, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from geoalchemy2 import Geometry
+import geoalchemy2
 
 # Database uri as described in
 # https://docs.sqlalchemy.org/en/13/core/engines.html#database-urls
@@ -35,7 +35,14 @@ class Carbonmonoxide(Base):
     # Latitude
     latitude = Column(Float)
     # PostGis type
-    geo = Column(Geometry(geometry_type="POINT"))
+    geom = Column(geoalchemy2.Geometry(geometry_type="POINT"))
+
+    def __init__(self, value, longitude, latitude):
+        self.value = value
+        self.longitude = longitude
+        self.latitude = latitude
+        self.geom = geoalchemy2.elements.WKTElement(
+            f"POINT({longitude} {latitude})")
 
 
 def with_session(f):
@@ -75,7 +82,7 @@ def get_session():
     global __session__
     # Create Database Connection, Tables and Sessionmaker if neccessary.
     if not __session__:
-        Engine = create_engine(database, echo=True)
+        Engine = create_engine(database)
         __session__ = sessionmaker(bind=Engine)
         Base.metadata.create_all(Engine)
 
