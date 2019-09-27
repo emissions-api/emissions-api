@@ -1,4 +1,5 @@
 import os
+
 import gdal
 import numpy
 
@@ -9,6 +10,7 @@ LAYER_NAME = '//PRODUCT/carbonmonoxide_total_column'
 LONGITUDE_NAME = '//PRODUCT/longitude'
 LATITUDE_NAME = '//PRODUCT/latitude'
 QA_VALUE_NAME = '//PRODUCT/qa_value'
+
 
 class Scan():
     data = []
