@@ -3,6 +3,8 @@ import os
 import gdal
 import numpy
 
+import emissionsapi.db
+
 PATH = 'data'
 
 # Specify the layer name to read
@@ -46,8 +48,29 @@ def read_file(ncfile):
 def filter_data(data):
     return data
 
-def write_to_database(data):
-    pass
+
+@emissionsapi.db.with_session
+def write_to_database(session, data):
+    """Write data to the PostGIS database
+
+    :param session: SQLAlchemy Session
+    :type session: sqlalchemy.orm.session.Session
+    :param data: Data to add to the database
+    :type data: emissionsapi.preprocess.Scan
+    """
+    # Iterate through the data of the Scan object
+    for index, d in enumerate(data.data):
+        # Add new Carbonmonoxide object to the session
+        session.add(
+            emissionsapi.db.Carbonmonoxide(
+                longitude=float(data.longitude[index]),
+                latitude=float(data.latitude[index]),
+                value=float(d),
+            )
+        )
+    # Commit the changes done in the session
+    session.commit()
+
 
 def entrypoint():
     for ncfile in list_ncfiles():
