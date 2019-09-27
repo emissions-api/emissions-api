@@ -1,3 +1,6 @@
+"""Web Application to deliver the data stored in the database via an API to
+the users.
+"""
 from flask import Flask, jsonify
 
 import emissionsapi.logger
@@ -15,8 +18,10 @@ def get_data():
 
 
 def entrypoint():
-    # Run the Flask Debug Server.
-    # Not for production!
+    """Entrypoint for running this as a module or from the binary.
+    It starts the Flask Debug Server. It is not meant to be used for
+    production, but only during the development.
+    """
     logger.info("Starting the Flask Debug Server")
     app.run()
 

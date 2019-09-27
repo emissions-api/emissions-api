@@ -1,3 +1,6 @@
+"""Database Layer for the Emmission API.
+"""
+
 from functools import wraps
 import os
 

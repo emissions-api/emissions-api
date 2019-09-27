@@ -1,3 +1,6 @@
+"""Module to filter and download the data from the ESA and store it locally.
+"""
+
 import os
 
 import emissionsapi.logger

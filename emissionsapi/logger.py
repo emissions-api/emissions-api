@@ -1,3 +1,5 @@
+"""Module to get pre-configured logger objects
+"""
 import logging
 
 
