@@ -1,25 +1,40 @@
 from functools import wraps
+import os
 
-
-from sqlalchemy import create_engine, Column, Integer, Float, String, ForeignKey, LargeBinary, Enum, ForeignKeyConstraint, Table  # noqa 501
+from sqlalchemy import create_engine, Column, Integer, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 from geoalchemy2 import Geometry
 
-database = 'postgresql://user:user@localhost/db'
+# Database uri as described in
+# https://docs.sqlalchemy.org/en/13/core/engines.html#database-urls
+# Retrieved as environment variable.
+database = os.environ.get(
+    'EMISSIONS_API',
+    'postgresql://user:user@localhost/db')
 
-Session = None
+# Global session variable. Set on initialization.
+__session__ = None
 
+# Base Class of all ORM objects.
 Base = declarative_base()
 
 
 class Carbonmonoxide(Base):
+    """ORM Object for Carbonmonoxide Point
+    """
+    # Tablename
     __tablename__ = 'carbonmonoxide'
+    # Primary Key
     id = Column(Integer, primary_key=True)
-    Value = Column(Float)
+    # Carbonmonoxide Value
+    value = Column(Float)
+    # Longitude
     longitude = Column(Float)
+    # Latitude
     latitude = Column(Float)
+    # PostGis type
     geo = Column(Geometry(geometry_type="POINT"))
 
 
@@ -50,9 +65,19 @@ def with_session(f):
 
 
 def get_session():
-    global Session
-    if not Session:
+    """Get a new session.
+
+    Lazy load the database connection and create the tables.
+
+    Returns:
+        sqlalchemy.orm.session.Session -- SQLAlchemy Session Object
+    """
+    global __session__
+    # Create Database Connection, Tables and Sessionmaker if neccessary.
+    if not __session__:
         Engine = create_engine(database, echo=True)
-        Session = sessionmaker(bind=Engine)
+        __session__ = sessionmaker(bind=Engine)
         Base.metadata.create_all(Engine)
-    return Session()
+
+    # Return new session object
+    return __session__()
