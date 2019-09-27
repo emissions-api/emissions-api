@@ -111,10 +111,9 @@ def entrypoint():
     """
     # Iterate through all find nc files
     for ncfile in list_ncfiles():
-        print(ncfile)
+        logger.info(f"Preprocess '{ncfile}'")
         # Read data from nc file
         data = read_file(ncfile)
-        print(data)
         # filter data
         data = filter_data(data)
         # Write the filtered data to the database
