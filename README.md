@@ -31,3 +31,11 @@ or execute the binaries after installation
 * **download**: `emissionsapi-download`
 * **preprocess**: `emissionsapi-preprocess`
 * **web**: `emissionsapi-web`
+
+## Database Setup
+
+This project is using a [PostgreSQL](https://www.postgresql.org/) database with the [PostGIS](https://postgis.net/) extension.
+
+There is a simple `docker-compose.yml` file to make it easier to setup a database for development.
+
+You can also setup the database on your own.
