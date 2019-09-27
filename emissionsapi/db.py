@@ -7,6 +7,11 @@ from sqlalchemy.orm import sessionmaker
 
 import geoalchemy2
 
+import emissionsapi.logger
+
+# Logger
+logger = emissionsapi.logger.getLogger('emission-api.db')
+
 # Database uri as described in
 # https://docs.sqlalchemy.org/en/13/core/engines.html#database-urls
 # Retrieved as environment variable.

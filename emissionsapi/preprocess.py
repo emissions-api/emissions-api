@@ -4,6 +4,10 @@ import gdal
 import numpy
 
 import emissionsapi.db
+import emissionsapi.logger
+
+# Logger
+logger = emissionsapi.logger.getLogger('emission-api.preprocess')
 
 PATH = 'data'
 

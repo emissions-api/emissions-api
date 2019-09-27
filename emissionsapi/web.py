@@ -1,5 +1,10 @@
 from flask import Flask, jsonify
 
+import emissionsapi.logger
+
+# Logger
+logger = emissionsapi.logger.getLogger('emission-api.web')
+
 # Flask Web App
 app = Flask(__name__)
 
@@ -12,6 +17,7 @@ def get_data():
 def entrypoint():
     # Run the Flask Debug Server.
     # Not for production!
+    logger.info("Starting the Flask Debug Server")
     app.run()
 
 
