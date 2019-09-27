@@ -5,10 +5,10 @@ The main repository for the Emissions API
 
 * numpy
 * gdal (C Library and Python bindings)
-* (SQLAlchemy)[https://www.sqlalchemy.org/]
-* (GeoAlchemy2)[https://github.com/geoalchemy/geoalchemy2]
-* (psycopg2)[https://pypi.org/project/psycopg2/]
-* (flask)[https://flask.palletsprojects.com]
+* [SQLAlchemy](https://www.sqlalchemy.org/)
+* [GeoAlchemy2](https://github.com/geoalchemy/geoalchemy2)
+* [psycopg2](https://pypi.org/project/psycopg2/)
+* [flask](https://flask.palletsprojects.com)
 
 ## Installation
 
