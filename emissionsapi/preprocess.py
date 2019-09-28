@@ -22,7 +22,7 @@ QA_VALUE_NAME = '//PRODUCT/qa_value'
 
 
 class Scan():
-    """Object to hold the arrays from a nc file.
+    """Object to hold arrays from an nc file.
     """
     data = []
     longitude = []
@@ -31,7 +31,7 @@ class Scan():
 
 
 def list_ncfiles():
-    """Generator yielding all nc files.
+    """Generator yielding all nc files in download path.
     """
     # Iterate through the files and directories in PATH
     for f in os.listdir(PATH):
@@ -43,8 +43,8 @@ def list_ncfiles():
 
 
 def read_file(ncfile):
-    """Read nc file, parse it using gdal and return its result as a
-    Scan Object.
+    """Read nc file, parse it using GDAL and return its result as a
+    Scan object.
 
     :param ncfile: filename of the nc file
     :type ncfile: string
@@ -54,8 +54,8 @@ def read_file(ncfile):
     # Create a new Scan Object
     scan = Scan()
 
-    # Get data, longitude, latitude and qa from nc file and
-    # Create flattend numpy array from data
+    # Get data, longitude, latitude and quality from nc file and
+    # create flattened numpy array from data
     ds = gdal.Open(f'HDF5:{ncfile}:{LAYER_NAME}')
     scan.data = numpy.ndarray.flatten(ds.ReadAsArray())
 
@@ -67,7 +67,7 @@ def read_file(ncfile):
 
     ds = gdal.Open(f'HDF5:{ncfile}:{QA_VALUE_NAME}')
     scan.quality = numpy.ndarray.flatten(ds.ReadAsArray())
-    # Return scan object
+
     return scan
 
 
@@ -93,7 +93,7 @@ def write_to_database(session, data):
     """
     # Iterate through the data of the Scan object
     for index, d in enumerate(data.data):
-        # Add new Carbonmonoxide object to the session
+        # Add new carbon monoxide object to the session
         session.add(
             emissionsapi.db.Carbonmonoxide(
                 longitude=float(data.longitude[index]),
@@ -111,7 +111,7 @@ def entrypoint():
     """
     # Iterate through all find nc files
     for ncfile in list_ncfiles():
-        logger.info(f"Preprocess '{ncfile}'")
+        logger.info(f"Pre-process '{ncfile}'")
         # Read data from nc file
         data = read_file(ncfile)
         # filter data
