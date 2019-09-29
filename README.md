@@ -5,7 +5,7 @@ The main repository for the Emissions API
 
 * numpy
 * gdal (C Library and Python bindings)
-* [SQLAlchemy](https://www.sqlalchemy.org/)
+* [SQLAlchemy](https://sqlalchemy.org)
 * [GeoAlchemy2](https://github.com/geoalchemy/geoalchemy2)
 * [psycopg2](https://pypi.org/project/psycopg2/)
 * [flask](https://flask.palletsprojects.com)
@@ -35,7 +35,7 @@ or execute the binaries after installation
 
 ## Database Setup
 
-This project is using a [PostgreSQL](https://www.postgresql.org/) database with the [PostGIS](https://postgis.net/) extension.
+This project is using a [PostgreSQL](https://postgresql.org) database with the [PostGIS](https://postgis.net) extension.
 
 There is a simple `docker-compose.yml` file to make it easier to setup a database for development.
 
