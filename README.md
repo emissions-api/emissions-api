@@ -9,6 +9,7 @@ The main repository for the Emissions API
 * [GeoAlchemy2](https://github.com/geoalchemy/geoalchemy2)
 * [psycopg2](https://pypi.org/project/psycopg2/)
 * [flask](https://flask.palletsprojects.com)
+* [geojson](https://pypi.org/project/geojson/)
 
 ## Installation
 
