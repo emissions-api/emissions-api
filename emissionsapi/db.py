@@ -96,3 +96,41 @@ def get_session():
 
     # Return new session object
     return __session__()
+
+
+def get_points_in_polygon(session, polygon):
+    """Get all points from within the specified polygon.
+
+    :param session: SQL Alchemy Session
+    :type session: sqlalchemy.orm.session.Session
+    :param polygon: Polygon where to search for points
+    :type polygon: geoalchemy2.WKTElement
+    :return: SQLAlchemy Query Object with the points from within the polygon.
+    :rtype: sqlalchemy.orm.query.Query
+    """
+    return session.query(Carbonmonoxide).filter(
+        geoalchemy2.func.ST_WITHIN(Carbonmonoxide.geom, polygon))
+
+
+def get_points_in_rectangle(session, upper_left, lower_right):
+    """Get all points from within a rectangle.
+
+    :param session: SQL Alchemy Session
+    :type session: sqlalchemy.orm.session.Session
+    :param polygon: Polygon where to search for points
+    :type polygon: geoalchemy2.WKTElement
+    :param upper_left: Upper left point of the rectangle
+    :type upper_left: tuple
+    :param lower_right: Lower right point of the rectangle
+    :type lower_right: tuple
+    :return: SQLAlchemy Query Object with the points from within the polygon.
+    :rtype: sqlalchemy.orm.query.Query
+    """
+    # Defining the rectangle
+    rectangle = geoalchemy2.elements.WKTElement(
+        f'POLYGON(({upper_left[0]} {upper_left[1]},'
+        f' {lower_right[0]} {upper_left[1]},'
+        f' {lower_right[0]} {lower_right[1]},'
+        f' {upper_left[0]} {lower_right[1]},'
+        f' {upper_left[0]} {upper_left[1]}))')
+    return get_points_in_polygon(session, rectangle)
