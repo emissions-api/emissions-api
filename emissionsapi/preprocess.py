@@ -91,16 +91,19 @@ def write_to_database(session, data):
     :param data: Data to add to the database
     :type data: emissionsapi.preprocess.Scan
     """
+    # Initialize object list
+    objects = []
     # Iterate through the data of the Scan object
     for index, d in enumerate(data.data):
-        # Add new carbon monoxide object to the session
-        session.add(
+        objects.append(
             emissionsapi.db.Carbonmonoxide(
                 longitude=float(data.longitude[index]),
                 latitude=float(data.latitude[index]),
                 value=float(d),
             )
         )
+    # Add new carbon monoxide object to the session
+    session.bulk_save_objects(objects)
     # Commit the changes done in the session
     session.commit()
 
