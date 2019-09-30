@@ -19,6 +19,7 @@ LAYER_NAME = '//PRODUCT/carbonmonoxide_total_column'
 LONGITUDE_NAME = '//PRODUCT/longitude'
 LATITUDE_NAME = '//PRODUCT/latitude'
 QA_VALUE_NAME = '//PRODUCT/qa_value'
+DELTA_TIME_NAME = '//PRODUCT/delta_time'
 
 
 class Scan():
@@ -28,6 +29,7 @@ class Scan():
     longitude = []
     latitude = []
     quality = []
+    deltatime = []
 
 
 def list_ncfiles():
@@ -67,6 +69,9 @@ def read_file(ncfile):
 
     ds = gdal.Open(f'HDF5:{ncfile}:{QA_VALUE_NAME}')
     scan.quality = numpy.ndarray.flatten(ds.ReadAsArray())
+
+    ds = gdal.Open(f'HDF5:{ncfile}:{DELTA_TIME_NAME}')
+    scan.deltatime = numpy.ndarray.flatten(ds.ReadAsArray())
 
     return scan
 
