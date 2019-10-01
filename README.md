@@ -11,6 +11,17 @@ The main repository for the Emissions API
 * [flask](https://flask.palletsprojects.com)
 * [geojson](https://pypi.org/project/geojson/)
 
+These can be installed by executing
+```
+pip install -r requirements.txt
+```
+
+### GDAL for Windows
+Follow [this guide](https://sandbox.idre.ucla.edu/sandbox/tutorials/installing-gdal-for-windows) to install GDAL. For some reason pip have trouble to install the gdal package using pip. The easiest way to fix this is to manually install the wheel package from [lfd.uci.edu](https://www.lfd.uci.edu/~gohlke/pythonlibs/#gdal). Note that the packages are unoffical windows binaries. Install the wheel package with
+```
+pip install <FILENAME>
+```
+
 ## Installation
 
 Note that you do not need to install this project to run the different parts of it. But you can install this tool and its binaries in your environment by executing
