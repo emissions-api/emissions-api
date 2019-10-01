@@ -3,7 +3,10 @@
 import os
 
 import gdal
+import iso8601
 import numpy
+
+from datetime import timedelta
 
 import emissionsapi.db
 import emissionsapi.logger
@@ -29,7 +32,7 @@ class Scan():
     longitude = []
     latitude = []
     quality = []
-    deltatime = []
+    timestamps = []
 
 
 def list_ncfiles():
@@ -71,7 +74,14 @@ def read_file(ncfile):
     scan.quality = numpy.ndarray.flatten(ds.ReadAsArray())
 
     ds = gdal.Open(f'HDF5:{ncfile}:{DELTA_TIME_NAME}')
-    scan.deltatime = numpy.ndarray.flatten(ds.ReadAsArray())
+    deltatime = numpy.ndarray.flatten(ds.ReadAsArray())
+
+    ds = gdal.Open(f'{ncfile}')
+    time_reference = iso8601.parse_date(ds.GetMetadata_Dict()['time_reference'])
+    timestamps = []
+    for dt in deltatime:
+        timestamps.append(time_reference + timedelta(milliseconds=dt.item()))
+    scan.timestamps = numpy.array(timestamps)
 
     return scan
 
