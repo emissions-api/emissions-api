@@ -7,6 +7,7 @@ import geojson
 
 import emissionsapi.db
 import emissionsapi.logger
+from emissionsapi.country_bounding_boxes import country_bounding_boxes
 
 # Logger
 logger = emissionsapi.logger.getLogger('emission-api.web')
@@ -34,11 +35,20 @@ def get_data(session):
     :rtype: flask.Response
     """
     # Get and parse url parameter
-    try:
-        lo1, lat1, lo2, lat2 = [float(x) for x in request.args.get(
-            "geoparam", "").split(",")]
-    except ValueError:
-        return '', 400
+    geoparam = request.args.get("geoparam")
+    country = request.args.get('country')
+    if geoparam is not None:
+        try:
+            lo1, lat1, lo2, lat2 = [float(x) for x in geoparam.split(",")]
+        except ValueError:
+            return '', 400
+    elif country is not None:
+        if country in country_bounding_boxes:
+            lo1, lat1, lo2, lat2 = country_bounding_boxes[country][1]
+        else:
+            return 'Country code not found.', 400
+    else:
+        return 'You must specify either geoparam or country.', 400
 
     # Init feature list
     features = []
