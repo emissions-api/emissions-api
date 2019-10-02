@@ -1,3 +1,4 @@
+# flake8: noqa
 # extracted from http//www.naturalearthdata.com/download/110m/cultural/ne_110m_admin_0_countries.zip
 # under public domain terms
 # Downloaded from https://gist.github.com/graydon/11198540

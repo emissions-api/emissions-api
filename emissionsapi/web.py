@@ -19,34 +19,50 @@ app = Flask(__name__)
 @app.route('/api/v1/geo.json')
 @emissionsapi.db.with_session
 def get_data(session):
-    """Get data in geojson format.
+    """Get data in GeoJSON format.
 
-    Mandatory url parameter 'geoparam' with 4 comma seperated values.
-    Those 4 value are the longitude and latidute of the upper left and
-    lower right points a the rectangle. The Response contains all points
-    from the database from withing this rectangle.
+    URL parameters
+    ,,,,,,,,,,,,,,
 
-    You can try this with
-    curl http://127.0.0.1:5000/api/v1/geo.json?geoparam=15,45,20,40
+    You must use exactly one of these URL parameters.
 
-    :param session: SQL Alchemy Session
+    * 'geoparam' expects 4 comma separated float values representing the
+      longitude and latitude of the upper left and lower right points of a
+      rectangle.
+    * `country` expects a two character country code which is mapped to a
+      minimal bounding box of that country as an alternative to specifying that
+      rectangle manually.
+
+    Response
+    ,,,,,,,,
+
+    The Response contains all known points located within the specified
+    rectangle contained in a GeoJSON feature collection.
+
+    Example
+    ,,,,,,,
+
+    You can try this with::
+
+        curl http://127.0.0.1:5000/api/v1/geo.json?geoparam=15,45,20,40
+
+    :param session: SQLAlchemy session
     :type session: sqlalchemy.orm.session.Session
-    :return: Geojson Response as feature collection
+    :return: GeoJSON response containing a feature collection
     :rtype: flask.Response
     """
-    # Get and parse url parameter
-    geoparam = request.args.get("geoparam")
+    # Get and parse URL parameter
+    geoparam = request.args.get('geoparam')
     country = request.args.get('country')
     if geoparam is not None:
         try:
-            lo1, lat1, lo2, lat2 = [float(x) for x in geoparam.split(",")]
+            lo1, lat1, lo2, lat2 = [float(x) for x in geoparam.split(',')]
         except ValueError:
-            return '', 400
+            return 'Invalid geoparam', 400
     elif country is not None:
-        if country in country_bounding_boxes:
-            lo1, lat1, lo2, lat2 = country_bounding_boxes[country][1]
-        else:
-            return 'Country code not found.', 400
+        if country not in country_bounding_boxes:
+            return 'Unknown country code.', 400
+        lo1, lat1, lo2, lat2 = country_bounding_boxes[country][1]
     else:
         return 'You must specify either geoparam or country.', 400
 
