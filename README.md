@@ -1,4 +1,5 @@
 # emissions-api
+[![Build Status](https://travis-ci.com/emissions-api/emissions-api.svg?branch=master)](https://travis-ci.com/emissions-api/emissions-api)
 The main repository for the Emissions API
 
 ## Prerequisites
