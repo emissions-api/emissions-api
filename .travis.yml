@@ -1,0 +1,14 @@
+language: python
+
+dist: bionic
+
+# https://devguide.python.org/#branchstatus
+python:
+  - "3.6"
+  - "3.7"
+
+install:
+  - pip install flake8
+
+script:
+  - flake8 emissionsapi
