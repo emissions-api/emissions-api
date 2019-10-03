@@ -3,7 +3,7 @@
 
 from functools import wraps
 
-from sqlalchemy import create_engine, Column, Integer, Float
+from sqlalchemy import create_engine, Column, DateTime, Integer, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -40,13 +40,16 @@ class Carbonmonoxide(Base):
     longitude = Column(Float)
     # Latitude
     latitude = Column(Float)
+    # timestamp
+    timestamp = Column(DateTime)
     # PostGis type
     geom = Column(geoalchemy2.Geometry(geometry_type="POINT"))
 
-    def __init__(self, value, longitude, latitude):
+    def __init__(self, value, longitude, latitude, timestamp):
         self.value = value
         self.longitude = longitude
         self.latitude = latitude
+        self.timestamp = timestamp
         self.geom = geoalchemy2.elements.WKTElement(
             f"POINT({longitude} {latitude})")
 
