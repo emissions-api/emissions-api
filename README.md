@@ -15,7 +15,7 @@ The main repository for the Emissions API
 * [swagger-ui-bundle](https://pypi.org/project/swagger-ui-bundle/)
 * [geojson](https://pypi.org/project/geojson/)
 * PyYAML
-* [sentinalsat](https://github.com/sentinelsat/sentinelsat)
+* [sentinelsat](https://github.com/sentinelsat/sentinelsat)
 
 These can be installed by executing
 
