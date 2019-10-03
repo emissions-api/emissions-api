@@ -12,6 +12,7 @@ logger = emissionsapi.logger.getLogger('emission-api.download')
 
 storage = config('storage') or 'data'
 
+
 def download():
     os.makedirs(storage, exist_ok=True)
 
