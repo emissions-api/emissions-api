@@ -31,6 +31,18 @@ Note that you do not need to install this project to run the different parts of 
 python setup.py install
 ```
 
+## Configuration
+
+Emissions API will look for configuration files in the following order:
+
+- ./emissionsapi.yml
+- ~/emissionsapi.yml
+- /etc/emissionsapi.yml
+
+A configuration file template can be found at `etc/emissionsapi.yml`. To get
+started, just copy this to the main project directory and adjust the values if
+the defaults do not work for you.
+
 ## Execute
 
 To execute the programs in this project run

@@ -4,14 +4,16 @@
 import os
 import urllib3
 
+from emissionsapi.config import config
 import emissionsapi.logger
 
 # Logger
 logger = emissionsapi.logger.getLogger('emission-api.download')
 
+storage = config('storage') or 'data'
 
 def download():
-    os.makedirs('data', exist_ok=True)
+    os.makedirs(storage, exist_ok=True)
 
     # TODO: Replace this with sentinalsat
     filename = 'S5P_NRTI_L2__CO_____20190921T122303_20190921T122803_'\

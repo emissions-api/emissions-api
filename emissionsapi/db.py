@@ -10,6 +10,7 @@ from sqlalchemy.orm import sessionmaker
 
 import geoalchemy2
 
+from emissionsapi.config import config
 import emissionsapi.logger
 
 # Logger
@@ -18,9 +19,7 @@ logger = emissionsapi.logger.getLogger('emission-api.db')
 # Database uri as described in
 # https://docs.sqlalchemy.org/en/13/core/engines.html#database-urls
 # Retrieved as environment variable.
-database = os.environ.get(
-    'EMISSIONS_API',
-    'postgresql://user:user@localhost/db')
+database = config('database') or 'postgresql://user:user@localhost/db'
 
 # Global session variable. Set on initialization.
 __session__ = None
