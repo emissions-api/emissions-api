@@ -28,11 +28,11 @@ DELTA_TIME_NAME = '//PRODUCT/delta_time'
 class Scan():
     """Object to hold arrays from an nc file.
     """
-    data = []
-    longitude = []
-    latitude = []
-    quality = []
-    timestamps = []
+    data = None
+    longitude = None
+    latitude = None
+    quality = None
+    timestamps = None
 
 
 def list_ncfiles():
@@ -62,16 +62,16 @@ def read_file(ncfile):
     # Get data, longitude, latitude and quality from nc file and
     # create flattened numpy array from data
     ds = gdal.Open(f'HDF5:{ncfile}:{LAYER_NAME}')
-    scan.data = numpy.ndarray.flatten(ds.ReadAsArray())
+    scan.data = ds.ReadAsArray()
 
     ds = gdal.Open(f'HDF5:{ncfile}:{LONGITUDE_NAME}')
-    scan.longitude = numpy.ndarray.flatten(ds.ReadAsArray())
+    scan.longitude = ds.ReadAsArray()
 
     ds = gdal.Open(f'HDF5:{ncfile}:{LATITUDE_NAME}')
-    scan.latitude = numpy.ndarray.flatten(ds.ReadAsArray())
+    scan.latitude = ds.ReadAsArray()
 
     ds = gdal.Open(f'HDF5:{ncfile}:{QA_VALUE_NAME}')
-    scan.quality = numpy.ndarray.flatten(ds.ReadAsArray())
+    scan.quality = ds.ReadAsArray()
 
     ds = gdal.Open(f'HDF5:{ncfile}:{DELTA_TIME_NAME}')
     deltatime = numpy.ndarray.flatten(ds.ReadAsArray())
@@ -113,15 +113,18 @@ def write_to_database(session, data):
     :type data: emissionsapi.preprocess.Scan
     """
     # Iterate through the data of the Scan object
-    for index, d in enumerate(data.data):
-        # Add new carbon monoxide object to the session
-        session.add(
-            emissionsapi.db.Carbonmonoxide(
-                longitude=float(data.longitude[index]),
-                latitude=float(data.latitude[index]),
-                value=float(d),
+    shape = data.data.shape
+    for i in range(shape[0]):
+        for j in range(shape[1]):
+            # Add new carbon monoxide object to the session
+            session.add(
+                emissionsapi.db.Carbonmonoxide(
+                    longitude=float(data.longitude[i, j]),
+                    latitude=float(data.latitude[i, j]),
+                    value=float(data.data[i, j]),
+                    timestamp=data.timestamps[i],
+                )
             )
-        )
     # Commit the changes done in the session
     session.commit()
 
