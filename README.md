@@ -10,6 +10,7 @@ The main repository for the Emissions API
 * [psycopg2](https://pypi.org/project/psycopg2/)
 * [flask](https://flask.palletsprojects.com)
 * [geojson](https://pypi.org/project/geojson/)
+* PyYAML
 
 These can be installed by executing
 ```
