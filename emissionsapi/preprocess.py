@@ -8,6 +8,7 @@ import numpy
 
 from datetime import timedelta
 
+from emissionsapi.config import config
 import emissionsapi.db
 import emissionsapi.logger
 
@@ -15,7 +16,7 @@ import emissionsapi.logger
 logger = emissionsapi.logger.getLogger('emission-api.preprocess')
 
 # Path where to store the data
-PATH = 'data'
+storage = config('storage') or 'data'
 
 # Specify the layer name to read
 LAYER_NAME = '//PRODUCT/carbonmonoxide_total_column'
@@ -38,10 +39,10 @@ class Scan():
 def list_ncfiles():
     """Generator yielding all nc files in download path.
     """
-    # Iterate through the files and directories in PATH
-    for f in os.listdir(PATH):
+    # Iterate through the files and directories in storage path
+    for f in os.listdir(storage):
         # Join directoriy and filename
-        filepath = os.path.join(PATH, f)
+        filepath = os.path.join(storage, f)
         # yield file ending with '.nc'
         if os.path.isfile(filepath) and filepath.endswith('.nc'):
             yield filepath

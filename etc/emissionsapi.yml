@@ -1,0 +1,7 @@
+# PostgreSQL database configuration.
+# Default: postgresql://user:user@localhost/db
+database: postgresql://emissionsapi:emissionsapi@127.0.0.1/emissionsapi
+
+# Storage directory location.
+# Default: data
+storage: data
