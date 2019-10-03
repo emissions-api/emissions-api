@@ -23,7 +23,7 @@ def configuration_file():
         return './emissionsapi.yml'
     if os.path.isfile('~/emissionsapi.yml'):
         return '~/emissionsapi.yml'
-    if os.path.isfile('/etc/emissionsapi.yml' ):
+    if os.path.isfile('/etc/emissionsapi.yml'):
         return '/etc/emissionsapi.yml'
 
 

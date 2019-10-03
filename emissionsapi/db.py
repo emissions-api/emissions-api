@@ -2,7 +2,6 @@
 """
 
 from functools import wraps
-import os
 
 from sqlalchemy import create_engine, Column, Integer, Float
 from sqlalchemy.ext.declarative import declarative_base
