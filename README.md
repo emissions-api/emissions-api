@@ -59,7 +59,7 @@ or execute the binaries after installation
 
 ## Database Setup
 
-This project is using a [PostgreSQL](https://postgresql.org) database with the [PostGIS](https://postgis.net) extension.
+This project is using a [PostgreSQL](https://postgresql.org) database with the [PostGIS](https://postgis.net) extension. Attention: PostGIS is not yet available for the newest PostgreSQL v.12.
 
 There is a simple `docker-compose.yml` file to make it easier to setup a database for development.
 
