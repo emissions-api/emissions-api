@@ -14,6 +14,7 @@ The main repository for the Emissions API
 * [flask](https://flask.palletsprojects.com)
 * [geojson](https://pypi.org/project/geojson/)
 * PyYAML
+* [sentinalsat](https://github.com/sentinelsat/sentinelsat)
 
 These can be installed by executing
 
