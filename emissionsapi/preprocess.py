@@ -77,7 +77,13 @@ def read_file(ncfile):
     deltatime = numpy.ndarray.flatten(ds.ReadAsArray())
 
     ds = gdal.Open(f'{ncfile}')
-    time_reference = iso8601.parse_date(ds.GetMetadata_Dict()['time_reference'])
+    meta_data = ds.GetMetadata_Dict()
+
+    # Get time reference from the meta data.
+    # Seems like there are named differently in the different gdal versions.
+    time_reference = iso8601.parse_date(
+        meta_data.get('NC_GLOBAL#time_reference') or
+        meta_data['time_reference'])
     timestamps = []
     for dt in deltatime:
         timestamps.append(time_reference + timedelta(milliseconds=dt.item()))
