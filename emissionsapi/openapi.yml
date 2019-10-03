@@ -1,0 +1,62 @@
+openapi: 3.0.0
+info:
+  title: Emissions API
+  version: "0.1"
+paths:
+  /api/v1/geo.json/:
+    get:
+      operationId: emissionsapi.web.get_data
+      description: |
+          Get data in GeoJSON format.
+
+          You can only use one url parameter at a time.
+      parameters:
+        - $ref: '#/components/parameters/geoframe'
+        - $ref: '#/components/parameters/country'
+      responses:
+        200:
+          description: The Response contains all known points located within the specified rectangle contained in a GeoJSON feature collection.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/featurecollection'
+        400:
+          description: Parameter error
+
+components:
+  parameters:
+    geoframe:
+      in: query
+      name: geoframe
+      schema:
+        type: string
+      description: |
+          `geoframe` will let use define your own rectangle from which the data is chosen.
+          The Parameter must be in the form lo1,la1,lo2,la2 and represent the upper left and lower right corners of a rectangle.
+      example: 15,45,20,40
+    country:
+      in: query
+      name: country
+      schema:
+        type: string
+      description: "`country` will use a preselected rectangle countaing the specified country. Like 'DE'."
+      example: DE
+  schemas:
+    featurecollection:
+      description: GeoJSON Feature Collection
+      type: object
+      example:
+        features:
+          - geometry:
+              coordinates: [15.096772, 44.516739]
+              type: Point
+            properties:
+              carbonmonixide: 0.0273975990712643
+              type: Feature
+          - geometry:
+              coordinates: [15.063565, 44.561062]
+              type: Point
+            properties:
+              carbonmonixide: 0.0273975990712643
+              type: Feature
+        type: FeatureCollection
