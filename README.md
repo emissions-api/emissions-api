@@ -8,7 +8,8 @@ The main repository for the Emissions API
 * [SQLAlchemy](https://sqlalchemy.org)
 * [GeoAlchemy2](https://github.com/geoalchemy/geoalchemy2)
 * [psycopg2](https://pypi.org/project/psycopg2/)
-* [flask](https://flask.palletsprojects.com)
+* [Connexion](https://github.com/zalando/connexion)
+* [swagger-ui-bundle](https://pypi.org/project/swagger-ui-bundle/)
 * [geojson](https://pypi.org/project/geojson/)
 * PyYAML
 

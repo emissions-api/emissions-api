@@ -1,4 +1,3 @@
-flask
 gdal
 geoalchemy2
 iso8601
@@ -6,3 +5,5 @@ numpy
 psycopg2
 sqlalchemy
 urllib3
+connexion
+swagger-ui-bundle
