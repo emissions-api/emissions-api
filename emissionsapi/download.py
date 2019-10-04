@@ -47,8 +47,10 @@ def download():
     where = products_df.producttypedescription == 'Carbon Monoxide'
     one_id = products_df.uuid[where][0]
 
+    # create storage folder if not existing
+    os.makedirs(storage, exist_ok=True)
+
     # download one product
-    os.makedirs(storage ,exist_ok=True) #create storage folder if not existing
     api.download(one_id, directory_path=storage)
 
 
