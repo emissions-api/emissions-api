@@ -29,6 +29,7 @@ DELTA_TIME_NAME = '//PRODUCT/delta_time'
 class Scan():
     """Object to hold arrays from an nc file.
     """
+    filename = None
     data = None
     longitude = None
     latitude = None
@@ -36,12 +37,19 @@ class Scan():
     timestamps = None
 
 
-def list_ncfiles():
+@emissionsapi.db.with_session
+def list_ncfiles(session):
     """Generator yielding all nc files in download path.
     """
     # Iterate through the files and directories in storage path
     for f in os.listdir(storage):
-        # Join directoriy and filename
+        # Check if file was already added
+        filename = session.query(emissionsapi.db.File).filter(
+            emissionsapi.db.File.filename == f).first()
+        if filename is not None:
+            logger.info(f"Skipping {f}")
+            continue
+        # Join directory and filename
         filepath = os.path.join(storage, f)
         # yield file ending with '.nc'
         if os.path.isfile(filepath) and filepath.endswith('.nc'):
@@ -59,6 +67,9 @@ def read_file(ncfile):
     """
     # Create a new Scan Object
     scan = Scan()
+
+    # Store filename
+    scan.filename = os.path.basename(ncfile)
 
     # Get data, longitude, latitude and quality from nc file and
     # create flattened numpy array from data
@@ -126,6 +137,7 @@ def write_to_database(session, data):
                     timestamp=data.timestamps[i],
                 )
             )
+    session.add(emissionsapi.db.File(filename=data.filename))
     # Commit the changes done in the session
     session.commit()
 

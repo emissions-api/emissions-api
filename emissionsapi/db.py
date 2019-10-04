@@ -3,7 +3,7 @@
 
 from functools import wraps
 
-from sqlalchemy import create_engine, Column, DateTime, Integer, Float
+from sqlalchemy import create_engine, Column, DateTime, Integer, Float, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -25,6 +25,14 @@ __session__ = None
 
 # Base Class of all ORM objects.
 Base = declarative_base()
+
+
+class File(Base):
+    """ORM Object for the nc files.
+    """
+    # Tablename
+    __tablename__ = 'file'
+    filename = Column(String, primary_key=True)
 
 
 class Carbonmonoxide(Base):
