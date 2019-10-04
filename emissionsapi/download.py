@@ -1,5 +1,6 @@
 """Module to filter and download the data from the ESA and store it locally.
 """
+import os
 
 from sentinelsat import SentinelAPI
 
@@ -47,6 +48,7 @@ def download():
     one_id = products_df.uuid[where][0]
 
     # download one product
+    os.makedirs(storage ,exist_ok=True) #create storage folder if not existing
     api.download(one_id, directory_path=storage)
 
 
