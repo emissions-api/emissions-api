@@ -1,6 +1,7 @@
 """Module to filter and download the data from the ESA and store it locally.
 """
 import os
+import glob
 
 from sentinelsat import SentinelAPI
 
@@ -52,6 +53,11 @@ def download():
 
     # download one product
     api.download(one_id, directory_path=storage)
+
+    # dirty fix for https://github.com/emissions-api/emissions-api/issues/43
+    dlFiles = glob.glob(os.path.join(storage, '*.zip'), recursive=False)
+    for filename in dlFiles:
+        os.rename(filename, filename[:-3]+"nc")
 
 
 if __name__ == "__main__":
