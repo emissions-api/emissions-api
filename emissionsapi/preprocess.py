@@ -109,25 +109,31 @@ def read_file(ncfile):
                                                                                                                              
 
 def filter_data(data, qa_percent):
-    """Filter data before processing them further.
+    """Filter data before processing them further. All corresponding values in the Scan objects are set to NaN if the quality requirement is not met
 
     :param data: scan object with data
     :type data: emissionsapi.preprocess.Scan
+    :param qa_percent: quality to filter in percent
+    :type qa_percent: 
     :return: scan object with filtered data
     :rtype: emissionsapi.preprocess.Scan
     """
 
+    # cast Scan objects to float because numpy.nan is float
     data.quality = data.quality.astype('float')
     data.data = data.data.astype('float')
     data.longitude = data.longitude.astype('float')
     data.latitude = data.latitude.astype('float')
 
+    # set all corresponding Scan object values to numpy.nan if the quality value is too low
     data.data[data.quality < qa_percent] = numpy.nan
     data.longitude[data.quality < qa_percent] = numpy.nan
     data.latitude[data.quality < qa_percent] = numpy.nan
 
+    # at least set all too low quality values to numpy.nan
     data.quality[data.quality < qa_percent] = numpy.nan
 
+    # return data
     return data
 
 
