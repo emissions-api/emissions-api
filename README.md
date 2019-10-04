@@ -16,6 +16,7 @@ The main repository for the Emissions API
 * [geojson](https://pypi.org/project/geojson/)
 * PyYAML
 * [sentinelsat](https://github.com/sentinelsat/sentinelsat)
+* [Pandas](https://pandas.pydata.org/)
 
 These can be installed by executing
 
