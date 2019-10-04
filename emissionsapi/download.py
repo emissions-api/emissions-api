@@ -1,5 +1,6 @@
 """Module to filter and download the data from the ESA and store it locally.
 """
+import os
 
 from sentinelsat import SentinelAPI
 
@@ -45,6 +46,9 @@ def download():
     # filter only one product of CO
     where = products_df.producttypedescription == 'Carbon Monoxide'
     one_id = products_df.uuid[where][0]
+
+    # create storage folder if not existing
+    os.makedirs(storage, exist_ok=True)
 
     # download one product
     api.download(one_id, directory_path=storage)
