@@ -106,15 +106,17 @@ def read_file(ncfile):
     scan.timestamps = numpy.array(timestamps)
 
     return scan
-                                                                                                                             
+
 
 def filter_data(data, qa_percent):
-    """Filter data before processing them further. All corresponding values in the Scan objects are set to NaN if the quality requirement is not met
+    """Filter data before processing them further
+    All corresponding values in the Scan objects are set to NaN
+    if the quality requirement is not met
 
     :param data: scan object with data
     :type data: emissionsapi.preprocess.Scan
     :param qa_percent: quality to filter in percent
-    :type qa_percent: 
+    :type qa_percent:
     :return: scan object with filtered data
     :rtype: emissionsapi.preprocess.Scan
     """
@@ -125,7 +127,8 @@ def filter_data(data, qa_percent):
     data.longitude = data.longitude.astype('float')
     data.latitude = data.latitude.astype('float')
 
-    # set all corresponding Scan object values to numpy.nan if the quality value is too low
+    # set all corresponding Scan object values to numpy.nan
+    # if the quality value is too low
     data.data[data.quality < qa_percent] = numpy.nan
     data.longitude[data.quality < qa_percent] = numpy.nan
     data.latitude[data.quality < qa_percent] = numpy.nan
@@ -173,7 +176,7 @@ def entrypoint():
         logger.info(f"Pre-process '{ncfile}'")
         # Read data from nc file
         data = read_file(ncfile)
-        # filter data
+        # filter data for quality >=50
         data = filter_data(data, 50)
         # Write the filtered data to the database
         write_to_database(data)
