@@ -2,7 +2,7 @@
 """
 import os
 
-from sentinelsat import SentinelAPI
+import sentinel5dl
 
 from emissionsapi.config import config
 from emissionsapi.country_bounding_boxes import country_bounding_boxes
@@ -13,15 +13,10 @@ logger = emissionsapi.logger.getLogger('emission-api.download')
 
 storage = config('storage') or 'data'
 
-# These credentials are provided publicly by ESA. There is no real user
-# management and we can keep it like this as long as they do not introduce
-# custom user accounts.
-user = 's5pguest'
-password = 's5pguest'
-url = 'https://s5phub.copernicus.eu/dhus'
-
-start_date = '20190910'
-end_date = '20190911'
+start_date = '2019-09-10T00:00:00.000Z'
+end_date = '2019-09-11T00:00:00.000Z'
+product = 'L2__CO____'
+processing_level = 'L2'
 
 
 def bounding_box_to_wkt(lon1, lat1, lon2, lat2):
@@ -38,20 +33,22 @@ def download():
     """
     wkt = bounding_box_to_wkt(*country_bounding_boxes['DE'][1])
 
-    # query api for available products
-    api = SentinelAPI(user, password, url)
-    products = api.query(area=wkt, date=(start_date, end_date))
-    products_df = api.to_dataframe(products)
-
-    # filter only one product of CO
-    where = products_df.producttypedescription == 'Carbon Monoxide'
-    one_id = products_df.uuid[where][0]
-
     # create storage folder if not existing
     os.makedirs(storage, exist_ok=True)
 
-    # download one product
-    api.download(one_id, directory_path=storage)
+    # Search for data matching the parameter
+    result = sentinel5dl.search(
+            wkt,
+            begin_ts=start_date,
+            end_ts=end_date,
+            product=product,
+            processing_level=processing_level,
+            logger_fn=logger.info)
+    logger.info('Found {0} products'.format(len(result.get('products'))))
+
+    # Download data
+    sentinel5dl.download(
+        result.get('products'), output_dir=storage, logger_fn=logger.info)
 
 
 if __name__ == "__main__":
