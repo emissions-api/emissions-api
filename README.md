@@ -60,6 +60,16 @@ A configuration file template can be found at `etc/emissionsapi.yml`.
 To get started, just copy this to the main project directory and adjust the
 values if the defaults do not work for you.
 
+## Documentation
+
+To build the documentation you need to have `sphinx` and `sphinx-rtd-theme`.
+
+With that installed, simply run
+
+```bash
+make -C docs clean html
+```
+
 ## Execute
 
 To execute the programs in this project run
