@@ -10,7 +10,6 @@ from sqlalchemy.orm import sessionmaker
 import geoalchemy2
 
 from emissionsapi.config import config
-from emissionsapi.utils import bounding_box_to_wkt
 import emissionsapi.logger
 
 # Logger
@@ -108,40 +107,33 @@ def get_session():
     return __session__()
 
 
-def get_points_in_polygon(session, polygon):
-    """Get all points from within the specified polygon.
+def get_points(session, polygon=None, begin=None, end=None):
+    """Get all points filtered by time and location.
 
     :param session: SQL Alchemy Session
     :type session: sqlalchemy.orm.session.Session
-    :param polygon: Polygon where to search for points
-    :type polygon: geoalchemy2.WKTElement
+    :param polygon: Polygon where to search for points, defaults to None
+    :type polygon: geoalchemy2.WKTElement, optional
+    :param begin: Get only points after this timestamp, defaults to None
+    :type begin: datetime.datetime, optional
+    :param end: datetime.datetime, defaults to None
+    :type end: Get only points before this timestamp, optional
     :return: SQLAlchemy Query Object with the points from within the polygon.
     :rtype: sqlalchemy.orm.query.Query
     """
-    return session.query(Carbonmonoxide).filter(
-        geoalchemy2.func.ST_WITHIN(Carbonmonoxide.geom, polygon))
+    query = session.query(Carbonmonoxide)
 
+    # Filter with polygon
+    if polygon is not None:
+        query = query.filter(geoalchemy2.func.ST_WITHIN(
+            Carbonmonoxide.geom, polygon))
 
-def get_points_in_rectangle(session, upper_left, lower_right):
-    """Get all points from within a rectangle.
+    # Only points after
+    if begin is not None:
+        query = query.filter(begin <= Carbonmonoxide.timestamp)
 
-    :param session: SQL Alchemy Session
-    :type session: sqlalchemy.orm.session.Session
-    :param polygon: Polygon where to search for points
-    :type polygon: geoalchemy2.WKTElement
-    :param upper_left: Upper left point of the rectangle
-    :type upper_left: tuple
-    :param lower_right: Lower right point of the rectangle
-    :type lower_right: tuple
-    :return: SQLAlchemy Query Object with the points from within the polygon.
-    :rtype: sqlalchemy.orm.query.Query
-    """
-    # Defining the rectangle
-    rectangle = geoalchemy2.elements.WKTElement(
-        bounding_box_to_wkt(
-            upper_left[0], upper_left[1],
-            lower_right[0], lower_right[1]
-        )
-    )
+    # Filter before
+    if end is not None:
+        query = query.filter(end > Carbonmonoxide.timestamp)
 
-    return get_points_in_polygon(session, rectangle)
+    return query

@@ -13,6 +13,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/geoframe'
         - $ref: '#/components/parameters/country'
+        - $ref: '#/components/parameters/begin'
+        - $ref: '#/components/parameters/end'
       responses:
         200:
           description: The Response contains all known points located within the specified rectangle contained in a GeoJSON feature collection.
@@ -41,6 +43,22 @@ components:
         type: string
       description: "`country` will use a preselected rectangle countaing the specified country. Like 'DE'."
       example: DE
+    begin:
+      in: query
+      name: begin
+      schema:
+        type: string
+      description: "`begin` filter out points before this date. The date itself is included."
+      example: 2019-09-10
+    end:
+      in: query
+      name: end
+      schema:
+        type: string
+      description: "`end` filter out points before this date. The date itself is not included."
+      example: 2019-09-11
+
+
   schemas:
     featurecollection:
       description: GeoJSON Feature Collection
@@ -52,11 +70,13 @@ components:
               type: Point
             properties:
               carbonmonixide: 0.0273975990712643
-              type: Feature
+              timestamp: "2019-09-21T12:26:28.762000Z"
+            type: Feature
           - geometry:
               coordinates: [15.063565, 44.561062]
               type: Point
             properties:
               carbonmonixide: 0.0273975990712643
-              type: Feature
+              timestamp: "2019-09-21T12:26:27.922000Z"
+            type: Feature
         type: FeatureCollection
