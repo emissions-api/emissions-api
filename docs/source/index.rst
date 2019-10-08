@@ -5,7 +5,8 @@ Welcome to Emissions API's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   modules.rst
+   installation.rst
+   emissionsapi.rst
 
 Indices and tables
 ==================

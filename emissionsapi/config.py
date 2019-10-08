@@ -16,9 +16,9 @@ def configuration_file():
     '''Find the best match for the configuration file.  The configuration file
     locations taken into consideration are (in this particular order):
 
-    - ./emissionsapi.yml
-    - ~/emissionsapi.yml
-    - /etc/emissionsapi.yml
+    - ``./emissionsapi.yml``
+    - ``~/emissionsapi.yml``
+    - ``/etc/emissionsapi.yml``
 
     :return: configuration file name or None
     '''
