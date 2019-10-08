@@ -28,3 +28,4 @@ deploy:
  local_dir: docs/build/html
  on:
    branch: master
+   python: "3.6"
