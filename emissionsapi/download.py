@@ -6,6 +6,7 @@ import sentinel5dl
 
 from emissionsapi.config import config
 from emissionsapi.country_bounding_boxes import country_bounding_boxes
+from emissionsapi.utils import bounding_box_to_wkt
 import emissionsapi.logger
 
 # Logger
@@ -17,14 +18,6 @@ start_date = '2019-09-10T00:00:00.000Z'
 end_date = '2019-09-11T00:00:00.000Z'
 product = 'L2__CO____'
 processing_level = 'L2'
-
-
-def bounding_box_to_wkt(lon1, lat1, lon2, lat2):
-    """Convert a bounding box specified by its top-left and bottom-right
-    coordinates to a wkt string defining a polygon.
-    """
-    return f'POLYGON(({lon1} {lat1},{lon1} {lat2},{lon2} {lat2},'\
-           f'{lon2} {lat1},{lon1} {lat1}))'
 
 
 def download():
