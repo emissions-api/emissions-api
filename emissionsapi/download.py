@@ -1,3 +1,7 @@
+# Copyright 2019, The Emissions API Developers
+# https://emissions-api.org
+# This software is available under the terms of an MIT license.
+# See LICENSE fore more information.
 """Module to filter and download the data from the ESA and store it locally.
 """
 import os
