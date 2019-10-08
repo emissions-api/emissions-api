@@ -26,4 +26,5 @@ deploy:
  github_token: $GITHUB_TOKEN
  local_dir: docs/build/html
  on:
-   branch: automatically-build-doc
+   all_branches: true # only for testing
+   # branch: master
