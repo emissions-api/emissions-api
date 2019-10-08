@@ -1,4 +1,8 @@
-"""Web Application to deliver the data stored in the database via an API to
+# Copyright 2019, The Emissions API Developers
+# https://emissions-api.org
+# This software is available under the terms of an MIT license.
+# See LICENSE fore more information.
+"""Web application to deliver the data stored in the database via an API to
 the users.
 """
 import connexion

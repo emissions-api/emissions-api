@@ -1,4 +1,7 @@
-# -*- coding: utf-8 -*-
+# Copyright 2019, The Emissions API Developers
+# https://emissions-api.org
+# This software is available under the terms of an MIT license.
+# See LICENSE fore more information.
 '''
 Load and handle Emission API configuration.
 '''

@@ -1,4 +1,8 @@
-"""Preprocess the locally stored data and store them in the Database.
+# Copyright 2019, The Emissions API Developers
+# https://emissions-api.org
+# This software is available under the terms of an MIT license.
+# See LICENSE fore more information.
+"""Preprocess the locally stored data and store them in the database.
 """
 import os
 
