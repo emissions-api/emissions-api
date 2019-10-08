@@ -32,30 +32,29 @@ Base = declarative_base()
 
 
 class File(Base):
-    """ORM Object for the nc files.
+    """ORM object for the nc files.
     """
-    # Tablename
     __tablename__ = 'file'
     filename = Column(String, primary_key=True)
+    """Name of processed data file"""
 
 
 class Carbonmonoxide(Base):
-    """ORM Object for Carbonmonoxide Point
+    """ORM object for carbon monoxide point
     """
-    # Tablename
     __tablename__ = 'carbonmonoxide'
-    # Primary Key
     id = Column(Integer, primary_key=True)
-    # Carbonmonoxide Value
+    """ Data sample identifier (primary key)"""
     value = Column(Float)
-    # Longitude
+    """Carbon monoxide value"""
     longitude = Column(Float)
-    # Latitude
+    """Longitude of measurement"""
     latitude = Column(Float)
-    # timestamp
+    """Latitude of measurement"""
     timestamp = Column(DateTime)
-    # PostGis type
+    """Timestamp of measurement"""
     geom = Column(geoalchemy2.Geometry(geometry_type="POINT"))
+    """Location (PostGis type)"""
 
     def __init__(self, value, longitude, latitude, timestamp):
         self.value = value
@@ -69,10 +68,10 @@ class Carbonmonoxide(Base):
 def with_session(f):
     """Wrapper for f to make a SQLAlchemy session present within the function
 
-    :param f: function to call
-    :type f: function
-    :raises e: Possible Exception of f
-    :return: result of f
+    :param f: Function to call
+    :type f: Function
+    :raises e: Possible exception of f
+    :return: Result of f
     """
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -98,10 +97,10 @@ def get_session():
     Lazy load the database connection and create the tables.
 
     Returns:
-        sqlalchemy.orm.session.Session -- SQLAlchemy Session Object
+        sqlalchemy.orm.session.Session -- SQLAlchemy Session object
     """
     global __session__
-    # Create Database Connection, Tables and Sessionmaker if neccessary.
+    # Create database connection, tables and Sessionmaker if neccessary.
     if not __session__:
         Engine = create_engine(database)
         __session__ = sessionmaker(bind=Engine)
@@ -116,7 +115,8 @@ def get_points(session, polygon=None, begin=None, end=None):
 
     :param session: SQL Alchemy Session
     :type session: sqlalchemy.orm.session.Session
-    :param polygon: Polygon where to search for points, defaults to None
+    :param polygon: Polygon specifying an area in which to search for points.
+                    Defaults to None.
     :type polygon: geoalchemy2.WKTElement, optional
     :param begin: Get only points after this timestamp, defaults to None
     :type begin: datetime.datetime, optional
@@ -132,11 +132,11 @@ def get_points(session, polygon=None, begin=None, end=None):
         query = query.filter(geoalchemy2.func.ST_WITHIN(
             Carbonmonoxide.geom, polygon))
 
-    # Only points after
+    # Filter for points after the time specified as begin
     if begin is not None:
         query = query.filter(begin <= Carbonmonoxide.timestamp)
 
-    # Filter before
+    # Filter for points before the time specified as end
     if end is not None:
         query = query.filter(end > Carbonmonoxide.timestamp)
 
