@@ -5,3 +5,8 @@ database: postgresql://emissionsapi:emissionsapi@127.0.0.1/emissionsapi
 # Storage directory location.
 # Default: data
 storage: data
+
+# Listening address for the built-in web server.
+# Note that this server is meant for development only.
+# Default: 127.0.0.1
+#host: 127.0.0.1
