@@ -1,8 +1,5 @@
-emissionsapi package
-====================
-
-Submodules
-----------
+Python API
+==========
 
 emissionsapi.config module
 --------------------------
