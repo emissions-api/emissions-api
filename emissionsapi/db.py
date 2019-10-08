@@ -138,7 +138,10 @@ def get_points_in_rectangle(session, upper_left, lower_right):
     """
     # Defining the rectangle
     rectangle = geoalchemy2.elements.WKTElement(
-        bounding_box_to_wkt(upper_left[0], upper_left[1], lower_right[0], lower_right[1])
+        bounding_box_to_wkt(
+            upper_left[0], upper_left[1],
+            lower_right[0], lower_right[1]
+        )
     )
 
     return get_points_in_polygon(session, rectangle)

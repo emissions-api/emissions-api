@@ -4,4 +4,3 @@ def bounding_box_to_wkt(lon1, lat1, lon2, lat2):
     """
     return f'POLYGON(({lon1} {lat1},{lon1} {lat2},{lon2} {lat2},'\
            f'{lon2} {lat1},{lon1} {lat1}))'
-
