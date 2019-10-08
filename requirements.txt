@@ -1,10 +1,10 @@
-sentinel5dl
+connexion
 gdal
 geoalchemy2
+geojson
 iso8601
 numpy
 psycopg2
+sentinel5dl
 sqlalchemy
-connexion
 swagger-ui-bundle
-iso8601
