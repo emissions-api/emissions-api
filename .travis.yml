@@ -19,6 +19,7 @@ script:
 after_success:
   - pip install sphinx sphinx-rtd-theme
   - make -C docs clean html
+  - touch docs/build/html/.nojekyll # create this file to prevent Github's Jekyll processing
 
 deploy:
  provider: pages
@@ -26,5 +27,4 @@ deploy:
  github_token: $GITHUB_TOKEN
  local_dir: docs/build/html
  on:
-   all_branches: true # only for testing
-   # branch: master
+   branch: master
