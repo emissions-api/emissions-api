@@ -153,13 +153,21 @@ def write_to_database(session, data):
     shape = data.data.shape
     for i in range(shape[0]):
         for j in range(shape[1]):
-            # Add new carbon monoxide object to the session
-            session.add(
-                emissionsapi.db.Carbonmonoxide(
-                    longitude=float(data.longitude[i, j]),
-                    latitude=float(data.latitude[i, j]),
-                    value=float(data.data[i, j]),
-                    timestamp=data.timestamps[i],
+
+            # Check if any of the data objects are set to NotANumber with
+            # filter_data() to skip writing them into the database
+            if not(numpy.isnan(data.longitude[i, j]) or
+                numpy.isnan(data.latitude[i, j]) or
+                numpy.isnan(data.data[i, j])):
+
+                # Add new carbon monoxide object to the session
+                session.add(
+                    emissionsapi.db.Carbonmonoxide(
+                        longitude=float(data.longitude[i, j]),
+                        latitude=float(data.latitude[i, j]),
+                        value=float(data.data[i, j]),
+                        timestamp=data.timestamps[i],
+                    )
                 )
             )
     session.add(emissionsapi.db.File(filename=data.filename))
