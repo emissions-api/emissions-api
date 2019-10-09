@@ -6,7 +6,6 @@ import geojson
 
 import emissionsapi.db
 import emissionsapi.logger
-from emissionsapi.config import config
 from emissionsapi.country_bounding_boxes import country_bounding_boxes
 
 # Logger
@@ -68,7 +67,7 @@ def entrypoint():
     production, but only during the development.
     """
     logger.info("Starting the Connexion Debug Server")
-    app.run(host=config('host') or '127.0.0.1')
+    app.run(host='127.0.0.1')
 
 
 if __name__ == "__main__":
