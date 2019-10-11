@@ -5,3 +5,21 @@ database: postgresql://emissionsapi:emissionsapi@127.0.0.1/emissionsapi
 # Storage directory location.
 # Default: data
 storage: data
+
+# Configure which data to download from the ESA archives
+download:
+  date:
+    # Only request data aquired before this date.
+    # Default: 2019-09-10T00:00:00.000Z
+    begin: '2019-09-10T00:00:00.000Z'
+
+    # Only request data aquired before this date.
+    # Default: 2019-09-10T00:00:00.000Z
+    end: '2019-09-11T00:00:00.000Z'
+
+  # List of two-letter country codes specifying the countries to request data
+  # for.
+  # Default: ['DE']
+  country:
+    - DE
+    - BE

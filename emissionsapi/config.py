@@ -42,7 +42,7 @@ def update_configuration():
     return cfg
 
 
-def config(key=None):
+def config(*args):
     '''Get a specific configuration value or the whole configuration, loading
     the configuration file if it was not before.
 
@@ -51,4 +51,8 @@ def config(key=None):
     :return: dictionary containing the configuration or configuration value
     '''
     cfg = __config or update_configuration()
-    return cfg.get(key) if key else cfg
+    for key in args:
+        if cfg is None:
+            return
+        cfg = cfg.get(key)
+    return cfg
