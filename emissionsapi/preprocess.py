@@ -8,10 +8,9 @@ import logging
 import os
 
 import gdal
-import iso8601
+import dateutil.parser
+from dateutil.relativedelta import relativedelta
 import numpy
-
-from datetime import timedelta
 
 from emissionsapi.config import config
 import emissionsapi.db
@@ -97,12 +96,14 @@ def read_file(ncfile):
 
     # Get time reference from the meta data.
     # Seems like there are named differently in the different gdal versions.
-    time_reference = iso8601.parse_date(
+    time_reference = dateutil.parser.parse(
         meta_data.get('NC_GLOBAL#time_reference') or
         meta_data['time_reference'])
     timestamps = []
     for dt in deltatime:
-        timestamps.append(time_reference + timedelta(milliseconds=dt.item()))
+        timestamps.append(
+            time_reference + relativedelta(microseconds=dt.item())
+        )
     scan.timestamps = numpy.array(timestamps)
 
     return scan
