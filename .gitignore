@@ -125,6 +125,11 @@ dmypy.json
 .pyre/
 
 .vscode
+.DS_Store
 data/
 node_modules/
 package-lock.json
+
+#local configuration file
+emissionsapi/emissionsapi.yml
+/emissionsapi.yml
