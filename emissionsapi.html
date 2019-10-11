@@ -1,0 +1,559 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Python API &mdash; Emissions API  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Emissions API
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Python API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.config">emissionsapi.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.country_bounding_boxes">emissionsapi.country_bounding_boxes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.db">emissionsapi.db module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.download">emissionsapi.download module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.logger">emissionsapi.logger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.preprocess">emissionsapi.preprocess module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.web">emissionsapi.web module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#emissions-api">Emissions API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Emissions API</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Python API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/emissionsapi.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="python-api">
+<h1>Python API<a class="headerlink" href="#python-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-emissionsapi.config">
+<span id="emissionsapi-config-module"></span><h2>emissionsapi.config module<a class="headerlink" href="#module-emissionsapi.config" title="Permalink to this headline">¶</a></h2>
+<p>Load and handle Emission API configuration.</p>
+<dl class="function">
+<dt id="emissionsapi.config.config">
+<code class="sig-prename descclassname">emissionsapi.config.</code><code class="sig-name descname">config</code><span class="sig-paren">(</span><em class="sig-param">key=None</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.config.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a specific configuration value or the whole configuration, loading
+the configuration file if it was not before.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>string</em>) – optional configuration key to return</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dictionary containing the configuration or configuration value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="emissionsapi.config.configuration_file">
+<code class="sig-prename descclassname">emissionsapi.config.</code><code class="sig-name descname">configuration_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.config.configuration_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the best match for the configuration file.  The configuration file
+locations taken into consideration are (in this particular order):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">./emissionsapi.yml</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">~/emissionsapi.yml</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/etc/emissionsapi.yml</span></code></p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>configuration file name or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="emissionsapi.config.update_configuration">
+<code class="sig-prename descclassname">emissionsapi.config.</code><code class="sig-name descname">update_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.config.update_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update configuration.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-emissionsapi.country_bounding_boxes">
+<span id="emissionsapi-country-bounding-boxes-module"></span><h2>emissionsapi.country_bounding_boxes module<a class="headerlink" href="#module-emissionsapi.country_bounding_boxes" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-emissionsapi.db">
+<span id="emissionsapi-db-module"></span><h2>emissionsapi.db module<a class="headerlink" href="#module-emissionsapi.db" title="Permalink to this headline">¶</a></h2>
+<p>Database layer for the Emmission API.</p>
+<dl class="class">
+<dt id="emissionsapi.db.Carbonmonoxide">
+<em class="property">class </em><code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">Carbonmonoxide</code><span class="sig-paren">(</span><em class="sig-param">value</em>, <em class="sig-param">longitude</em>, <em class="sig-param">latitude</em>, <em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.Carbonmonoxide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<p>ORM object for carbon monoxide point</p>
+<dl class="attribute">
+<dt id="emissionsapi.db.Carbonmonoxide.geom">
+<code class="sig-name descname">geom</code><a class="headerlink" href="#emissionsapi.db.Carbonmonoxide.geom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Location (PostGis type)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="emissionsapi.db.Carbonmonoxide.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#emissionsapi.db.Carbonmonoxide.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data sample identifier (primary key)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="emissionsapi.db.Carbonmonoxide.latitude">
+<code class="sig-name descname">latitude</code><a class="headerlink" href="#emissionsapi.db.Carbonmonoxide.latitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Latitude of measurement</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="emissionsapi.db.Carbonmonoxide.longitude">
+<code class="sig-name descname">longitude</code><a class="headerlink" href="#emissionsapi.db.Carbonmonoxide.longitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Longitude of measurement</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="emissionsapi.db.Carbonmonoxide.timestamp">
+<code class="sig-name descname">timestamp</code><a class="headerlink" href="#emissionsapi.db.Carbonmonoxide.timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Timestamp of measurement</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="emissionsapi.db.Carbonmonoxide.value">
+<code class="sig-name descname">value</code><a class="headerlink" href="#emissionsapi.db.Carbonmonoxide.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Carbon monoxide value</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="emissionsapi.db.File">
+<em class="property">class </em><code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">File</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.File" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<p>ORM object for the nc files.</p>
+<dl class="attribute">
+<dt id="emissionsapi.db.File.filename">
+<code class="sig-name descname">filename</code><a class="headerlink" href="#emissionsapi.db.File.filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of processed data file</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="emissionsapi.db.get_points">
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_points</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">polygon=None</em>, <em class="sig-param">begin=None</em>, <em class="sig-param">end=None</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all points filtered by time and location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQL Alchemy Session</p></li>
+<li><p><strong>polygon</strong> (<em>geoalchemy2.WKTElement</em><em>, </em><em>optional</em>) – Polygon specifying an area in which to search for points.
+Defaults to None.</p></li>
+<li><p><strong>begin</strong> (<em>datetime.datetime</em><em>, </em><em>optional</em>) – Get only points after this timestamp, defaults to None</p></li>
+<li><p><strong>end</strong> (<em>Get only points before this timestamp</em><em>, </em><em>optional</em>) – datetime.datetime, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>SQLAlchemy Query Object with the points from within the polygon.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>sqlalchemy.orm.query.Query</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="emissionsapi.db.get_session">
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_session</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_session" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a new session.</p>
+<p>Lazy load the database connection and create the tables.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>sqlalchemy.orm.session.Session – SQLAlchemy Session object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="emissionsapi.db.with_session">
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">with_session</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.with_session" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for f to make a SQLAlchemy session present within the function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>Function</em>) – Function to call</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>e</strong> – Possible exception of f</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Result of f</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-emissionsapi.download">
+<span id="emissionsapi-download-module"></span><h2>emissionsapi.download module<a class="headerlink" href="#module-emissionsapi.download" title="Permalink to this headline">¶</a></h2>
+<p>Module to filter and download the data from the ESA and store it locally.</p>
+<dl class="function">
+<dt id="emissionsapi.download.download">
+<code class="sig-prename descclassname">emissionsapi.download.</code><code class="sig-name descname">download</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.download.download" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download data files from ESA and store them in the configured storage
+directory.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-emissionsapi.logger">
+<span id="emissionsapi-logger-module"></span><h2>emissionsapi.logger module<a class="headerlink" href="#module-emissionsapi.logger" title="Permalink to this headline">¶</a></h2>
+<p>Module to get pre-configured logger objects</p>
+<dl class="function">
+<dt id="emissionsapi.logger.getLogger">
+<code class="sig-prename descclassname">emissionsapi.logger.</code><code class="sig-name descname">getLogger</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.logger.getLogger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get Logger with the default logging configuration for this projects</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>string</em>) – name of the logging program</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>logger</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>logging.Logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-emissionsapi.preprocess">
+<span id="emissionsapi-preprocess-module"></span><h2>emissionsapi.preprocess module<a class="headerlink" href="#module-emissionsapi.preprocess" title="Permalink to this headline">¶</a></h2>
+<p>Preprocess the locally stored data and store them in the database.</p>
+<dl class="class">
+<dt id="emissionsapi.preprocess.Scan">
+<em class="property">class </em><code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">Scan</code><a class="headerlink" href="#emissionsapi.preprocess.Scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Object to hold arrays from an nc file.</p>
+<dl class="attribute">
+<dt id="emissionsapi.preprocess.Scan.data">
+<code class="sig-name descname">data</code><em class="property"> = None</em><a class="headerlink" href="#emissionsapi.preprocess.Scan.data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="emissionsapi.preprocess.Scan.filename">
+<code class="sig-name descname">filename</code><em class="property"> = None</em><a class="headerlink" href="#emissionsapi.preprocess.Scan.filename" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="emissionsapi.preprocess.Scan.latitude">
+<code class="sig-name descname">latitude</code><em class="property"> = None</em><a class="headerlink" href="#emissionsapi.preprocess.Scan.latitude" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="emissionsapi.preprocess.Scan.longitude">
+<code class="sig-name descname">longitude</code><em class="property"> = None</em><a class="headerlink" href="#emissionsapi.preprocess.Scan.longitude" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="emissionsapi.preprocess.Scan.quality">
+<code class="sig-name descname">quality</code><em class="property"> = None</em><a class="headerlink" href="#emissionsapi.preprocess.Scan.quality" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="emissionsapi.preprocess.Scan.timestamps">
+<code class="sig-name descname">timestamps</code><em class="property"> = None</em><a class="headerlink" href="#emissionsapi.preprocess.Scan.timestamps" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="emissionsapi.preprocess.entrypoint">
+<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">entrypoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.entrypoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entrypoint for running this as a module or from the binary.
+Triggers the preprocessing of the data.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="emissionsapi.preprocess.filter_data">
+<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">filter_data</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.filter_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter data before processing them further.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference internal" href="#emissionsapi.preprocess.Scan" title="emissionsapi.preprocess.Scan"><em>emissionsapi.preprocess.Scan</em></a>) – scan object with data</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>scan object with filtered data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#emissionsapi.preprocess.Scan" title="emissionsapi.preprocess.Scan">emissionsapi.preprocess.Scan</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="emissionsapi.preprocess.list_ncfiles">
+<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">list_ncfiles</code><span class="sig-paren">(</span><em class="sig-param">session</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.list_ncfiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator yielding all nc files in download path.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="emissionsapi.preprocess.read_file">
+<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">read_file</code><span class="sig-paren">(</span><em class="sig-param">ncfile</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.read_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read nc file, parse it using GDAL and return its result as a
+Scan object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ncfile</strong> (<em>string</em>) – filename of the nc file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>scan object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#emissionsapi.preprocess.Scan" title="emissionsapi.preprocess.Scan">emissionsapi.preprocess.Scan</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="emissionsapi.preprocess.write_to_database">
+<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">write_to_database</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.write_to_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write data to the PostGIS database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p></li>
+<li><p><strong>data</strong> (<a class="reference internal" href="#emissionsapi.preprocess.Scan" title="emissionsapi.preprocess.Scan"><em>emissionsapi.preprocess.Scan</em></a>) – Data to add to the database</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-emissionsapi.web">
+<span id="emissionsapi-web-module"></span><h2>emissionsapi.web module<a class="headerlink" href="#module-emissionsapi.web" title="Permalink to this headline">¶</a></h2>
+<p>Web application to deliver the data stored in the database via an API to
+the users.</p>
+<dl class="function">
+<dt id="emissionsapi.web.entrypoint">
+<code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">entrypoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.entrypoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entrypoint for running this as a module or from the binary.
+It starts the Connexion Debug Server. It is not meant to be used for
+production, but only during the development.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="emissionsapi.web.get_data">
+<code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">country=None</em>, <em class="sig-param">geoframe=None</em>, <em class="sig-param">begin=None</em>, <em class="sig-param">end=None</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.get_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get data in GeoJSON format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy session</p></li>
+<li><p><strong>country</strong> (<em>string</em>) – ‘country’ url parameter</p></li>
+<li><p><strong>geoframe</strong> (<em>string</em>) – ‘geoframe’ url parameter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Feature Collection with requested Points</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>geojson.FeatureCollection</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-emissionsapi">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-emissionsapi" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="emissions-api">
+<h3>Emissions API<a class="headerlink" href="#emissions-api" title="Permalink to this headline">¶</a></h3>
+<p>Emissions API’s mission is to provide easy access to European Space Agency’s
+Sentinel-5P satellite data without the need of being an expert in satellite
+data analysis and without having to process terabytes of data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">copyright</dt>
+<dd class="field-odd"><p>2019, The Emissions API Developers</p>
+</dd>
+<dt class="field-even">url</dt>
+<dd class="field-even"><p><a class="reference external" href="https://emissions-api.org">https://emissions-api.org</a></p>
+</dd>
+<dt class="field-odd">license</dt>
+<dd class="field-odd"><p>MIT</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019 The Emissions API Developers (https://emissions-api.org)
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
