@@ -5,6 +5,6 @@ geojson
 iso8601
 numpy
 psycopg2
-sentinel5dl
+sentinel5dl>=0.4
 sqlalchemy
 swagger-ui-bundle
