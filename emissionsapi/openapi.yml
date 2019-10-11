@@ -9,7 +9,7 @@ paths:
       description: |
           Get data in GeoJSON format.
 
-          You can only use one url parameter at a time.
+          You can provide a geoframe or a country parameter. If you provide both, the geoframe parameter will be used.
       parameters:
         - $ref: '#/components/parameters/geoframe'
         - $ref: '#/components/parameters/country'
