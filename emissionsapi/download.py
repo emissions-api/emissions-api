@@ -6,6 +6,7 @@
 """
 import os
 
+import logging
 import sentinel5dl
 
 from emissionsapi.config import config
@@ -15,6 +16,11 @@ import emissionsapi.logger
 
 # Logger
 logger = emissionsapi.logger.getLogger('emission-api.download')
+
+# Configure logger for sentinel5dl
+logging.basicConfig()
+download_logger = logging.getLogger(sentinel5dl.__name__)
+download_logger.setLevel(logger.getEffectiveLevel())
 
 product = 'L2__CO____'
 processing_level = 'L2'
@@ -45,13 +51,11 @@ def download():
                 begin_ts=date_begin,
                 end_ts=date_end,
                 product=product,
-                processing_level=processing_level,
-                logger_fn=logger.info)
+                processing_level=processing_level)
         logger.info('Found {0} products'.format(len(result.get('products'))))
 
         # Download data
-        sentinel5dl.download(
-            result.get('products'), output_dir=storage, logger_fn=logger.info)
+        sentinel5dl.download(result.get('products'), output_dir=storage)
 
 
 if __name__ == "__main__":
