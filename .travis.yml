@@ -41,6 +41,9 @@ jobs:
         - touch docs/build/html/.nojekyll # create this file to prevent Github's Jekyll processing
       deploy:
         provider: pages
+        fqdn: docs.emissions-api.org
+        verbose: true
+        keep_history: true
         skip_cleanup: true
         github_token: $GITHUB_TOKEN
         local_dir: docs/build/html
