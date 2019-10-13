@@ -10,3 +10,13 @@ data analysis and without having to process terabytes of data.
 :url: https://emissions-api.org
 :license: MIT
 """
+# Copyright 2019, The Emissions API Developers
+# https://emissions-api.org
+# This software is available under the terms of an MIT license.
+# See LICENSE fore more information.
+import logging
+
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO,
+)

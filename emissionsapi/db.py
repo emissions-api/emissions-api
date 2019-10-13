@@ -6,6 +6,7 @@
 """
 
 from functools import wraps
+import logging
 
 from sqlalchemy import create_engine, Column, DateTime, Integer, Float, String
 from sqlalchemy.ext.declarative import declarative_base
@@ -14,10 +15,9 @@ from sqlalchemy.orm import sessionmaker
 import geoalchemy2
 
 from emissionsapi.config import config
-import emissionsapi.logger
 
 # Logger
-logger = emissionsapi.logger.getLogger('emission-api.db')
+logger = logging.getLogger(__name__)
 
 # Database uri as described in
 # https://docs.sqlalchemy.org/en/13/core/engines.html#database-urls

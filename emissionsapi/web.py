@@ -5,18 +5,18 @@
 """Web application to deliver the data stored in the database via an API to
 the users.
 """
+import logging
 import datetime
 
 import connexion
 import geojson
 
 import emissionsapi.db
-import emissionsapi.logger
 from emissionsapi.country_bounding_boxes import country_bounding_boxes
 from emissionsapi.utils import bounding_box_to_wkt
 
 # Logger
-logger = emissionsapi.logger.getLogger('emission-api.web')
+logger = logging.getLogger(__name__)
 
 
 @emissionsapi.db.with_session
