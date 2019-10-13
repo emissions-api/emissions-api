@@ -4,6 +4,7 @@
 # See LICENSE fore more information.
 """Preprocess the locally stored data and store them in the database.
 """
+import logging
 import os
 
 import gdal
@@ -14,10 +15,9 @@ from datetime import timedelta
 
 from emissionsapi.config import config
 import emissionsapi.db
-import emissionsapi.logger
 
 # Logger
-logger = emissionsapi.logger.getLogger('emission-api.preprocess')
+logger = logging.getLogger(__name__)
 
 # Path where to store the data
 storage = config('storage') or 'data'

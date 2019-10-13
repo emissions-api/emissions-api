@@ -12,10 +12,9 @@ import sentinel5dl
 from emissionsapi.config import config
 from emissionsapi.country_bounding_boxes import country_bounding_boxes
 from emissionsapi.utils import bounding_box_to_wkt
-import emissionsapi.logger
 
 # Logger
-logger = emissionsapi.logger.getLogger('emission-api.download')
+logger = logging.getLogger(__name__)
 
 # Configure logger for sentinel5dl
 logging.basicConfig()
