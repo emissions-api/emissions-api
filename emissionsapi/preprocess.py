@@ -116,7 +116,7 @@ def filter_data(data, qa_percent):
     :param data: scan object with data
     :type data: emissionsapi.preprocess.Scan
     :param qa_percent: quality to filter in percent
-    :type qa_percent:
+    :type qa_percent: int
     :return: scan object with filtered data
     :rtype: emissionsapi.preprocess.Scan
     """
@@ -156,9 +156,9 @@ def write_to_database(session, data):
 
             # Check if any of the data objects are set to NotANumber with
             # filter_data() to skip writing them into the database
-            if not(numpy.isnan(data.longitude[i, j]) or
-                numpy.isnan(data.latitude[i, j]) or
-                numpy.isnan(data.data[i, j])):
+            if (not(numpy.isnan(data.longitude[i, j]) or
+                    numpy.isnan(data.latitude[i, j]) or
+                    numpy.isnan(data.data[i, j]))):
 
                 # Add new carbon monoxide object to the session
                 session.add(
@@ -169,7 +169,7 @@ def write_to_database(session, data):
                         timestamp=data.timestamps[i],
                     )
                 )
-            )
+
     session.add(emissionsapi.db.File(filename=data.filename))
     # Commit the changes done in the session
     session.commit()
