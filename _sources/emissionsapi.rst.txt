@@ -33,14 +33,6 @@ emissionsapi.download module
    :undoc-members:
    :show-inheritance:
 
-emissionsapi.logger module
---------------------------
-
-.. automodule:: emissionsapi.logger
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 emissionsapi.preprocess module
 ------------------------------
 
