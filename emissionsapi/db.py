@@ -47,10 +47,6 @@ class Carbonmonoxide(Base):
     """ Data sample identifier (primary key)"""
     value = Column(Float)
     """Carbon monoxide value"""
-    longitude = Column(Float)
-    """Longitude of measurement"""
-    latitude = Column(Float)
-    """Latitude of measurement"""
     timestamp = Column(DateTime)
     """Timestamp of measurement"""
     geom = Column(geoalchemy2.Geometry(geometry_type="POINT"))
@@ -58,8 +54,6 @@ class Carbonmonoxide(Base):
 
     def __init__(self, value, longitude, latitude, timestamp):
         self.value = value
-        self.longitude = longitude
-        self.latitude = latitude
         self.timestamp = timestamp
         self.geom = geoalchemy2.elements.WKTElement(
             f"POINT({longitude} {latitude})")
@@ -122,10 +116,14 @@ def get_points(session, polygon=None, begin=None, end=None):
     :type begin: datetime.datetime, optional
     :param end: datetime.datetime, defaults to None
     :type end: Get only points before this timestamp, optional
-    :return: SQLAlchemy Query Object with the points from within the polygon.
+    :return: SQLAlchemy Query with tuple of Carbonmonoxide object,
+             longitude and latitude.
     :rtype: sqlalchemy.orm.query.Query
     """
-    query = session.query(Carbonmonoxide)
+    query = session.query(
+        Carbonmonoxide,
+        Carbonmonoxide.geom.ST_X(),
+        Carbonmonoxide.geom.ST_Y())
 
     # Filter with polygon
     if polygon is not None:
