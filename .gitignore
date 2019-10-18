@@ -125,6 +125,7 @@ dmypy.json
 .pyre/
 
 .vscode
+.vs
 .DS_Store
 data/
 node_modules/

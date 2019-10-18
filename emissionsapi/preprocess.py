@@ -108,14 +108,35 @@ def read_file(ncfile):
     return scan
 
 
-def filter_data(data):
-    """Filter data before processing them further.
+def filter_data(data, qa_percent):
+    """Filter data before processing them further
+    All corresponding values in the Scan objects are set to NaN
+    if the quality requirement is not met
 
     :param data: scan object with data
     :type data: emissionsapi.preprocess.Scan
+    :param qa_percent: quality to filter in percent
+    :type qa_percent: int
     :return: scan object with filtered data
     :rtype: emissionsapi.preprocess.Scan
     """
+
+    # cast Scan objects to float because numpy.nan is float
+    data.quality = data.quality.astype('float')
+    data.data = data.data.astype('float')
+    data.longitude = data.longitude.astype('float')
+    data.latitude = data.latitude.astype('float')
+
+    # set all corresponding Scan object values to numpy.nan
+    # if the quality value is too low
+    data.data[data.quality < qa_percent] = numpy.nan
+    data.longitude[data.quality < qa_percent] = numpy.nan
+    data.latitude[data.quality < qa_percent] = numpy.nan
+
+    # at least set all too low quality values to numpy.nan
+    data.quality[data.quality < qa_percent] = numpy.nan
+
+    # return data
     return data
 
 
@@ -132,15 +153,23 @@ def write_to_database(session, data):
     shape = data.data.shape
     for i in range(shape[0]):
         for j in range(shape[1]):
-            # Add new carbon monoxide object to the session
-            session.add(
-                emissionsapi.db.Carbonmonoxide(
-                    longitude=float(data.longitude[i, j]),
-                    latitude=float(data.latitude[i, j]),
-                    value=float(data.data[i, j]),
-                    timestamp=data.timestamps[i],
+
+            # Check if any of the data objects are set to NotANumber with
+            # filter_data() to skip writing them into the database
+            if (not(numpy.isnan(data.longitude[i, j]) or
+                    numpy.isnan(data.latitude[i, j]) or
+                    numpy.isnan(data.data[i, j]))):
+
+                # Add new carbon monoxide object to the session
+                session.add(
+                    emissionsapi.db.Carbonmonoxide(
+                        longitude=float(data.longitude[i, j]),
+                        latitude=float(data.latitude[i, j]),
+                        value=float(data.data[i, j]),
+                        timestamp=data.timestamps[i],
+                    )
                 )
-            )
+
     session.add(emissionsapi.db.File(filename=data.filename))
     # Commit the changes done in the session
     session.commit()
@@ -155,8 +184,8 @@ def entrypoint():
         logger.info(f"Pre-process '{ncfile}'")
         # Read data from nc file
         data = read_file(ncfile)
-        # filter data
-        data = filter_data(data)
+        # filter data for quality >=50
+        data = filter_data(data, 50)
         # Write the filtered data to the database
         write_to_database(data)
     pass
