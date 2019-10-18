@@ -377,11 +377,16 @@ Triggers the preprocessing of the data.</p>
 
 <dl class="function">
 <dt id="emissionsapi.preprocess.filter_data">
-<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">filter_data</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.filter_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter data before processing them further.</p>
+<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">filter_data</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">qa_percent</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.filter_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter data before processing them further
+All corresponding values in the Scan objects are set to NaN
+if the quality requirement is not met</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>data</strong> (<a class="reference internal" href="#emissionsapi.preprocess.Scan" title="emissionsapi.preprocess.Scan"><em>emissionsapi.preprocess.Scan</em></a>) – scan object with data</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<a class="reference internal" href="#emissionsapi.preprocess.Scan" title="emissionsapi.preprocess.Scan"><em>emissionsapi.preprocess.Scan</em></a>) – scan object with data</p></li>
+<li><p><strong>qa_percent</strong> (<em>int</em>) – quality to filter in percent</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>scan object with filtered data</p>
