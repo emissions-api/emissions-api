@@ -12,6 +12,7 @@ import iso8601
 import numpy
 
 from datetime import timedelta
+import geoalchemy2
 
 from emissionsapi.config import config
 import emissionsapi.db
@@ -137,6 +138,7 @@ def write_to_database(session, data):
     """
     # Iterate through the data of the Scan object
     shape = data.data.shape
+    inserts = []
     for i in range(shape[0]):
         for j in range(shape[1]):
 
@@ -144,15 +146,23 @@ def write_to_database(session, data):
             # filter_data() to skip writing them into the database
             if (numpy.isfinite(data.data[i, j])):
 
-                # Add new carbon monoxide object to the session
-                session.add(
-                    emissionsapi.db.Carbonmonoxide(
-                        longitude=float(data.longitude[i, j]),
-                        latitude=float(data.latitude[i, j]),
-                        value=float(data.data[i, j]),
-                        timestamp=data.timestamps[i],
-                    )
-                )
+                # Create geometry wkt element
+                geom = geoalchemy2.elements.WKTElement(
+                    f"POINT({data.longitude[i, j]} {data.latitude[i, j]})")
+
+                # Append to list of elements to insert to database
+                inserts.append({
+                    'value': float(data.data[i, j]),
+                    'timestamp': data.timestamps[i],
+                    'geom': geom})
+
+    # Execute statement to insert multiple carbonmonoxide rows into the
+    # database
+    session.execute(
+        emissionsapi.db.Carbonmonoxide.metadata.tables['carbonmonoxide'].
+        insert(),
+        inserts,
+    )
 
     session.add(emissionsapi.db.File(filename=data.filename))
     # Commit the changes done in the session
