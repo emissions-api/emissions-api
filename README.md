@@ -16,7 +16,7 @@ This is the main repository for the [Emissions API](https://emissions-api.org/).
 * [geojson](https://pypi.org/project/geojson/)
 * PyYAML
 * [sebtinel5dl](https://github.com/emissions-api/sentinel5dl)
-* [iso8601](https://pypi.org/project/iso8601/)
+* [python-dateutil](https://pypi.org/project/python-dateutil/)
 
 These can be installed by executing
 
