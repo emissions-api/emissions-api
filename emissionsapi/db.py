@@ -11,6 +11,7 @@ import logging
 from sqlalchemy import create_engine, Column, DateTime, Integer, Float, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql import text
 
 import geoalchemy2
 
@@ -102,6 +103,25 @@ def get_session():
 
     # Return new session object
     return __session__()
+
+
+def insert(session, data, table_name=Carbonmonoxide.__table__.name):
+    '''Batch insert data into the database using PostGIS specific functions.
+
+    :param session: SQL Alchemy Session
+    :type session: sqlalchemy.orm.session.Session
+    :param data: List of dictionaries with entries for timestamp, longitude,
+                 latitude and value
+    :type data: list
+    :param table_name: Name of database table to insert data into. Defaults to
+                       table for carbon monoxide values.
+    :type table_name: str
+    '''
+    statement = text(f'insert into {table_name} '
+                     '(value, timestamp, geom) '
+                     'values (:value, :timestamp, '
+                     '        ST_MakePoint(:longitude, :latitude))')
+    session.execute(statement, data)
 
 
 def get_points(session, polygon=None, begin=None, end=None):
