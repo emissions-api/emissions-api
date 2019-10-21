@@ -108,10 +108,9 @@ def read_file(ncfile):
     return scan
 
 
-def filter_data(data, qa_percent):
-    """Filter data before processing them further
-    All corresponding values in the Scan objects are set to NaN
-    if the quality requirement is not met
+def filter_data(data, qa_percent=50):
+    """Ensure minimum quality of data.
+    Measurements for which the required quality is not met are set to NaN.
 
     :param data: scan object with data
     :type data: emissionsapi.preprocess.Scan
@@ -120,21 +119,8 @@ def filter_data(data, qa_percent):
     :return: scan object with filtered data
     :rtype: emissionsapi.preprocess.Scan
     """
-
-    # cast Scan objects to float because numpy.nan is float
-    data.quality = data.quality.astype('float')
-    data.data = data.data.astype('float')
-    data.longitude = data.longitude.astype('float')
-    data.latitude = data.latitude.astype('float')
-
-    # set all corresponding Scan object values to numpy.nan
-    # if the quality value is too low
+    # set all measurements to numpy.nan if the quality value is too low
     data.data[data.quality < qa_percent] = numpy.nan
-    data.longitude[data.quality < qa_percent] = numpy.nan
-    data.latitude[data.quality < qa_percent] = numpy.nan
-
-    # at least set all too low quality values to numpy.nan
-    data.quality[data.quality < qa_percent] = numpy.nan
 
     # return data
     return data
@@ -156,9 +142,7 @@ def write_to_database(session, data):
 
             # Check if any of the data objects are set to NotANumber with
             # filter_data() to skip writing them into the database
-            if (not(numpy.isnan(data.longitude[i, j]) or
-                    numpy.isnan(data.latitude[i, j]) or
-                    numpy.isnan(data.data[i, j]))):
+            if (numpy.isfinite(data.data[i, j])):
 
                 # Add new carbon monoxide object to the session
                 session.add(
