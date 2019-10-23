@@ -366,10 +366,9 @@ Triggers the preprocessing of the data.</p>
 
 <dl class="function">
 <dt id="emissionsapi.preprocess.filter_data">
-<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">filter_data</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">qa_percent</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.filter_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter data before processing them further
-All corresponding values in the Scan objects are set to NaN
-if the quality requirement is not met</p>
+<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">filter_data</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">qa_percent=50</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.filter_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensure minimum quality of data.
+Measurements for which the required quality is not met are set to NaN.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
