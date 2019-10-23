@@ -289,6 +289,23 @@ longitude and latitude.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="emissionsapi.db.insert">
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">insert</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">data</em>, <em class="sig-param">table_name='carbonmonoxide'</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Batch insert data into the database using PostGIS specific functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQL Alchemy Session</p></li>
+<li><p><strong>data</strong> (<em>list</em>) – List of dictionaries with entries for timestamp, longitude,
+latitude and value</p></li>
+<li><p><strong>table_name</strong> (<em>str</em>) – Name of database table to insert data into. Defaults to
+table for carbon monoxide values.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="emissionsapi.db.with_session">
 <code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">with_session</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.with_session" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper for f to make a SQLAlchemy session present within the function</p>
