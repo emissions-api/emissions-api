@@ -15,7 +15,7 @@ This is the main repository for the [Emissions API](https://emissions-api.org/).
 * [swagger-ui-bundle](https://pypi.org/project/swagger-ui-bundle/)
 * [geojson](https://pypi.org/project/geojson/)
 * PyYAML
-* [sebtinel5dl](https://github.com/emissions-api/sentinel5dl)
+* [sentinel5dl](https://github.com/emissions-api/sentinel5dl)
 * [python-dateutil](https://pypi.org/project/python-dateutil/)
 
 These can be installed by executing
