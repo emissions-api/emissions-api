@@ -17,6 +17,7 @@ import emissionsapi.db
 
 # Logger
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 # Path where to store the data
 storage = config('storage') or 'data'
@@ -27,6 +28,15 @@ LONGITUDE_NAME = '//PRODUCT/longitude'
 LATITUDE_NAME = '//PRODUCT/latitude'
 QA_VALUE_NAME = '//PRODUCT/qa_value'
 DELTA_TIME_NAME = '//PRODUCT/delta_time'
+
+
+def log(func):
+    def wrapper(*args, **kwargs):
+        logger.info('Starting {func}...'.format(func=func.__name__))
+        result = func(*args, **kwargs)
+        logger.info('Ended {func}.'.format(func=func.__name__))
+        return result
+    return wrapper
 
 
 class Scan():
@@ -59,6 +69,7 @@ def list_ncfiles(session):
             yield filepath
 
 
+@log
 def read_file(ncfile):
     """Read nc file, parse it using GDAL and return its result as a
     Scan object.
@@ -109,6 +120,7 @@ def read_file(ncfile):
     return scan
 
 
+@log
 def filter_data(data, qa_percent=50):
     """Ensure minimum quality of data.
     Measurements for which the required quality is not met are set to NaN.
@@ -127,6 +139,7 @@ def filter_data(data, qa_percent=50):
     return data
 
 
+@log
 @emissionsapi.db.with_session
 def write_to_database(session, data):
     """Write data to the PostGIS database
