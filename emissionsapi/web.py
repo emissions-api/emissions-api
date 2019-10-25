@@ -6,7 +6,7 @@
 the users.
 """
 import logging
-import datetime
+import dateutil.parser
 
 import connexion
 import geojson
@@ -49,14 +49,14 @@ def get_data(session, country=None, geoframe=None, begin=None, end=None):
     # Parse parameter begin
     try:
         if begin is not None:
-            begin = datetime.datetime.fromisoformat(begin)
+            begin = dateutil.parser.parse(begin)
     except ValueError:
         return 'Invalid begin', 400
 
     # Parse parameter end
     try:
         if end is not None:
-            end = datetime.datetime.fromisoformat(end)
+            end = dateutil.parser.parse(end)
     except ValueError:
         return 'Invalid end', 400
 
