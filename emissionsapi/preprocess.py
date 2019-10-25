@@ -102,7 +102,7 @@ def read_file(ncfile):
     timestamps = []
     for dt in deltatime:
         timestamps.append(
-            time_reference + relativedelta(microseconds=dt.item())
+            time_reference + relativedelta(microseconds=1e3*dt.item())
         )
     scan.timestamps = numpy.array(timestamps)
 
