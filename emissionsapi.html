@@ -333,6 +333,27 @@ table for carbon monoxide values.</p></li>
 directory.</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="emissionsapi.download.filtered_download">
+<code class="sig-prename descclassname">emissionsapi.download.</code><code class="sig-name descname">filtered_download</code><span class="sig-paren">(</span><em class="sig-param">polygon=None</em>, <em class="sig-param">begin_ts=None</em>, <em class="sig-param">end_ts=None</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.download.filtered_download" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download Sentinel 5 data from the ESA and store them in the data
+directory.
+The downloaded files are optionally filtered by location, start and end
+time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>polygon</strong> (<em>str</em><em>, </em><em>optional</em>) – WKT polygon specifying an area the data should intersect,
+defaults to None</p></li>
+<li><p><strong>begin_ts</strong> (<em>str</em><em>, </em><em>optional</em>) – ISO-8601 timestamp specifying the earliest sensing date,
+defaults to None</p></li>
+<li><p><strong>end_ts</strong> (<em>str</em><em>, </em><em>optional</em>) – ISO-8601 timestamp specifying the latest sensing date,
+defaults to None</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 <div class="section" id="module-emissionsapi.preprocess">
 <span id="emissionsapi-preprocess-module"></span><h2>emissionsapi.preprocess module<a class="headerlink" href="#module-emissionsapi.preprocess" title="Permalink to this headline">¶</a></h2>
