@@ -6,8 +6,6 @@ This is the main repository for the [Emissions API](https://emissions-api.org/).
 
 ## Prerequisites
 
-* numpy
-* gdal (C Library and Python bindings)
 * [SQLAlchemy](https://sqlalchemy.org)
 * [GeoAlchemy2](https://github.com/geoalchemy/geoalchemy2)
 * [psycopg2](https://pypi.org/project/psycopg2/)
@@ -16,6 +14,7 @@ This is the main repository for the [Emissions API](https://emissions-api.org/).
 * [geojson](https://pypi.org/project/geojson/)
 * PyYAML
 * [sentinel5dl](https://github.com/emissions-api/sentinel5dl)
+* [sentinel5algorithms](https://github.com/emissions-api/sentinel5algorithms)
 * [python-dateutil](https://pypi.org/project/python-dateutil/)
 
 These can be installed by executing
