@@ -7,10 +7,7 @@
 import logging
 import os
 
-import gdal
-import dateutil.parser
-from dateutil.relativedelta import relativedelta
-import numpy
+import s5a
 
 from emissionsapi.config import config
 import emissionsapi.db
@@ -20,24 +17,6 @@ logger = logging.getLogger(__name__)
 
 # Path where to store the data
 storage = config('storage') or 'data'
-
-# Specify the layer name to read
-LAYER_NAME = '//PRODUCT/carbonmonoxide_total_column'
-LONGITUDE_NAME = '//PRODUCT/longitude'
-LATITUDE_NAME = '//PRODUCT/latitude'
-QA_VALUE_NAME = '//PRODUCT/qa_value'
-DELTA_TIME_NAME = '//PRODUCT/delta_time'
-
-
-class Scan():
-    """Object to hold arrays from an nc file.
-    """
-    filename = None
-    data = None
-    longitude = None
-    latitude = None
-    quality = None
-    timestamps = None
 
 
 @emissionsapi.db.with_session
@@ -59,74 +38,6 @@ def list_ncfiles(session):
             yield filepath
 
 
-def read_file(ncfile):
-    """Read nc file, parse it using GDAL and return its result as a
-    Scan object.
-
-    :param ncfile: filename of the nc file
-    :type ncfile: string
-    :return: scan object
-    :rtype: emissionsapi.preprocess.Scan
-    """
-    # Create a new Scan Object
-    scan = Scan()
-
-    # Store filename
-    scan.filename = os.path.basename(ncfile)
-
-    # Get data, longitude, latitude and quality from nc file and
-    # create flattened numpy array from data
-    ds = gdal.Open(f'HDF5:{ncfile}:{LAYER_NAME}')
-    scan.data = ds.ReadAsArray()
-
-    ds = gdal.Open(f'HDF5:{ncfile}:{LONGITUDE_NAME}')
-    scan.longitude = ds.ReadAsArray()
-
-    ds = gdal.Open(f'HDF5:{ncfile}:{LATITUDE_NAME}')
-    scan.latitude = ds.ReadAsArray()
-
-    ds = gdal.Open(f'HDF5:{ncfile}:{QA_VALUE_NAME}')
-    scan.quality = ds.ReadAsArray()
-
-    ds = gdal.Open(f'HDF5:{ncfile}:{DELTA_TIME_NAME}')
-    deltatime = numpy.ndarray.flatten(ds.ReadAsArray())
-
-    ds = gdal.Open(f'{ncfile}')
-    meta_data = ds.GetMetadata_Dict()
-
-    # Get time reference from the meta data.
-    # Seems like there are named differently in the different gdal versions.
-    time_reference = dateutil.parser.parse(
-        meta_data.get('NC_GLOBAL#time_reference') or
-        meta_data['time_reference'])
-    timestamps = []
-    for dt in deltatime:
-        timestamps.append(
-            time_reference + relativedelta(microseconds=1e3*dt.item())
-        )
-    scan.timestamps = numpy.array(timestamps)
-
-    return scan
-
-
-def filter_data(data, qa_percent=50):
-    """Ensure minimum quality of data.
-    Measurements for which the required quality is not met are set to NaN.
-
-    :param data: scan object with data
-    :type data: emissionsapi.preprocess.Scan
-    :param qa_percent: quality to filter in percent
-    :type qa_percent: int
-    :return: scan object with filtered data
-    :rtype: emissionsapi.preprocess.Scan
-    """
-    # set all measurements to numpy.nan if the quality value is too low
-    data.data[data.quality < qa_percent] = numpy.nan
-
-    # return data
-    return data
-
-
 @emissionsapi.db.with_session
 def write_to_database(session, data):
     """Write data to the PostGIS database
@@ -136,27 +47,21 @@ def write_to_database(session, data):
     :param data: Data to add to the database
     :type data: emissionsapi.preprocess.Scan
     """
-    # Iterate through the data of the Scan object
-    shape = data.data.shape
-    scan_data = []
-    for i in range(shape[0]):
-        for j in range(shape[1]):
-
-            # Check if any of the data objects are set to NotANumber with
-            # filter_data() to skip writing them into the database
-            if (numpy.isfinite(data.data[i, j])):
-
-                # Add new carbon monoxide object to the session
-                scan_data.append({
-                    'value': float(data.data[i, j]),
-                    'longitude': float(data.longitude[i, j]),
-                    'latitude': float(data.latitude[i, j]),
-                    'timestamp': data.timestamps[i]
-                })
-    if scan_data:
-        emissionsapi.db.insert(session, scan_data)
-
-    session.add(emissionsapi.db.File(filename=data.filename))
+    # Iterate through the points of the Scan object
+    points = []
+    for point in data.points:
+        points.append({
+            'value': point.value,
+            'longitude': point.longitude,
+            'latitude': point.latitude,
+            'timestamp': point.timestamp
+        })
+    # Add all points
+    if points:
+        emissionsapi.db.insert(session, points)
+    # Add file to database
+    filename = os.path.basename(data.filepath)
+    session.add(emissionsapi.db.File(filename=filename))
     # Commit the changes done in the session
     session.commit()
 
@@ -169,11 +74,14 @@ def entrypoint():
     for ncfile in list_ncfiles():
         logger.info(f"Pre-process '{ncfile}'")
         # Read data from nc file
-        data = read_file(ncfile)
+        logger.info(f"Read file '{ncfile}'")
+        scan = s5a.Scan(ncfile)
+        logger.info(f"Filter {scan.len()} points by quality")
         # filter data for quality >=50
-        data = filter_data(data, 50)
+        scan.filter_by_quality(50)
+        logger.info(f"Write {scan.len()} points to database")
         # Write the filtered data to the database
-        write_to_database(data)
+        write_to_database(scan)
     pass
 
 
