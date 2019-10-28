@@ -1,15 +1,24 @@
 openapi: 3.0.0
 info:
   title: Emissions API
+  description: >-
+      Emissions API’s mission is to provide easy access to this data without
+      the need of being an expert in satellite data analysis and without having
+      to process terabytes of data.
   version: "0.1"
+  contact:
+    name: The Emissions API Developers
+    url: https://emissions-api.org
+    email: info@emissions-api.org
+externalDocs:
+  description: Source code documentation
+  url: https://docs.emissions-api.org
 paths:
   /api/v1/geo.json/:
     get:
       operationId: emissionsapi.web.get_data
       description: |
-          Get data in GeoJSON format.
-
-          You can only use one url parameter at a time.
+          Get all points in [GeoJSON](https://geojson.org/) format.
       parameters:
         - $ref: '#/components/parameters/geoframe'
         - $ref: '#/components/parameters/country'
@@ -33,7 +42,7 @@ components:
       schema:
         type: string
       description: |
-          `geoframe` will let use define your own rectangle from which the data is chosen.
+          `geoframe` will let you define your own rectangle from which the data is chosen.
           The Parameter must be in the form lo1,la1,lo2,la2 and represent the upper left and lower right corners of a rectangle.
       example: 15,45,20,40
     country:
@@ -41,7 +50,7 @@ components:
       name: country
       schema:
         type: string
-      description: "`country` will use a preselected rectangle countaing the specified country. Like 'DE'."
+      description: "`country` will use a preselected rectangle containing the specified country. Like 'DE'."
       example: DE
     begin:
       in: query
@@ -62,6 +71,9 @@ components:
   schemas:
     featurecollection:
       description: GeoJSON Feature Collection
+      externalDocs:
+        description: RFC7946
+        url: "https://tools.ietf.org/html/rfc7946#section-3.3"
       type: object
       example:
         features:
