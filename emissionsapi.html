@@ -358,43 +358,6 @@ defaults to None</p></li>
 <div class="section" id="module-emissionsapi.preprocess">
 <span id="emissionsapi-preprocess-module"></span><h2>emissionsapi.preprocess module<a class="headerlink" href="#module-emissionsapi.preprocess" title="Permalink to this headline">¶</a></h2>
 <p>Preprocess the locally stored data and store them in the database.</p>
-<dl class="class">
-<dt id="emissionsapi.preprocess.Scan">
-<em class="property">class </em><code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">Scan</code><a class="headerlink" href="#emissionsapi.preprocess.Scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Object to hold arrays from an nc file.</p>
-<dl class="attribute">
-<dt id="emissionsapi.preprocess.Scan.data">
-<code class="sig-name descname">data</code><em class="property"> = None</em><a class="headerlink" href="#emissionsapi.preprocess.Scan.data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="emissionsapi.preprocess.Scan.filename">
-<code class="sig-name descname">filename</code><em class="property"> = None</em><a class="headerlink" href="#emissionsapi.preprocess.Scan.filename" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="emissionsapi.preprocess.Scan.latitude">
-<code class="sig-name descname">latitude</code><em class="property"> = None</em><a class="headerlink" href="#emissionsapi.preprocess.Scan.latitude" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="emissionsapi.preprocess.Scan.longitude">
-<code class="sig-name descname">longitude</code><em class="property"> = None</em><a class="headerlink" href="#emissionsapi.preprocess.Scan.longitude" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="emissionsapi.preprocess.Scan.quality">
-<code class="sig-name descname">quality</code><em class="property"> = None</em><a class="headerlink" href="#emissionsapi.preprocess.Scan.quality" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="emissionsapi.preprocess.Scan.timestamps">
-<code class="sig-name descname">timestamps</code><em class="property"> = None</em><a class="headerlink" href="#emissionsapi.preprocess.Scan.timestamps" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 <dl class="function">
 <dt id="emissionsapi.preprocess.entrypoint">
 <code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">entrypoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.entrypoint" title="Permalink to this definition">¶</a></dt>
@@ -403,48 +366,9 @@ Triggers the preprocessing of the data.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="emissionsapi.preprocess.filter_data">
-<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">filter_data</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">qa_percent=50</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.filter_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ensure minimum quality of data.
-Measurements for which the required quality is not met are set to NaN.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<a class="reference internal" href="#emissionsapi.preprocess.Scan" title="emissionsapi.preprocess.Scan"><em>emissionsapi.preprocess.Scan</em></a>) – scan object with data</p></li>
-<li><p><strong>qa_percent</strong> (<em>int</em>) – quality to filter in percent</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>scan object with filtered data</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#emissionsapi.preprocess.Scan" title="emissionsapi.preprocess.Scan">emissionsapi.preprocess.Scan</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
 <dt id="emissionsapi.preprocess.list_ncfiles">
 <code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">list_ncfiles</code><span class="sig-paren">(</span><em class="sig-param">session</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.list_ncfiles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generator yielding all nc files in download path.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="emissionsapi.preprocess.read_file">
-<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">read_file</code><span class="sig-paren">(</span><em class="sig-param">ncfile</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.read_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read nc file, parse it using GDAL and return its result as a
-Scan object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ncfile</strong> (<em>string</em>) – filename of the nc file</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>scan object</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#emissionsapi.preprocess.Scan" title="emissionsapi.preprocess.Scan">emissionsapi.preprocess.Scan</a></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="function">
@@ -455,7 +379,7 @@ Scan object.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p></li>
-<li><p><strong>data</strong> (<a class="reference internal" href="#emissionsapi.preprocess.Scan" title="emissionsapi.preprocess.Scan"><em>emissionsapi.preprocess.Scan</em></a>) – Data to add to the database</p></li>
+<li><p><strong>data</strong> (<em>emissionsapi.preprocess.Scan</em>) – Data to add to the database</p></li>
 </ul>
 </dd>
 </dl>
