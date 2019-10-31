@@ -40,11 +40,15 @@ components:
       in: query
       name: geoframe
       schema:
-        type: string
+        type: array
+        items:
+          type: number
+        maxItems: 4
+        minItems: 4
       description: |
           `geoframe` will let you define your own rectangle from which the data is chosen.
           The Parameter must be in the form lo1,la1,lo2,la2 and represent the upper left and lower right corners of a rectangle.
-      example: 15,45,20,40
+      example: [15, 45, 20, 40]
     country:
       in: query
       name: country

@@ -36,8 +36,7 @@ def get_data(session, country=None, geoframe=None, begin=None, end=None):
     # Parse parameter geoframe
     if geoframe is not None:
         try:
-            rectangle = bounding_box_to_wkt(
-                *[float(x) for x in geoframe.split(',')])
+            rectangle = bounding_box_to_wkt(*geoframe)
         except ValueError:
             return 'Invalid geoparam', 400
     # parse parameter country
