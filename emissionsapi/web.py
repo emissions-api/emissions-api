@@ -19,6 +19,32 @@ from emissionsapi.utils import bounding_box_to_wkt
 logger = logging.getLogger(__name__)
 
 
+def parse_date(*keys):
+    """Function wrapper replacing string date arguments with
+    datetime.datetime
+
+    :param keys: keys to be parsed and replaced
+    :type keys: list
+    :return: wrapper function
+    :rtype: func
+    """
+    def wrap(f):
+        def wrapped_f(*args, **kwargs):
+            for key in keys:
+                logger.debug(f'Try to parse {key} as date')
+                date = kwargs.get(key)
+                if date is None:
+                    continue
+                try:
+                    kwargs[key] = dateutil.parser.parse(date)
+                except ValueError:
+                    return f'Invalid {key}', 400
+            return f(*args, **kwargs)
+        return wrapped_f
+    return wrap
+
+
+@parse_date('begin', 'end')
 @emissionsapi.db.with_session
 def get_data(session, country=None, geoframe=None, begin=None, end=None):
     """Get data in GeoJSON format.
@@ -45,20 +71,6 @@ def get_data(session, country=None, geoframe=None, begin=None, end=None):
         if country not in country_bounding_boxes:
             return 'Unknown country code.', 400
         rectangle = bounding_box_to_wkt(*country_bounding_boxes[country][1])
-
-    # Parse parameter begin
-    try:
-        if begin is not None:
-            begin = dateutil.parser.parse(begin)
-    except ValueError:
-        return 'Invalid begin', 400
-
-    # Parse parameter end
-    try:
-        if end is not None:
-            end = dateutil.parser.parse(end)
-    except ValueError:
-        return 'Invalid end', 400
 
     # Init feature list
     features = []
