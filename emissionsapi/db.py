@@ -203,3 +203,26 @@ def filter_query(query, polygon=None, begin=None, end=None):
         query = query.filter(end > Carbonmonoxide.timestamp)
 
     return query
+
+
+def limit_offset_query(query, limit=None, offset=None):
+    """Apply limit and offset to the query.
+
+    :param query: SQL Alchemy Query
+    :type query: sqlalchemy.orm.Query
+    :param limit: Limit number of Items returned, defaults to None
+    :type limit: int, optional
+    :param offset: Specify the offset of the first hit to return,
+                   defaults to None
+    :type offset: int, optional
+    :return: SQLAlchemy Query with limit and offset applied.
+    :rtype: sqlalchemy.orm.query.Query
+    """
+    # Apply limit
+    if limit is not None:
+        query = query.limit(limit)
+
+    # Apply offset
+    if offset is not None:
+        query = query.offset(offset)
+    return query

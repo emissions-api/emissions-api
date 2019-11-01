@@ -46,7 +46,8 @@ def parse_date(*keys):
 
 @parse_date('begin', 'end')
 @emissionsapi.db.with_session
-def get_data(session, country=None, geoframe=None, begin=None, end=None):
+def get_data(session, country=None, geoframe=None, begin=None, end=None,
+             limit=None, offset=None):
     """Get data in GeoJSON format.
 
     :param session: SQLAlchemy session
@@ -76,6 +77,10 @@ def get_data(session, country=None, geoframe=None, begin=None, end=None):
     # Iterate through database query
     query = emissionsapi.db.get_points(
         session, polygon=rectangle, begin=begin, end=end)
+    # Apply limit and offset
+    query = emissionsapi.db.limit_offset_query(
+        query, limit=limit, offset=offset)
+
     for obj, longitude, latitude in query:
         # Create and append single features.
         features.append(geojson.Feature(
@@ -91,7 +96,8 @@ def get_data(session, country=None, geoframe=None, begin=None, end=None):
 
 @parse_date('begin', 'end')
 @emissionsapi.db.with_session
-def get_average(session, country=None, geoframe=None, begin=None, end=None):
+def get_average(session, country=None, geoframe=None, begin=None, end=None,
+                limit=None, offset=None):
     rectangle = None
     # Parse parameter geoframe
     if geoframe is not None:
@@ -107,6 +113,9 @@ def get_average(session, country=None, geoframe=None, begin=None, end=None):
 
     query = emissionsapi.db.get_averages(
         session, polygon=rectangle, begin=begin, end=end)
+    # Apply limit and offset
+    query = emissionsapi.db.limit_offset_query(
+        query, limit=limit, offset=offset)
 
     result = []
     for avg, max_time, min_time, _ in query:
