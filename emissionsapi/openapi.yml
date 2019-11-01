@@ -33,6 +33,24 @@ paths:
                 $ref: '#/components/schemas/featurecollection'
         400:
           description: Parameter error
+  /api/v1/average.json:
+    get:
+      operationId: emissionsapi.web.get_average
+      description: Get daily average for a specified area filtered by time.
+      parameters:
+        - $ref: '#/components/parameters/geoframe'
+        - $ref: '#/components/parameters/country'
+        - $ref: '#/components/parameters/begin'
+        - $ref: '#/components/parameters/end'
+      responses:
+        200:
+          description: Array of calculated averages.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/averages'
+        400:
+          description: Parameter error
 
 components:
   parameters:
@@ -62,14 +80,14 @@ components:
       schema:
         type: string
       description: "`begin` filter out points before this date. The date itself is included."
-      example: 2019-09-10
+      example: 2019-02-10
     end:
       in: query
       name: end
       schema:
         type: string
       description: "`end` filter out points before this date. The date itself is not included."
-      example: 2019-09-11
+      example: 2019-02-11
 
 
   schemas:
@@ -96,3 +114,18 @@ components:
               timestamp: "2019-09-21T12:26:27.922000Z"
             type: Feature
         type: FeatureCollection
+    averages:
+      type: array
+      description: Array of average values.
+      items:
+        type: object
+        properties:
+          average:
+            type: number
+            example: 0.0312481193586528
+          start:
+            type: date-time
+            example: 2019-02-10T13:05:08.812000Z
+          end:
+            type: date-time
+            example: 2019-02-10T13:03:40.254000Z

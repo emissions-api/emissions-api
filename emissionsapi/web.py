@@ -89,6 +89,34 @@ def get_data(session, country=None, geoframe=None, begin=None, end=None):
     return feature_collection
 
 
+@parse_date('begin', 'end')
+@emissionsapi.db.with_session
+def get_average(session, country=None, geoframe=None, begin=None, end=None):
+    rectangle = None
+    # Parse parameter geoframe
+    if geoframe is not None:
+        try:
+            rectangle = bounding_box_to_wkt(*geoframe)
+        except ValueError:
+            return 'Invalid geoparam', 400
+    # parse parameter country
+    elif country is not None:
+        if country not in country_bounding_boxes:
+            return 'Unknown country code.', 400
+        rectangle = bounding_box_to_wkt(*country_bounding_boxes[country][1])
+
+    query = emissionsapi.db.get_averages(
+        session, polygon=rectangle, begin=begin, end=end)
+
+    result = []
+    for avg, max_time, min_time, _ in query:
+        result.append({
+            'average': avg,
+            'start': min_time,
+            'end': max_time})
+    return result
+
+
 # Create connexion app
 app = connexion.App(__name__)
 
