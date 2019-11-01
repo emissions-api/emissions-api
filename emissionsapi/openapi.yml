@@ -24,6 +24,8 @@ paths:
         - $ref: '#/components/parameters/country'
         - $ref: '#/components/parameters/begin'
         - $ref: '#/components/parameters/end'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
       responses:
         200:
           description: The Response contains all known points located within the specified rectangle contained in a GeoJSON feature collection.
@@ -42,6 +44,8 @@ paths:
         - $ref: '#/components/parameters/country'
         - $ref: '#/components/parameters/begin'
         - $ref: '#/components/parameters/end'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
       responses:
         200:
           description: Array of calculated averages.
@@ -54,6 +58,22 @@ paths:
 
 components:
   parameters:
+    limit:
+      in: query
+      name: limit
+      description: Limit number of Items returned.
+      schema:
+        type: integer
+        minimum: 0
+      example: 100
+    offset:
+      in: query
+      name: offset
+      description: Specify the offset of the first hit to return.
+      schema:
+        type: integer
+        minimum: 0
+      example: 100
     geoframe:
       in: query
       name: geoframe
