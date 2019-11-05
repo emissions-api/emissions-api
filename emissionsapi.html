@@ -254,6 +254,54 @@ locations taken into consideration are (in this particular order):</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="emissionsapi.db.filter_query">
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">filter_query</code><span class="sig-paren">(</span><em class="sig-param">query</em>, <em class="sig-param">polygon=None</em>, <em class="sig-param">begin=None</em>, <em class="sig-param">end=None</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.filter_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter query by time and location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query</strong> (<em>sqlalchemy.orm.Query</em>) – SQLAlchemy Query</p></li>
+<li><p><strong>polygon</strong> (<em>geoalchemy2.WKTElement</em><em>, </em><em>optional</em>) – Polygon specifying an area in which to search for points.
+Defaults to None</p></li>
+<li><p><strong>begin</strong> (<em>datetime.datetime</em><em>, </em><em>optional</em>) – Get only points after this timestamp, defaults to None</p></li>
+<li><p><strong>end</strong> (<em>datetime.datetime</em><em>, </em><em>optional</em>) – Get only points before this timestamp, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>SQLAlchemy Query filtered by time and location.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>sqlalchemy.orm.query.Query</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="emissionsapi.db.get_averages">
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_averages</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">polygon=None</em>, <em class="sig-param">begin=None</em>, <em class="sig-param">end=None</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_averages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get daily averages of all points filtered by time and location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQL Alchemy Session</p></li>
+<li><p><strong>polygon</strong> (<em>geoalchemy2.WKTElement</em><em>, </em><em>optional</em>) – Polygon specifying an area in which to search for points.
+Defaults to None</p></li>
+<li><p><strong>begin</strong> (<em>datetime.datetime</em><em>, </em><em>optional</em>) – Get only points after this timestamp, defaults to None</p></li>
+<li><p><strong>end</strong> (<em>datetime.datetime</em><em>, </em><em>optional</em>) – Get only points before this timestamp, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>SQLAlchemy Query with tuple of the daily carbon monoxide average,
+the maximal timestamp the minimal timestamp and the timestamp
+truncated by day.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>sqlalchemy.orm.query.Query</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="emissionsapi.db.get_points">
 <code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_points</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">polygon=None</em>, <em class="sig-param">begin=None</em>, <em class="sig-param">end=None</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all points filtered by time and location.</p>
@@ -397,6 +445,11 @@ the users.</p>
 It starts the Connexion Debug Server. It is not meant to be used for
 production, but only during the development.</p>
 </dd></dl>
+
+<dl class="function">
+<dt id="emissionsapi.web.get_average">
+<code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">get_average</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.get_average" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="emissionsapi.web.get_data">
