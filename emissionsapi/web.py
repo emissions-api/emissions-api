@@ -106,8 +106,8 @@ def get_data(session, country=None, geoframe=None, polygon=None,
 
 @parse_date('begin', 'end')
 @emissionsapi.db.with_session
-def get_average(session, country=None, geoframe=None, polygon=None,
-                begin=None, end=None, limit=None, offset=None):
+def get_daily(session, country=None, geoframe=None, polygon=None,
+              begin=None, end=None, limit=None, offset=None):
     wkt_polygon = None
     # Parse parameter geoframe
     if geoframe is not None:
@@ -127,19 +127,23 @@ def get_average(session, country=None, geoframe=None, polygon=None,
         except RESTParamError as err:
             return str(err), 400
 
-    query = emissionsapi.db.get_averages(
+    query = emissionsapi.db.get_daily(
         session, polygon=wkt_polygon, begin=begin, end=end)
     # Apply limit and offset
     query = emissionsapi.db.limit_offset_query(
         query, limit=limit, offset=offset)
-
-    result = []
-    for avg, max_time, min_time, _ in query:
-        result.append({
-            'average': avg,
-            'start': min_time,
-            'end': max_time})
-    return result
+    return [{'value': {
+                'count': count,
+                'average': avg,
+                'standard deviation': stddev,
+                'min': min_val,
+                'max': max_val},
+            'time': {
+                'start': min_time,
+                'end': max_time,
+                'day': day.strftime("%Y-%m-%d")}}
+            for count, avg, stddev, min_val, max_val, min_time, max_time, day
+            in query]
 
 
 # Create connexion app

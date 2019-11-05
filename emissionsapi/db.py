@@ -148,8 +148,9 @@ def get_points(session, polygon=None, begin=None, end=None):
     return filter_query(query, polygon=polygon, begin=begin, end=end)
 
 
-def get_averages(session, polygon=None, begin=None, end=None):
-    """Get daily averages of all points filtered by time and location.
+def get_daily(session, polygon=None, begin=None, end=None):
+    """Get daily amount, average, min, and max values. Additional time and
+    location filters can be applied.
 
     :param session: SQL Alchemy Session
     :type session: sqlalchemy.orm.session.Session
@@ -160,16 +161,20 @@ def get_averages(session, polygon=None, begin=None, end=None):
     :type begin: datetime.datetime, optional
     :param end: Get only points before this timestamp, defaults to None
     :type end: datetime.datetime, optional
-    :return: SQLAlchemy Query with tuple of the daily carbon monoxide average,
-             the maximal timestamp the minimal timestamp and the timestamp
-             truncated by day.
+    :return: SQLAlchemy Query requesting the daily amount, average, min, and
+             max carbon monoxide values, the time of the first measurement of
+             the day, the time of the last measurement of the day, and the day.
     :rtype: sqlalchemy.orm.query.Query
     """
     day = sqlalchemy.func.date_trunc('day', Carbonmonoxide.timestamp)
     query = session.query(
+        sqlalchemy.func.count(Carbonmonoxide.value),
         sqlalchemy.func.avg(Carbonmonoxide.value),
-        sqlalchemy.func.max(Carbonmonoxide.timestamp),
+        sqlalchemy.func.stddev(Carbonmonoxide.value),
+        sqlalchemy.func.min(Carbonmonoxide.value),
+        sqlalchemy.func.max(Carbonmonoxide.value),
         sqlalchemy.func.min(Carbonmonoxide.timestamp),
+        sqlalchemy.func.max(Carbonmonoxide.timestamp),
         day).group_by(day)
     return filter_query(query, polygon=polygon, begin=begin, end=end)
 

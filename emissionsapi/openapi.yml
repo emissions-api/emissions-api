@@ -35,18 +35,18 @@ paths:
         - $ref: '#/components/parameters/offset'
       responses:
         200:
-          description: The Response contains all known points located within the specified rectangle contained in a GeoJSON feature collection.
+          description: The response contains all known points located within the specified rectangle contained in a GeoJSON feature collection.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Feature Collection'
         400:
           description: Parameter error
-  /api/v1/average.json/:
+  /api/v1/daily.json:
     get:
-      operationId: emissionsapi.web.get_average
+      operationId: emissionsapi.web.get_daily
       description: |
-          Get daily average for a specified area filtered by time.
+          Get daily values for a specified area filtered by time.
 
           The parameters `geoframe`, `country` and `polygon` overwrite each other so that only one will be used even if multiple parameters are provided.
           The priority of the parameter is:
@@ -63,11 +63,11 @@ paths:
         - $ref: '#/components/parameters/offset'
       responses:
         200:
-          description: Array of calculated averages.
+          description: Array of daily carbon monoxide values.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Averages'
+                $ref: '#/components/schemas/Daily'
         400:
           description: Parameter error
 
@@ -76,7 +76,7 @@ components:
     limit:
       in: query
       name: limit
-      description: Limit number of Items returned.
+      description: Limit number of items returned.
       schema:
         type: integer
         minimum: 0
@@ -174,18 +174,39 @@ components:
                   type:  # This is the name of the key
                     type: string
                     example: "Point"
-    Averages:
+    Daily:
       type: array
-      description: Array of average values.
+      description: Array of daily carbon monoxide values.
       items:
         type: object
         properties:
-          average:
-            type: number
-            example: 0.0312481193586528
-          start:
-            type: date-time
-            example: 2019-02-10T13:05:08.812000Z
-          end:
-            type: date-time
-            example: 2019-02-10T13:03:40.254000Z
+          value:
+            type: object
+            properties:
+              count:
+                type: number
+                example: 100
+              average:
+                type: number
+                example: 0.0312481193586528
+              standard deviation:
+                type: number
+                example: 0.0123
+              min:
+                type: number
+                example: 0.02
+              max:
+                type: number
+                example: 0.04
+          time:
+            type: object
+            properties:
+              start:
+                type: date-time
+                example: 2019-02-10T13:05:08.812000Z
+              end:
+                type: date-time
+                example: 2019-02-10T13:03:40.254000Z
+              day:
+                type: date
+                example: 2019-02-10
