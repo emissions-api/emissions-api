@@ -33,15 +33,6 @@ jobs:
       script:
         - python -m emissionsapi.preprocess
 
-    - stage: quick tests
-      env: name=documentation
-      language: node_js
-      node_js: 11
-      install:
-        - npm install -g markdownlint-cli
-      script:
-        - markdownlint .
-
     - stage: deployment
       env: name=gh-pages
       addons:
