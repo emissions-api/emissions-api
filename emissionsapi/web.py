@@ -10,6 +10,7 @@ import dateutil.parser
 
 import connexion
 import geojson
+from flask import request, send_from_directory
 
 import emissionsapi.db
 from emissionsapi.country_bounding_boxes import country_bounding_boxes
@@ -125,6 +126,13 @@ app.add_api('openapi.yml', )
 
 # Create app to run with wsgi server
 application = app.app
+
+
+@app.route('/')
+@app.route('/style.css')
+def home():
+    filename = 'style.css' if request.path == '/style.css' else 'index.html'
+    return send_from_directory('web', filename)
 
 
 def entrypoint():
