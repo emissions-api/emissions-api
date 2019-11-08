@@ -32,10 +32,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/featurecollection'
+                $ref: '#/components/schemas/Feature Collection'
         400:
           description: Parameter error
-  /api/v1/average.json:
+  /api/v1/average.json/:
     get:
       operationId: emissionsapi.web.get_average
       description: Get daily average for a specified area filtered by time.
@@ -52,7 +52,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/averages'
+                $ref: '#/components/schemas/Averages'
         400:
           description: Parameter error
 
@@ -111,30 +111,41 @@ components:
 
 
   schemas:
-    featurecollection:
-      description: GeoJSON Feature Collection
-      externalDocs:
-        description: RFC7946
-        url: "https://tools.ietf.org/html/rfc7946#section-3.3"
+    Feature Collection:
+      description: Points as GeoJSON Feature Collection
       type: object
-      example:
+      properties:
         features:
-          - geometry:
-              coordinates: [15.096772, 44.516739]
-              type: Point
+          type: array
+          items:
+            type: object
             properties:
-              carbonmonixide: 0.0273975990712643
-              timestamp: "2019-09-21T12:26:28.762000Z"
-            type: Feature
-          - geometry:
-              coordinates: [15.063565, 44.561062]
-              type: Point
-            properties:
-              carbonmonixide: 0.0273975990712643
-              timestamp: "2019-09-21T12:26:27.922000Z"
-            type: Feature
-        type: FeatureCollection
-    averages:
+              type:  # This is the name of the key
+                type: string
+                example: FeatureCollection
+              properties:  # This is the name of the key
+                type: object
+                properties:
+                  carbonmonixide:
+                    type: number
+                    example: 0.0273975990712643
+                  timestamp:
+                    type: string
+                    example: "2019-09-21T12:26:28.762000Z"
+              geometry:
+                type: object
+                properties:
+                  coordinates:
+                    type: array
+                    maxItems: 2
+                    minItems: 2
+                    items:
+                      type: number
+                    example: [15.096772, 44.516739]
+                  type:  # This is the name of the key
+                    type: string
+                    example: "Point"
+    Averages:
       type: array
       description: Array of average values.
       items:
