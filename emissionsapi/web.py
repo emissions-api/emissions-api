@@ -10,6 +10,7 @@ import dateutil.parser
 
 import connexion
 import geojson
+from flask import redirect
 
 import emissionsapi.db
 from emissionsapi.country_bounding_boxes import country_bounding_boxes
@@ -134,6 +135,16 @@ app.add_api('openapi.yml', )
 
 # Create app to run with wsgi server
 application = app.app
+
+
+@app.route('/')
+def home():
+    """Redirect / to the swagger ui
+
+    :return: Redirect response
+    :rtype: werkzeug.wrappers.response.Response
+    """
+    return redirect('/ui', code=302)
 
 
 def entrypoint():
