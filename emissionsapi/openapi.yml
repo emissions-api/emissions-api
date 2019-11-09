@@ -19,9 +19,16 @@ paths:
       operationId: emissionsapi.web.get_data
       description: |
           Get all points in [GeoJSON](https://geojson.org/) format.
+
+          The parameters `geoframe`, `country` and `polygon` overwrite each other so that only one will be used even if multiple parameters are provided.
+          The priority of the parameter is:
+            1. geoframe
+            2. country
+            3. polygon
       parameters:
         - $ref: '#/components/parameters/geoframe'
         - $ref: '#/components/parameters/country'
+        - $ref: '#/components/parameters/polygon'
         - $ref: '#/components/parameters/begin'
         - $ref: '#/components/parameters/end'
         - $ref: '#/components/parameters/limit'
@@ -38,10 +45,18 @@ paths:
   /api/v1/average.json/:
     get:
       operationId: emissionsapi.web.get_average
-      description: Get daily average for a specified area filtered by time.
+      description: |
+          Get daily average for a specified area filtered by time.
+
+          The parameters `geoframe`, `country` and `polygon` overwrite each other so that only one will be used even if multiple parameters are provided.
+          The priority of the parameter is:
+            1. geoframe
+            2. country
+            3. polygon
       parameters:
         - $ref: '#/components/parameters/geoframe'
         - $ref: '#/components/parameters/country'
+        - $ref: '#/components/parameters/polygon'
         - $ref: '#/components/parameters/begin'
         - $ref: '#/components/parameters/end'
         - $ref: '#/components/parameters/limit'
@@ -94,6 +109,20 @@ components:
         type: string
       description: "`country` will use a preselected rectangle containing the specified country. Like 'DE'."
       example: DE
+    polygon:
+      in: query
+      name: polygon
+      schema:
+        type: array
+        items:
+          type: number
+        minItems: 3
+      description: |
+        The parameter must be in the form lo1,la1,lo2,la2,... and every pair of values represent a vertex of longitude and latitude.
+        The polygon is then defined as the line segments of the consecutive vertices.
+
+        If the first and last vertices do not match, the first vertex is automatically appended to close the polygon.
+      example: [30, 10, 40, 40, 20, 40, 10, 20, 30, 10]
     begin:
       in: query
       name: begin

@@ -14,7 +14,8 @@ from flask import redirect
 
 import emissionsapi.db
 from emissionsapi.country_bounding_boxes import country_bounding_boxes
-from emissionsapi.utils import bounding_box_to_wkt
+from emissionsapi.utils import bounding_box_to_wkt, polygon_to_wkt, \
+    RESTParamError
 
 # Logger
 logger = logging.getLogger(__name__)
@@ -47,8 +48,8 @@ def parse_date(*keys):
 
 @parse_date('begin', 'end')
 @emissionsapi.db.with_session
-def get_data(session, country=None, geoframe=None, begin=None, end=None,
-             limit=None, offset=None):
+def get_data(session, country=None, geoframe=None, polygon=None,
+             begin=None, end=None, limit=None, offset=None):
     """Get data in GeoJSON format.
 
     :param session: SQLAlchemy session
@@ -56,28 +57,36 @@ def get_data(session, country=None, geoframe=None, begin=None, end=None,
     :param country: 'country' url parameter
     :type country: string
     :param geoframe: 'geoframe' url parameter
-    :type geoframe: string
+    :type geoframe: list
+    :param polygon: 'polygon' url parameter
+    :type polygon: list
     :return: Feature Collection with requested Points
     :rtype: geojson.FeatureCollection
     """
-    rectangle = None
+    wkt_polygon = None
     # Parse parameter geoframe
     if geoframe is not None:
         try:
-            rectangle = bounding_box_to_wkt(*geoframe)
+            wkt_polygon = bounding_box_to_wkt(*geoframe)
         except ValueError:
             return 'Invalid geoparam', 400
     # parse parameter country
     elif country is not None:
         if country not in country_bounding_boxes:
             return 'Unknown country code.', 400
-        rectangle = bounding_box_to_wkt(*country_bounding_boxes[country][1])
+        wkt_polygon = bounding_box_to_wkt(*country_bounding_boxes[country][1])
+    # parse parameter polygon
+    elif polygon is not None:
+        try:
+            wkt_polygon = polygon_to_wkt(polygon)
+        except RESTParamError as err:
+            return str(err), 400
 
     # Init feature list
     features = []
     # Iterate through database query
     query = emissionsapi.db.get_points(
-        session, polygon=rectangle, begin=begin, end=end)
+        session, polygon=wkt_polygon, begin=begin, end=end)
     # Apply limit and offset
     query = emissionsapi.db.limit_offset_query(
         query, limit=limit, offset=offset)
@@ -97,23 +106,29 @@ def get_data(session, country=None, geoframe=None, begin=None, end=None,
 
 @parse_date('begin', 'end')
 @emissionsapi.db.with_session
-def get_average(session, country=None, geoframe=None, begin=None, end=None,
-                limit=None, offset=None):
-    rectangle = None
+def get_average(session, country=None, geoframe=None, polygon=None,
+                begin=None, end=None, limit=None, offset=None):
+    wkt_polygon = None
     # Parse parameter geoframe
     if geoframe is not None:
         try:
-            rectangle = bounding_box_to_wkt(*geoframe)
+            wkt_polygon = bounding_box_to_wkt(*geoframe)
         except ValueError:
             return 'Invalid geoparam', 400
     # parse parameter country
     elif country is not None:
         if country not in country_bounding_boxes:
             return 'Unknown country code.', 400
-        rectangle = bounding_box_to_wkt(*country_bounding_boxes[country][1])
+        wkt_polygon = bounding_box_to_wkt(*country_bounding_boxes[country][1])
+    # parse parameter polygon
+    elif polygon is not None:
+        try:
+            wkt_polygon = polygon_to_wkt(polygon)
+        except RESTParamError as err:
+            return str(err), 400
 
     query = emissionsapi.db.get_averages(
-        session, polygon=rectangle, begin=begin, end=end)
+        session, polygon=wkt_polygon, begin=begin, end=end)
     # Apply limit and offset
     query = emissionsapi.db.limit_offset_query(
         query, limit=limit, offset=offset)
