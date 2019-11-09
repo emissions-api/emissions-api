@@ -24,8 +24,9 @@ def configuration_file():
     '''
     if os.path.isfile('./emissionsapi.yml'):
         return './emissionsapi.yml'
-    if os.path.isfile('~/emissionsapi.yml'):
-        return '~/emissionsapi.yml'
+    expanded_file = os.path.expanduser('~/emissionsapi.yml')
+    if os.path.isfile(expanded_file):
+        return expanded_file
     if os.path.isfile('/etc/emissionsapi.yml'):
         return '/etc/emissionsapi.yml'
 
