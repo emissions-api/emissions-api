@@ -18,8 +18,8 @@ download:
     end: '2019-09-11T00:00:00.000Z'
 
   # List of two-letter country codes specifying the countries to request data
-  # for.
-  # Default: ['DE']
-  country:
-    - DE
-    - BE
+  # for. If none are specified, this filter is not applied.
+  # Default: None
+  #country:
+  #  - DE
+  #  - BE
