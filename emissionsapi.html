@@ -88,6 +88,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.db">emissionsapi.db module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.download">emissionsapi.download module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.preprocess">emissionsapi.preprocess module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.utils">emissionsapi.utils module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.web">emissionsapi.web module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi">Module contents</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#emissions-api">Emissions API</a></li>
@@ -451,6 +452,41 @@ Triggers the preprocessing of the data.</p>
 <li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p></li>
 <li><p><strong>data</strong> (<em>emissionsapi.preprocess.Scan</em>) – Data to add to the database</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-emissionsapi.utils">
+<span id="emissionsapi-utils-module"></span><h2>emissionsapi.utils module<a class="headerlink" href="#module-emissionsapi.utils" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="emissionsapi.utils.RESTParamError">
+<em class="property">exception </em><code class="sig-prename descclassname">emissionsapi.utils.</code><code class="sig-name descname">RESTParamError</code><a class="headerlink" href="#emissionsapi.utils.RESTParamError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+<p>User-specific exception, used in <a class="reference internal" href="#emissionsapi.utils.polygon_to_wkt" title="emissionsapi.utils.polygon_to_wkt"><code class="xref py py-func docutils literal notranslate"><span class="pre">polygon_to_wkt()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="emissionsapi.utils.bounding_box_to_wkt">
+<code class="sig-prename descclassname">emissionsapi.utils.</code><code class="sig-name descname">bounding_box_to_wkt</code><span class="sig-paren">(</span><em class="sig-param">lon1</em>, <em class="sig-param">lat1</em>, <em class="sig-param">lon2</em>, <em class="sig-param">lat2</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.utils.bounding_box_to_wkt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a bounding box specified by its top-left and bottom-right
+coordinates to a wkt string defining a polygon.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="emissionsapi.utils.polygon_to_wkt">
+<code class="sig-prename descclassname">emissionsapi.utils.</code><code class="sig-name descname">polygon_to_wkt</code><span class="sig-paren">(</span><em class="sig-param">polygon</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.utils.polygon_to_wkt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a list of points to a WKT string defining a polygon.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>polygon</strong> (<em>list</em>) – List of values with every pair of values representing a
+consecutive vertex of the polygon.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>WKT defining the polygon.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
