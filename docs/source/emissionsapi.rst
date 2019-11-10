@@ -41,6 +41,14 @@ emissionsapi.preprocess module
    :undoc-members:
    :show-inheritance:
 
+emissionsapi.utils module
+-------------------------
+
+.. automodule:: emissionsapi.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 emissionsapi.web module
 -----------------------
 
