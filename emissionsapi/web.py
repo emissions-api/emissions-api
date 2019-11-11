@@ -5,6 +5,7 @@
 """Web application to deliver the data stored in the database via an API to
 the users.
 """
+from functools import wraps
 import logging
 import dateutil.parser
 
@@ -46,42 +47,67 @@ def parse_date(*keys):
     return wrap
 
 
+def parse_wkt_polygon(f):
+    """Function wrapper replacing 'geoframe', 'country' and 'polygon' with a
+    WKT polygon.
+
+    :param f: Function to call
+    :type f: Function
+    :raises e: Possible exception of f
+    :return: Result of f
+    """
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        geoframe = kwargs.pop('geoframe', None)
+        country = kwargs.pop('country', None)
+        polygon = kwargs.pop('polygon', None)
+        # Parse parameter geoframe
+        if geoframe is not None:
+            try:
+                logger.debug('Try to parse geoframe')
+                kwargs['wkt_polygon'] = bounding_box_to_wkt(*geoframe)
+            except ValueError:
+                return 'Invalid geoparam', 400
+        # parse parameter country
+        elif country is not None:
+            logger.debug('Try to parse country')
+            if country not in country_bounding_boxes:
+                return 'Unknown country code.', 400
+            kwargs['wkt_polygon'] = bounding_box_to_wkt(
+                *country_bounding_boxes[country][1])
+        # parse parameter polygon
+        elif polygon is not None:
+            try:
+                logger.debug('Try to parse polygon')
+                kwargs['wkt_polygon'] = polygon_to_wkt(polygon)
+            except RESTParamError as err:
+                return str(err), 400
+        return f(*args, **kwargs)
+    return decorated
+
+
+@parse_wkt_polygon
 @parse_date('begin', 'end')
 @emissionsapi.db.with_session
-def get_data(session, country=None, geoframe=None, polygon=None,
-             begin=None, end=None, limit=None, offset=None):
+def get_data(session, wkt_polygon=None, begin=None, end=None, limit=None,
+             offset=None):
     """Get data in GeoJSON format.
 
     :param session: SQLAlchemy session
     :type session: sqlalchemy.orm.session.Session
-    :param country: 'country' url parameter
-    :type country: string
-    :param geoframe: 'geoframe' url parameter
-    :type geoframe: list
-    :param polygon: 'polygon' url parameter
-    :type polygon: list
+    :param wkt_polygon: WKT defining the polygon
+    :type wkt_polygon: string
+    :param begin: Filter out points before this date
+    :type begin: datetime.datetime
+    :param end: filter out points after this date
+    :type end: datetime.datetime
+    :param limit: Limit number of returned items
+    :type limit: int
+    :param offset: Specify the offset of the first item to return
+    :type offset: int
     :return: Feature Collection with requested Points
     :rtype: geojson.FeatureCollection
     """
-    wkt_polygon = None
-    # Parse parameter geoframe
-    if geoframe is not None:
-        try:
-            wkt_polygon = bounding_box_to_wkt(*geoframe)
-        except ValueError:
-            return 'Invalid geoparam', 400
-    # parse parameter country
-    elif country is not None:
-        if country not in country_bounding_boxes:
-            return 'Unknown country code.', 400
-        wkt_polygon = bounding_box_to_wkt(*country_bounding_boxes[country][1])
-    # parse parameter polygon
-    elif polygon is not None:
-        try:
-            wkt_polygon = polygon_to_wkt(polygon)
-        except RESTParamError as err:
-            return str(err), 400
-
     # Init feature list
     features = []
     # Iterate through database query
@@ -104,29 +130,29 @@ def get_data(session, country=None, geoframe=None, polygon=None,
     return feature_collection
 
 
+@parse_wkt_polygon
 @parse_date('begin', 'end')
 @emissionsapi.db.with_session
-def get_average(session, country=None, geoframe=None, polygon=None,
-                begin=None, end=None, limit=None, offset=None):
-    wkt_polygon = None
-    # Parse parameter geoframe
-    if geoframe is not None:
-        try:
-            wkt_polygon = bounding_box_to_wkt(*geoframe)
-        except ValueError:
-            return 'Invalid geoparam', 400
-    # parse parameter country
-    elif country is not None:
-        if country not in country_bounding_boxes:
-            return 'Unknown country code.', 400
-        wkt_polygon = bounding_box_to_wkt(*country_bounding_boxes[country][1])
-    # parse parameter polygon
-    elif polygon is not None:
-        try:
-            wkt_polygon = polygon_to_wkt(polygon)
-        except RESTParamError as err:
-            return str(err), 400
+def get_average(session, wkt_polygon=None, begin=None, end=None,
+                limit=None, offset=None):
+    """Get daily average for a specified area filtered by time.
 
+    :param session: SQLAlchemy session
+    :type session: sqlalchemy.orm.session.Session
+    :param wkt_polygon: WKT defining the polygon
+    :type wkt_polygon: string
+    :param begin: Filter out points before this date
+    :type begin: datetime.datetime
+    :param end: filter out points after this date
+    :type end: datetime.datetime
+    :param limit: Limit number of returned items
+    :type limit: int
+    :param offset: Specify the offset of the first item to return
+    :type offset: int
+    :return: List of calculated averages
+    :rtype: list
+    """
+    # Get averages
     query = emissionsapi.db.get_averages(
         session, polygon=wkt_polygon, begin=begin, end=end)
     # Apply limit and offset
