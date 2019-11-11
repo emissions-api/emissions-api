@@ -115,7 +115,7 @@ def insert(session, data, table_name=Carbonmonoxide.__table__.name):
     :param data: List of dictionaries with entries for timestamp, longitude,
                  latitude and value
     :type data: list
-    :param table_name: Name of database table to insert data into. Defaults to
+    :param table_name: Name of database table to insert data into, defaults to
                        table for carbon monoxide values.
     :type table_name: str
     '''
@@ -126,70 +126,46 @@ def insert(session, data, table_name=Carbonmonoxide.__table__.name):
     session.execute(statement, data)
 
 
-def get_points(session, polygon=None, begin=None, end=None):
-    """Get all points filtered by time and location.
+def get_points(session):
+    """Get all points.
 
     :param session: SQLAlchemy Session
     :type session: sqlalchemy.orm.session.Session
-    :param polygon: Polygon specifying an area in which to search for points.
-                    Defaults to None.
-    :type polygon: geoalchemy2.WKTElement, optional
-    :param begin: Get only points after this timestamp, defaults to None
-    :type begin: datetime.datetime, optional
-    :param end: datetime.datetime, defaults to None
-    :type end: Get only points before this timestamp, optional
     :return: SQLAlchemy Query with tuple of Carbonmonoxide object,
              longitude and latitude.
     :rtype: sqlalchemy.orm.query.Query
     """
-    query = session.query(
+    return session.query(
         Carbonmonoxide,
         Carbonmonoxide.geom.ST_X(),
         Carbonmonoxide.geom.ST_Y())
-    return filter_query(query, polygon=polygon, begin=begin, end=end)
 
 
-def get_averages(session, polygon=None, begin=None, end=None):
-    """Get daily averages of all points filtered by time and location.
+def get_averages(session):
+    """Get daily averages of all points.
 
     :param session: SQLAlchemy Session
     :type session: sqlalchemy.orm.session.Session
-    :param polygon: Polygon specifying an area in which to search for points.
-                    Defaults to None
-    :type polygon: geoalchemy2.WKTElement, optional
-    :param begin: Get only points after this timestamp, defaults to None
-    :type begin: datetime.datetime, optional
-    :param end: Get only points before this timestamp, defaults to None
-    :type end: datetime.datetime, optional
     :return: SQLAlchemy Query with tuple of the daily carbon monoxide average,
              the maximal timestamp the minimal timestamp and the timestamp
              truncated by day.
     :rtype: sqlalchemy.orm.query.Query
     """
     day = sqlalchemy.func.date(Carbonmonoxide.timestamp)
-    query = session.query(
+    return session.query(
         sqlalchemy.func.avg(Carbonmonoxide.value),
         sqlalchemy.func.max(Carbonmonoxide.timestamp),
         sqlalchemy.func.min(Carbonmonoxide.timestamp),
         day).group_by(day)
-    return filter_query(query, polygon=polygon, begin=begin, end=end)
 
 
-def get_statistics(session, polygon=None, begin=None, end=None,
-                   interval_length='day'):
+def get_statistics(session, interval_length='day'):
     """Get statistical data like amount, average, min, or max values for a
     specified time interval. Optionally, time and location filters can be
     applied.
 
     :param session: SQLAlchemy Session
     :type session: sqlalchemy.orm.session.Session
-    :param polygon: Polygon specifying an area in which to search for points.
-                    Defaults to None
-    :type polygon: geoalchemy2.WKTElement, optional
-    :param begin: Get only points after this timestamp, defaults to None
-    :type begin: datetime.datetime, optional
-    :param end: Get only points before this timestamp, defaults to None
-    :type end: datetime.datetime, optional
     :param interval_length: Length of the time interval for which data is being
                             aggregated as accepted by PostgreSQL's date_trunc_
                             function like ``day`` or ``week``.
@@ -210,7 +186,7 @@ def get_statistics(session, polygon=None, begin=None, end=None,
     """
     interval = sqlalchemy.func.date_trunc(interval_length,
                                           Carbonmonoxide.timestamp)
-    query = session.query(
+    return session.query(
         sqlalchemy.func.count(Carbonmonoxide.value),
         sqlalchemy.func.avg(Carbonmonoxide.value),
         sqlalchemy.func.stddev(Carbonmonoxide.value),
@@ -219,28 +195,35 @@ def get_statistics(session, polygon=None, begin=None, end=None,
         sqlalchemy.func.min(Carbonmonoxide.timestamp),
         sqlalchemy.func.max(Carbonmonoxide.timestamp),
         interval).group_by(interval)
-    return filter_query(query, polygon=polygon, begin=begin, end=end)
 
 
-def filter_query(query, polygon=None, begin=None, end=None):
+def filter_query(query, wkt=None, distance=None, begin=None, end=None):
     """Filter query by time and location.
 
     :param query: SQLAlchemy Query
     :type query: sqlalchemy.orm.Query
-    :param polygon: Polygon specifying an area in which to search for points.
-                    Defaults to None
-    :type polygon: geoalchemy2.WKTElement, optional
+    :param wkt: WKT Element specifying an area in which to search for points,
+                defaults to None.
+    :type wkt: geoalchemy2.WKTElement, optional
+    :param distance: Distance as defined in PostGIS' ST_DWithin_ function.
+    :type distance: float, optional
     :param begin: Get only points after this timestamp, defaults to None
     :type begin: datetime.datetime, optional
     :param end: Get only points before this timestamp, defaults to None
     :type end: datetime.datetime, optional
     :return: SQLAlchemy Query filtered by time and location.
     :rtype: sqlalchemy.orm.query.Query
+
+    .. _ST_DWithin: https://postgis.net/docs/ST_DWithin.html
     """
-    # Filter with polygon
-    if polygon is not None:
-        query = query.filter(geoalchemy2.func.ST_WITHIN(
-            Carbonmonoxide.geom, polygon))
+    # Filter by WKT
+    if wkt is not None:
+        if distance is not None:
+            query = query.filter(geoalchemy2.func.ST_DWITHIN(
+                Carbonmonoxide.geom, wkt, distance))
+        else:
+            query = query.filter(geoalchemy2.func.ST_WITHIN(
+                Carbonmonoxide.geom, wkt))
 
     # Filter for points after the time specified as begin
     if begin is not None:

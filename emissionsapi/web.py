@@ -48,7 +48,7 @@ def parse_date(*keys):
     return decorator
 
 
-def parse_wkt_polygon(f):
+def parse_wkt(f):
     """Function wrapper replacing 'geoframe', 'country' and 'polygon' with a
     WKT polygon.
 
@@ -62,11 +62,12 @@ def parse_wkt_polygon(f):
         geoframe = kwargs.pop('geoframe', None)
         country = kwargs.pop('country', None)
         polygon = kwargs.pop('polygon', None)
+        point = kwargs.pop('point', None)
         # Parse parameter geoframe
         if geoframe is not None:
             try:
                 logger.debug('Try to parse geoframe')
-                kwargs['wkt_polygon'] = bounding_box_to_wkt(*geoframe)
+                kwargs['wkt'] = bounding_box_to_wkt(*geoframe)
             except ValueError:
                 return 'Invalid geoparam', 400
         # parse parameter country
@@ -74,31 +75,43 @@ def parse_wkt_polygon(f):
             logger.debug('Try to parse country')
             if country not in country_bounding_boxes:
                 return 'Unknown country code.', 400
-            kwargs['wkt_polygon'] = bounding_box_to_wkt(
+            kwargs['wkt'] = bounding_box_to_wkt(
                 *country_bounding_boxes[country][1])
         # parse parameter polygon
         elif polygon is not None:
             try:
                 logger.debug('Try to parse polygon')
-                kwargs['wkt_polygon'] = polygon_to_wkt(polygon)
+                kwargs['wkt'] = polygon_to_wkt(polygon)
             except RESTParamError as err:
                 return str(err), 400
+        # parse paramter point
+        elif point is not None:
+            try:
+                logger.debug('Try to parse point')
+                kwargs['wkt'] = f'POINT({point[0]} {point[1]})'
+                # Take a radius from 0.2 decimal degree which are approx.
+                # 22264 meter
+                kwargs['distance'] = 0.2
+            except KeyError:
+                return 'Invalid point', 400
         return f(*args, **kwargs)
     return decorated
 
 
-@parse_wkt_polygon
+@parse_wkt
 @parse_date('begin', 'end')
 @emissionsapi.db.with_session
-def get_data(session, wkt_polygon=None, begin=None, end=None, limit=None,
-             offset=None, **kwargs):
+def get_data(session, wkt=None, distance=None, begin=None, end=None,
+             limit=None, offset=None, **kwargs):
     """Get data in GeoJSON format.
 
     :param session: SQLAlchemy session
     :type session: sqlalchemy.orm.session.Session
-    :param wkt_polygon: WKT defining the polygon
-    :type wkt_polygon: string
-    :param begin: Filter out points before this date
+    :param wkt: Well-known text representation of geometry, defaults to None.
+
+    :type wkt: string, optional
+    :param distance: Distance as defined in PostGIS' ST_DWithin_ function.
+    :type distance: float, optional
     :type begin: datetime.datetime
     :param end: filter out points after this date
     :type end: datetime.datetime
@@ -108,12 +121,16 @@ def get_data(session, wkt_polygon=None, begin=None, end=None, limit=None,
     :type offset: int
     :return: Feature Collection with requested Points
     :rtype: geojson.FeatureCollection
+
+    .. _ST_DWithin: https://postgis.net/docs/ST_DWithin.html
     """
     # Init feature list
     features = []
     # Iterate through database query
-    query = emissionsapi.db.get_points(
-        session, polygon=wkt_polygon, begin=begin, end=end)
+    query = emissionsapi.db.get_points(session)
+    # Filter result
+    query = emissionsapi.db.filter_query(
+        query, wkt=wkt, distance=distance, begin=begin, end=end)
     # Apply limit and offset
     query = emissionsapi.db.limit_offset_query(
         query, limit=limit, offset=offset)
@@ -131,17 +148,19 @@ def get_data(session, wkt_polygon=None, begin=None, end=None, limit=None,
     return feature_collection
 
 
-@parse_wkt_polygon
+@parse_wkt
 @parse_date('begin', 'end')
 @emissionsapi.db.with_session
-def get_average(session, wkt_polygon=None, begin=None, end=None,
+def get_average(session, wkt=None, distance=None, begin=None, end=None,
                 limit=None, offset=None, **kwargs):
     """Get daily average for a specified area filtered by time.
 
     :param session: SQLAlchemy session
     :type session: sqlalchemy.orm.session.Session
-    :param wkt_polygon: WKT defining the polygon
-    :type wkt_polygon: string
+    :param wkt: Well-known text representation of geometry, defaults to None.
+    :type wkt: string, optional
+    :param distance: Distance as defined in PostGIS' ST_DWithin_ function.
+    :type distance: float, optional
     :param begin: Filter out points before this date
     :type begin: datetime.datetime
     :param end: filter out points after this date
@@ -152,10 +171,13 @@ def get_average(session, wkt_polygon=None, begin=None, end=None,
     :type offset: int
     :return: List of calculated averages
     :rtype: list
+
+    .. _ST_DWithin: https://postgis.net/docs/ST_DWithin.html
     """
-    # Get averages
-    query = emissionsapi.db.get_averages(
-        session, polygon=wkt_polygon, begin=begin, end=end)
+    query = emissionsapi.db.get_averages(session)
+    # Filter result
+    query = emissionsapi.db.filter_query(
+        query, wkt=wkt, distance=distance, begin=begin, end=end)
     # Apply limit and offset
     query = emissionsapi.db.limit_offset_query(
         query, limit=limit, offset=offset)
@@ -169,11 +191,11 @@ def get_average(session, wkt_polygon=None, begin=None, end=None,
     return result
 
 
-@parse_wkt_polygon
+@parse_wkt
 @parse_date('begin', 'end')
 @emissionsapi.db.with_session
-def get_statistics(session, interval='day', wkt_polygon=None, begin=None,
-                   end=None, limit=None, offset=None, **kwargs):
+def get_statistics(session, interval='day', wkt=None, distance=None,
+                   begin=None, end=None, limit=None, offset=None, **kwargs):
     """Get statistical data like amount, average, min, or max values for a
     specified time interval. Optionally, time and location filters can be
     applied.
@@ -184,8 +206,10 @@ def get_statistics(session, interval='day', wkt_polygon=None, begin=None,
                      aggregated as accepted by PostgreSQL's date_trunc_
                      function like ``day`` or ``week``.
     :type interval: str
-    :param wkt_polygon: WKT defining the polygon
-    :type wkt_polygon: string
+    :param wkt: Well-known text representation of geometry, defaults to None.
+    :type wkt: string, optional
+    :param distance: Distance as defined in PostGIS' ST_DWithin_ function.
+    :type distance: float, optional
     :param begin: Filter out points before this date
     :type begin: datetime.datetime
     :param end: filter out points after this date
@@ -198,12 +222,16 @@ def get_statistics(session, interval='day', wkt_polygon=None, begin=None,
     :rtype: list
 
     .. _date_trunc: https://postgresql.org/docs/9.1/functions-datetime.html
+    .. _ST_DWithin: https://postgis.net/docs/ST_DWithin.html
     """
-    query = emissionsapi.db.get_statistics(session, wkt_polygon, begin, end,
-                                           interval)
+    query = emissionsapi.db.get_statistics(session)
+    # Filter result
+    query = emissionsapi.db.filter_query(
+        query, wkt=wkt, distance=distance, begin=begin, end=end)
     # Apply limit and offset
     query = emissionsapi.db.limit_offset_query(
         query, limit=limit, offset=offset)
+
     return [{'value': {
                 'count': count,
                 'average': avg,
