@@ -98,7 +98,8 @@ def get_session():
     global __session__
     # Create database connection, tables and Sessionmaker if neccessary.
     if not __session__:
-        Engine = create_engine(database)
+        Engine = create_engine(
+            database, echo=logger.getEffectiveLevel() == logging.DEBUG)
         __session__ = sessionmaker(bind=Engine)
         Base.metadata.create_all(Engine)
 
