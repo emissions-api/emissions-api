@@ -168,6 +168,55 @@ def get_average(session, wkt_polygon=None, begin=None, end=None,
     return result
 
 
+@parse_wkt_polygon
+@parse_date('begin', 'end')
+@emissionsapi.db.with_session
+def get_statistics(session, interval='day', wkt_polygon=None, begin=None,
+                   end=None, limit=None, offset=None):
+    """Get statistical data like amount, average, min, or max values for a
+    specified time interval. Optionally, time and location filters can be
+    applied.
+
+    :param session: SQLAlchemy session
+    :type session: sqlalchemy.orm.session.Session
+    :param interval: Length of the time interval for which data is being
+                     aggregated as accepted by PostgreSQL's date_trunc_
+                     function like ``day`` or ``week``.
+    :type interval: str
+    :param wkt_polygon: WKT defining the polygon
+    :type wkt_polygon: string
+    :param begin: Filter out points before this date
+    :type begin: datetime.datetime
+    :param end: filter out points after this date
+    :type end: datetime.datetime
+    :param limit: Limit number of returned items
+    :type limit: int
+    :param offset: Specify the offset of the first item to return
+    :type offset: int
+    :return: List of statistical values
+    :rtype: list
+
+    .. _date_trunc: https://postgresql.org/docs/9.1/functions-datetime.html
+    """
+    query = emissionsapi.db.get_statistics(session, wkt_polygon, begin, end,
+                                           interval)
+    # Apply limit and offset
+    query = emissionsapi.db.limit_offset_query(
+        query, limit=limit, offset=offset)
+    return [{'value': {
+                'count': count,
+                'average': avg,
+                'standard deviation': stddev,
+                'min': min_val,
+                'max': max_val},
+            'time': {
+                'min': min_time,
+                'max': max_time,
+                'interval_start': inter}}
+            for count, avg, stddev, min_val, max_val, min_time, max_time, inter
+            in query]
+
+
 # Create connexion app
 app = connexion.App(__name__)
 

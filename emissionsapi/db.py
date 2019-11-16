@@ -175,6 +175,53 @@ def get_averages(session, polygon=None, begin=None, end=None):
     return filter_query(query, polygon=polygon, begin=begin, end=end)
 
 
+def get_statistics(session, polygon=None, begin=None, end=None,
+                   interval_length='day'):
+    """Get statistical data like amount, average, min, or max values for a
+    specified time interval. Optionally, time and location filters can be
+    applied.
+
+    :param session: SQLAlchemy Session
+    :type session: sqlalchemy.orm.session.Session
+    :param polygon: Polygon specifying an area in which to search for points.
+                    Defaults to None
+    :type polygon: geoalchemy2.WKTElement, optional
+    :param begin: Get only points after this timestamp, defaults to None
+    :type begin: datetime.datetime, optional
+    :param end: Get only points before this timestamp, defaults to None
+    :type end: datetime.datetime, optional
+    :param interval_length: Length of the time interval for which data is being
+                            aggregated as accepted by PostgreSQL's date_trunc_
+                            function like ``day`` or ``week``.
+    :type interval_length: str
+    :return: SQLAlchemy Query requesting the following statistical values for
+             the specified time interval:
+
+             - number of considered measurements
+             - average carbon monoxide value
+             - minimum carbon monoxide value
+             - maximum carbon monoxide value
+             - time of the first measurement
+             - time of the last measurement
+             - start of the interval
+    :rtype: sqlalchemy.orm.query.Query
+
+    .. _date_trunc: https://postgresql.org/docs/9.1/functions-datetime.html
+    """
+    interval = sqlalchemy.func.date_trunc(interval_length,
+                                          Carbonmonoxide.timestamp)
+    query = session.query(
+        sqlalchemy.func.count(Carbonmonoxide.value),
+        sqlalchemy.func.avg(Carbonmonoxide.value),
+        sqlalchemy.func.stddev(Carbonmonoxide.value),
+        sqlalchemy.func.min(Carbonmonoxide.value),
+        sqlalchemy.func.max(Carbonmonoxide.value),
+        sqlalchemy.func.min(Carbonmonoxide.timestamp),
+        sqlalchemy.func.max(Carbonmonoxide.timestamp),
+        interval).group_by(interval)
+    return filter_query(query, polygon=polygon, begin=begin, end=end)
+
+
 def filter_query(query, polygon=None, begin=None, end=None):
     """Filter query by time and location.
 
