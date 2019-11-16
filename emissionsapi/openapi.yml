@@ -14,14 +14,14 @@ externalDocs:
   description: Source code documentation
   url: https://docs.emissions-api.org
 paths:
-  /api/v1/geo.json/:
+  /api/v1/geo.json:
     get:
       operationId: emissionsapi.web.get_data
       description: |
           Get all points in [GeoJSON](https://geojson.org/) format.
 
           The parameters `geoframe`, `country` and `polygon` overwrite each other so that only one will be used even if multiple parameters are provided.
-          The priority of the parameter is:
+          The order of parameter precedence is:
             1. geoframe
             2. country
             3. polygon
@@ -35,21 +35,21 @@ paths:
         - $ref: '#/components/parameters/offset'
       responses:
         200:
-          description: The Response contains all known points located within the specified rectangle contained in a GeoJSON feature collection.
+          description: The response contains all known points located within the specified rectangle contained in a GeoJSON feature collection.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Feature Collection'
         400:
           description: Parameter error
-  /api/v1/average.json/:
+  /api/v1/average.json:
     get:
       operationId: emissionsapi.web.get_average
       description: |
           Get daily average for a specified area filtered by time.
 
           The parameters `geoframe`, `country` and `polygon` overwrite each other so that only one will be used even if multiple parameters are provided.
-          The priority of the parameter is:
+          The order of parameter precedence is:
             1. geoframe
             2. country
             3. polygon
@@ -76,7 +76,7 @@ components:
     limit:
       in: query
       name: limit
-      description: Limit number of Items returned.
+      description: Limit number of returned items.
       schema:
         type: integer
         minimum: 0
@@ -84,11 +84,11 @@ components:
     offset:
       in: query
       name: offset
-      description: Specify the offset of the first hit to return.
+      description: Specify the offset of the first item to return.
       schema:
         type: integer
         minimum: 0
-      example: 100
+      example: '0'
     geoframe:
       in: query
       name: geoframe
@@ -99,15 +99,22 @@ components:
         maxItems: 4
         minItems: 4
       description: |
-          `geoframe` will let you define your own rectangle from which the data is chosen.
-          The Parameter must be in the form lo1,la1,lo2,la2 and represent the upper left and lower right corners of a rectangle.
+        Defines an area from which measurements included in the response are taken.
+
+        The parameter must be in the form `lon1,lat1,lon2,lat2`,
+        representing the upper left and lower right corners of a rectangle.
       example: [15, 45, 20, 40]
     country:
       in: query
       name: country
       schema:
         type: string
-      description: "`country` will use a preselected rectangle containing the specified country. Like 'DE'."
+      description: |
+        Specifies a bounding box of the specified country
+        from which measurements included in the response are taken.
+
+        The country is selected using an [ISO-3166, two-letter country code
+        ](https://www.iban.com/country-codes).
       example: DE
     polygon:
       in: query
@@ -116,9 +123,12 @@ components:
         type: array
         items:
           type: number
-        minItems: 3
+        minItems: 6
       description: |
-        The parameter must be in the form lo1,la1,lo2,la2,... and every pair of values represent a vertex of longitude and latitude.
+        Defines an area from which measurements included in the response are taken.
+
+        The parameter must be in the form `lon1,lat1,lon2,lat2,…`.
+        Every value pair represents a vertex of longitude and latitude.
         The polygon is then defined as the line segments of the consecutive vertices.
 
         If the first and last vertices do not match, the first vertex is automatically appended to close the polygon.
@@ -128,14 +138,22 @@ components:
       name: begin
       schema:
         type: string
-      description: "`begin` filter out points before this date. The date itself is included."
+      description: |
+        Defines an inclusive lower bound for measurements included in the response.
+
+        In regards of time filtering, the set of measurements considered in a response
+        is defined as `{ measurement | begin ≤ measurement.time < end }`.
       example: 2019-02-10
     end:
       in: query
       name: end
       schema:
         type: string
-      description: "`end` filter out points before this date. The date itself is not included."
+      description: |
+        Defines a non-inclusive upper bound for measurements included in the response.
+
+        In regards of time filtering, the set of measurements considered in a response
+        is defined as `{ measurement | begin ≤ measurement.time < end }`.
       example: 2019-02-11
 
 
@@ -176,7 +194,7 @@ components:
                     example: "Point"
     Averages:
       type: array
-      description: Array of average values.
+      description: Array of daily average values.
       items:
         type: object
         properties:
