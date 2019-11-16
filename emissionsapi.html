@@ -284,7 +284,7 @@ Defaults to None</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQL Alchemy Session</p></li>
+<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p></li>
 <li><p><strong>polygon</strong> (<em>geoalchemy2.WKTElement</em><em>, </em><em>optional</em>) – Polygon specifying an area in which to search for points.
 Defaults to None</p></li>
 <li><p><strong>begin</strong> (<em>datetime.datetime</em><em>, </em><em>optional</em>) – Get only points after this timestamp, defaults to None</p></li>
@@ -309,7 +309,7 @@ truncated by day.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQL Alchemy Session</p></li>
+<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p></li>
 <li><p><strong>polygon</strong> (<em>geoalchemy2.WKTElement</em><em>, </em><em>optional</em>) – Polygon specifying an area in which to search for points.
 Defaults to None.</p></li>
 <li><p><strong>begin</strong> (<em>datetime.datetime</em><em>, </em><em>optional</em>) – Get only points after this timestamp, defaults to None</p></li>
@@ -344,7 +344,7 @@ longitude and latitude.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQL Alchemy Session</p></li>
+<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p></li>
 <li><p><strong>data</strong> (<em>list</em>) – List of dictionaries with entries for timestamp, longitude,
 latitude and value</p></li>
 <li><p><strong>table_name</strong> (<em>str</em>) – Name of database table to insert data into. Defaults to
@@ -361,7 +361,7 @@ table for carbon monoxide values.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>query</strong> (<em>sqlalchemy.orm.Query</em>) – SQL Alchemy Query</p></li>
+<li><p><strong>query</strong> (<em>sqlalchemy.orm.Query</em>) – SQLAlchemy Query</p></li>
 <li><p><strong>limit</strong> (<em>int</em><em>, </em><em>optional</em>) – Limit number of Items returned, defaults to None</p></li>
 <li><p><strong>offset</strong> (<em>int</em><em>, </em><em>optional</em>) – Specify the offset of the first hit to return,
 defaults to None</p></li>
