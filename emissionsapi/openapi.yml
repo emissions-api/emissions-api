@@ -70,6 +70,35 @@ paths:
                 $ref: '#/components/schemas/Averages'
         400:
           description: Parameter error
+  /api/v1/statistics.json:
+    get:
+      operationId: emissionsapi.web.get_statistics
+      description: |
+          Get statistical values for specified time intervals.
+
+          The parameters `geoframe`, `country` and `polygon` overwrite each other so that only one will be used even if multiple parameters are provided.
+          The order of parameter precedence is:
+            1. geoframe
+            2. country
+            3. polygon
+      parameters:
+        - $ref: '#/components/parameters/interval'
+        - $ref: '#/components/parameters/geoframe'
+        - $ref: '#/components/parameters/country'
+        - $ref: '#/components/parameters/polygon'
+        - $ref: '#/components/parameters/begin'
+        - $ref: '#/components/parameters/end'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+      responses:
+        200:
+          description: Array of statistical data about carbon monoxide for specified intervals.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Statistics'
+        400:
+          description: Parameter error
 
 components:
   parameters:
@@ -89,6 +118,16 @@ components:
         type: integer
         minimum: 0
       example: '0'
+    interval:
+      in: query
+      name: interval
+      description: |
+        Specify the time interval length for which data is being aggregated.
+        Defaults to `day`.
+      schema:
+        type: string
+        enum: [minute, hour, day, week, month, quarter, year, decade, century]
+      example: day
     geoframe:
       in: query
       name: geoframe
@@ -194,7 +233,7 @@ components:
                     example: "Point"
     Averages:
       type: array
-      description: Array of daily average values.
+      description: Array of daily carbon monoxide values.
       items:
         type: object
         properties:
@@ -207,3 +246,39 @@ components:
           end:
             type: date-time
             example: 2019-02-10T13:03:40.254000Z
+    Statistics:
+      type: array
+      description: Array of statistical data about carbon monoxide for specified intervals.
+      items:
+        type: object
+        properties:
+          value:
+            type: object
+            properties:
+              count:
+                type: number
+                example: 100
+              average:
+                type: number
+                example: 0.0312481193586528
+              standard deviation:
+                type: number
+                example: 0.0123
+              min:
+                type: number
+                example: 0.02
+              max:
+                type: number
+                example: 0.04
+          time:
+            type: object
+            properties:
+              min:
+                type: date-time
+                example: 2019-02-10T13:05:08.812000Z
+              max:
+                type: date-time
+                example: 2019-02-10T13:03:40.254000Z
+              interval_start:
+                type: date-time
+                example: 2019-02-10T00:00:00Z
