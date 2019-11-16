@@ -338,6 +338,45 @@ longitude and latitude.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="emissionsapi.db.get_statistics">
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_statistics</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">polygon=None</em>, <em class="sig-param">begin=None</em>, <em class="sig-param">end=None</em>, <em class="sig-param">interval_length='day'</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_statistics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get statistical data like amount, average, min, or max values for a
+specified time interval. Optionally, time and location filters can be
+applied.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p></li>
+<li><p><strong>polygon</strong> (<em>geoalchemy2.WKTElement</em><em>, </em><em>optional</em>) – Polygon specifying an area in which to search for points.
+Defaults to None</p></li>
+<li><p><strong>begin</strong> (<em>datetime.datetime</em><em>, </em><em>optional</em>) – Get only points after this timestamp, defaults to None</p></li>
+<li><p><strong>end</strong> (<em>datetime.datetime</em><em>, </em><em>optional</em>) – Get only points before this timestamp, defaults to None</p></li>
+<li><p><strong>interval_length</strong> (<em>str</em>) – Length of the time interval for which data is being
+aggregated as accepted by PostgreSQL’s <a class="reference external" href="https://postgresql.org/docs/9.1/functions-datetime.html">date_trunc</a>
+function like <code class="docutils literal notranslate"><span class="pre">day</span></code> or <code class="docutils literal notranslate"><span class="pre">week</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>SQLAlchemy Query requesting the following statistical values for
+the specified time interval:</p>
+<ul class="simple">
+<li><p>number of considered measurements</p></li>
+<li><p>average carbon monoxide value</p></li>
+<li><p>minimum carbon monoxide value</p></li>
+<li><p>maximum carbon monoxide value</p></li>
+<li><p>time of the first measurement</p></li>
+<li><p>time of the last measurement</p></li>
+<li><p>start of the interval</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>sqlalchemy.orm.query.Query</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="emissionsapi.db.insert">
 <code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">insert</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">data</em>, <em class="sig-param">table_name='carbonmonoxide'</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.insert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Batch insert data into the database using PostGIS specific functions.</p>
@@ -512,6 +551,11 @@ production, but only during the development.</p>
 <dl class="function">
 <dt id="emissionsapi.web.get_data">
 <code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.get_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="emissionsapi.web.get_statistics">
+<code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">get_statistics</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.get_statistics" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
