@@ -166,7 +166,7 @@ def get_averages(session, polygon=None, begin=None, end=None):
              truncated by day.
     :rtype: sqlalchemy.orm.query.Query
     """
-    day = sqlalchemy.func.date_trunc('day', Carbonmonoxide.timestamp)
+    day = sqlalchemy.func.date(Carbonmonoxide.timestamp)
     query = session.query(
         sqlalchemy.func.avg(Carbonmonoxide.value),
         sqlalchemy.func.max(Carbonmonoxide.timestamp),
