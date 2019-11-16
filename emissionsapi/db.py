@@ -110,7 +110,7 @@ def get_session():
 def insert(session, data, table_name=Carbonmonoxide.__table__.name):
     '''Batch insert data into the database using PostGIS specific functions.
 
-    :param session: SQL Alchemy Session
+    :param session: SQLAlchemy Session
     :type session: sqlalchemy.orm.session.Session
     :param data: List of dictionaries with entries for timestamp, longitude,
                  latitude and value
@@ -129,7 +129,7 @@ def insert(session, data, table_name=Carbonmonoxide.__table__.name):
 def get_points(session, polygon=None, begin=None, end=None):
     """Get all points filtered by time and location.
 
-    :param session: SQL Alchemy Session
+    :param session: SQLAlchemy Session
     :type session: sqlalchemy.orm.session.Session
     :param polygon: Polygon specifying an area in which to search for points.
                     Defaults to None.
@@ -152,7 +152,7 @@ def get_points(session, polygon=None, begin=None, end=None):
 def get_averages(session, polygon=None, begin=None, end=None):
     """Get daily averages of all points filtered by time and location.
 
-    :param session: SQL Alchemy Session
+    :param session: SQLAlchemy Session
     :type session: sqlalchemy.orm.session.Session
     :param polygon: Polygon specifying an area in which to search for points.
                     Defaults to None
@@ -209,7 +209,7 @@ def filter_query(query, polygon=None, begin=None, end=None):
 def limit_offset_query(query, limit=None, offset=None):
     """Apply limit and offset to the query.
 
-    :param query: SQL Alchemy Query
+    :param query: SQLAlchemy Query
     :type query: sqlalchemy.orm.Query
     :param limit: Limit number of Items returned, defaults to None
     :type limit: int, optional
