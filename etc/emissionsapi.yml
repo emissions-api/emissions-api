@@ -6,6 +6,10 @@ database: postgresql://emissionsapi:emissionsapi@127.0.0.1/emissionsapi
 # Default: data
 storage: data
 
+# Configure the log level of the root logger.
+# Default: INFO
+#loglevel: INFO
+
 # Configure which data to download from the ESA archives
 download:
   date:

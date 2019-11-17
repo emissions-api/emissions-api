@@ -16,7 +16,10 @@ data analysis and without having to process terabytes of data.
 # See LICENSE fore more information.
 import logging
 
+from emissionsapi.config import config
+
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO,
+    level=config('loglevel') or logging.INFO,
 )
+logging.debug('Log level set to: %s', logging.getLogger().getEffectiveLevel())
