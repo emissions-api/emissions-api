@@ -26,9 +26,8 @@ def list_ncfiles(session):
     # Iterate through the files and directories in storage path
     for f in os.listdir(storage):
         # Check if file was already added
-        filename = session.query(emissionsapi.db.File).filter(
-            emissionsapi.db.File.filename == f).first()
-        if filename is not None:
+        if session.query(emissionsapi.db.File)\
+                  .filter(emissionsapi.db.File.filename == f).count():
             logger.info(f"Skipping {f}")
             continue
         # Join directory and filename
