@@ -4,6 +4,7 @@
 # See LICENSE fore more information.
 """Preprocess the locally stored data and store them in the database.
 """
+import datetime
 import logging
 import os
 
@@ -48,6 +49,8 @@ def write_to_database(session, data):
     """
     # Iterate through the points of the Scan object
     points = []
+    time_min = datetime.datetime.max
+    time_max = datetime.datetime.min
     for point in data.points:
         points.append({
             'value': point.value,
@@ -55,12 +58,18 @@ def write_to_database(session, data):
             'latitude': point.latitude,
             'timestamp': point.timestamp
         })
+        if point.timestamp > time_max:
+            time_max = point.timestamp
+        if point.timestamp < time_min:
+            time_min = point.timestamp
     # Add all points
     if points:
         emissionsapi.db.insert(session, points)
     # Add file to database
     filename = os.path.basename(data.filepath)
     session.add(emissionsapi.db.File(filename=filename))
+    # Invalidate cache
+    emissionsapi.db.Cache.invalidate(session, time_min, time_max)
     # Commit the changes done in the session
     session.commit()
 

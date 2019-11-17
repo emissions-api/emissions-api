@@ -9,7 +9,8 @@ from functools import wraps
 import logging
 
 import sqlalchemy
-from sqlalchemy import create_engine, Column, DateTime, Integer, Float, String
+from sqlalchemy import and_, or_, create_engine, Column, DateTime, Integer, \
+        Float, String, PickleType
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import text
@@ -39,6 +40,49 @@ class File(Base):
     __tablename__ = 'file'
     filename = Column(String, primary_key=True)
     """Name of processed data file"""
+
+
+class Cache(Base):
+    """ORM object for the request cache
+    """
+    __tablename__ = 'cache'
+    request = Column(String, primary_key=True)
+    """Primary key identifying the request"""
+    begin = Column(DateTime)
+    """Begin of the time interval involved in this request (used for
+    efficiently invalidating caches)
+    """
+    end = Column(DateTime)
+    """End of the time interval involved in this request (used for efficiently
+    invalidating caches)
+    """
+    response = Column(PickleType)
+    """Cached response"""
+
+    @classmethod
+    def invalidate(cache, session, earliest, latest):
+        """Invalidates/deletes all cached responses in the given interval to
+        ensure these data is generated anew. This is meant to be run when the
+        underlying data for this interval changes, for instance since new data
+        has been imported.
+
+        :param session: SQLAlchemy Session
+        :type session: sqlalchemy.orm.session.Session
+        :param earliest: Earliest time of the interval to invalidate
+        :type earliest: datetime.datetime
+        :param latest: Latest time of the interval to invalidate
+        :type latest: datetime.datetime
+
+        """
+        logger.debug('Invalidating cache in interval %s..%s',
+                     earliest.isoformat(), latest.isoformat())
+        session.query(cache)\
+               .filter(and_(or_(cache.begin.is_(None),
+                                cache.begin <= latest),
+                            or_(cache.end.is_(None),
+                                cache.end > earliest)))\
+               .delete()
+        session.commit()
 
 
 class Carbonmonoxide(Base):
