@@ -31,8 +31,9 @@ def parse_date(*keys):
     :return: wrapper function
     :rtype: func
     """
-    def wrap(f):
-        def wrapped_f(*args, **kwargs):
+    def decorator(function):
+        @wraps(function)
+        def wrapper(*args, **kwargs):
             for key in keys:
                 logger.debug(f'Try to parse {key} as date')
                 date = kwargs.get(key)
@@ -42,9 +43,9 @@ def parse_date(*keys):
                     kwargs[key] = dateutil.parser.parse(date)
                 except ValueError:
                     return f'Invalid {key}', 400
-            return f(*args, **kwargs)
-        return wrapped_f
-    return wrap
+            return function(*args, **kwargs)
+        return wrapper
+    return decorator
 
 
 def parse_wkt_polygon(f):
@@ -90,7 +91,7 @@ def parse_wkt_polygon(f):
 @parse_date('begin', 'end')
 @emissionsapi.db.with_session
 def get_data(session, wkt_polygon=None, begin=None, end=None, limit=None,
-             offset=None):
+             offset=None, **kwargs):
     """Get data in GeoJSON format.
 
     :param session: SQLAlchemy session
@@ -134,7 +135,7 @@ def get_data(session, wkt_polygon=None, begin=None, end=None, limit=None,
 @parse_date('begin', 'end')
 @emissionsapi.db.with_session
 def get_average(session, wkt_polygon=None, begin=None, end=None,
-                limit=None, offset=None):
+                limit=None, offset=None, **kwargs):
     """Get daily average for a specified area filtered by time.
 
     :param session: SQLAlchemy session
@@ -172,7 +173,7 @@ def get_average(session, wkt_polygon=None, begin=None, end=None,
 @parse_date('begin', 'end')
 @emissionsapi.db.with_session
 def get_statistics(session, interval='day', wkt_polygon=None, begin=None,
-                   end=None, limit=None, offset=None):
+                   end=None, limit=None, offset=None, **kwargs):
     """Get statistical data like amount, average, min, or max values for a
     specified time interval. Optionally, time and location filters can be
     applied.
