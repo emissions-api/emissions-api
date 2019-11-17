@@ -109,3 +109,21 @@ There is a simple ``docker-compose.yml`` file to make it easier to setup a
 database for development.
 
 You can also setup the database on your own.
+
+Database Migration
+^^^^^^^^^^^^^^^^^^
+
+For database migration we are using `Alembic <https://alembic.sqlalchemy.org/en/latest/>`_.
+If you have a database that is already on the latest database schema, just execute
+
+.. code-block:: bash
+
+   alembic stamp head
+
+to add the alembic metadata to the database and make it ready for later migration.
+
+If you want to migrate your database to the latest version, just execute
+
+.. code-block:: bash
+
+   alembic upgrade head

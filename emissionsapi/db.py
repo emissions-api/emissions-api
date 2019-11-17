@@ -40,6 +40,11 @@ psycopg2.extensions.register_adapter(
         lambda arr: psycopg2.extensions.adapt(list(arr)))
 
 
+class AlembicVersion(Base):
+    __tablename__ = 'alembic_version'
+    version_num = Column(String(32), primary_key=True)
+
+
 class File(Base):
     """ORM object for the nc files.
     """
@@ -99,7 +104,7 @@ class Carbonmonoxide(Base):
     """ Data sample identifier (primary key)"""
     value = Column(Float)
     """Carbon monoxide value"""
-    timestamp = Column(DateTime)
+    timestamp = Column(DateTime, index=True)
     """Timestamp of measurement"""
     geom = Column(geoalchemy2.Geometry(geometry_type="POINT"))
     """Location (PostGis type)"""
