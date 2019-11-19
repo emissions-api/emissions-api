@@ -30,7 +30,7 @@ def list_ncfiles(session):
         # Check if file was already added
         if session.query(emissionsapi.db.File)\
                   .filter(emissionsapi.db.File.filename == f).count():
-            logger.info(f"Skipping {f}")
+            logger.info("Skipping %s", f)
             continue
         # Join directory and filename
         filepath = os.path.join(storage, f)
@@ -81,14 +81,14 @@ def entrypoint():
     """
     # Iterate through all find nc files
     for ncfile in list_ncfiles():
-        logger.info(f"Pre-process '{ncfile}'")
+        logger.info("Pre-processing '%s'", ncfile)
         # Read data from nc file
-        logger.info(f"Read file '{ncfile}'")
+        logger.info("Reading file '%s'", ncfile)
         scan = s5a.Scan(ncfile)
-        logger.info(f"Filter {scan.len()} points by quality")
+        logger.info("Filtering %s points by quality", scan.len())
         # filter data for quality >=50
         scan.filter_by_quality(50)
-        logger.info(f"Write {scan.len()} points to database")
+        logger.info("Writing %s points to the database", scan.len())
         # Write the filtered data to the database
         write_to_database(scan)
     pass
