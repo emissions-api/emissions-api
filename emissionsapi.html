@@ -545,18 +545,80 @@ production, but only during the development.</p>
 
 <dl class="function">
 <dt id="emissionsapi.web.get_average">
-<code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">get_average</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.get_average" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">get_average</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">wkt_polygon=None</em>, <em class="sig-param">begin=None</em>, <em class="sig-param">end=None</em>, <em class="sig-param">limit=None</em>, <em class="sig-param">offset=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.get_average" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get daily average for a specified area filtered by time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy session</p></li>
+<li><p><strong>wkt_polygon</strong> (<em>string</em>) – WKT defining the polygon</p></li>
+<li><p><strong>begin</strong> (<em>datetime.datetime</em>) – Filter out points before this date</p></li>
+<li><p><strong>end</strong> (<em>datetime.datetime</em>) – filter out points after this date</p></li>
+<li><p><strong>limit</strong> (<em>int</em>) – Limit number of returned items</p></li>
+<li><p><strong>offset</strong> (<em>int</em>) – Specify the offset of the first item to return</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of calculated averages</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="emissionsapi.web.get_data">
-<code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.get_data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">wkt_polygon=None</em>, <em class="sig-param">begin=None</em>, <em class="sig-param">end=None</em>, <em class="sig-param">limit=None</em>, <em class="sig-param">offset=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.get_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get data in GeoJSON format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy session</p></li>
+<li><p><strong>wkt_polygon</strong> (<em>string</em>) – WKT defining the polygon</p></li>
+<li><p><strong>begin</strong> (<em>datetime.datetime</em>) – Filter out points before this date</p></li>
+<li><p><strong>end</strong> (<em>datetime.datetime</em>) – filter out points after this date</p></li>
+<li><p><strong>limit</strong> (<em>int</em>) – Limit number of returned items</p></li>
+<li><p><strong>offset</strong> (<em>int</em>) – Specify the offset of the first item to return</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Feature Collection with requested Points</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>geojson.FeatureCollection</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="emissionsapi.web.get_statistics">
-<code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">get_statistics</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.get_statistics" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">get_statistics</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">interval='day'</em>, <em class="sig-param">wkt_polygon=None</em>, <em class="sig-param">begin=None</em>, <em class="sig-param">end=None</em>, <em class="sig-param">limit=None</em>, <em class="sig-param">offset=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.get_statistics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get statistical data like amount, average, min, or max values for a
+specified time interval. Optionally, time and location filters can be
+applied.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy session</p></li>
+<li><p><strong>interval</strong> (<em>str</em>) – Length of the time interval for which data is being
+aggregated as accepted by PostgreSQL’s <a class="reference external" href="https://postgresql.org/docs/9.1/functions-datetime.html">date_trunc</a>
+function like <code class="docutils literal notranslate"><span class="pre">day</span></code> or <code class="docutils literal notranslate"><span class="pre">week</span></code>.</p></li>
+<li><p><strong>wkt_polygon</strong> (<em>string</em>) – WKT defining the polygon</p></li>
+<li><p><strong>begin</strong> (<em>datetime.datetime</em>) – Filter out points before this date</p></li>
+<li><p><strong>end</strong> (<em>datetime.datetime</em>) – filter out points after this date</p></li>
+<li><p><strong>limit</strong> (<em>int</em>) – Limit number of returned items</p></li>
+<li><p><strong>offset</strong> (<em>int</em>) – Specify the offset of the first item to return</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of statistical values</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="emissionsapi.web.home">
