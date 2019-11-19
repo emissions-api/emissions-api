@@ -36,7 +36,7 @@ def parse_date(*keys):
         @wraps(function)
         def wrapper(*args, **kwargs):
             for key in keys:
-                logger.debug(f'Try to parse {key} as date')
+                logger.debug('Try parsing %s as date', key)
                 date = kwargs.get(key)
                 if date is None:
                     continue
@@ -67,13 +67,13 @@ def parse_wkt(f):
         # Parse parameter geoframe
         if geoframe is not None:
             try:
-                logger.debug('Try to parse geoframe')
+                logger.debug('Try parsing geoframe')
                 kwargs['wkt'] = bounding_box_to_wkt(*geoframe)
             except ValueError:
                 return 'Invalid geoparam', 400
         # parse parameter country
         elif country is not None:
-            logger.debug('Try to parse country')
+            logger.debug('Try parsing country')
             if country not in country_bounding_boxes:
                 return 'Unknown country code.', 400
             kwargs['wkt'] = bounding_box_to_wkt(
@@ -81,7 +81,7 @@ def parse_wkt(f):
         # parse parameter polygon
         elif polygon is not None:
             try:
-                logger.debug('Try to parse polygon')
+                logger.debug('Try parsing polygon')
                 kwargs['wkt'] = polygon_to_wkt(polygon)
             except RESTParamError as err:
                 return str(err), 400

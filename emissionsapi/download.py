@@ -49,7 +49,7 @@ def filtered_download(polygon=None, begin_ts=None, end_ts=None):
             end_ts=end_ts,
             product=product,
             processing_level=processing_level)
-    logger.info('Found {0} products'.format(len(result.get('products'))))
+    logger.info('Found %s products', len(result.get('products')))
 
     # Download data
     sentinel5dl.download(result.get('products'), output_dir=storage)
@@ -71,8 +71,8 @@ def download():
     os.makedirs(storage, exist_ok=True)
 
     if countries is None:
-        logger.info(
-            f'Looking for products between {date_begin} and {date_end}.')
+        logger.info('Looking for products between %s and %s.',
+                    date_begin, date_end)
         filtered_download(
             begin_ts=date_begin,
             end_ts=date_end,
@@ -81,9 +81,8 @@ def download():
 
     for country in countries:
         polygon = bounding_box_to_wkt(*country_bounding_boxes[country][1])
-        logger.info(
-            f'Looking for products in country {country} '
-            f'between {date_begin} and {date_end}.')
+        logger.info('Looking for products in country %s between %s and %s.',
+                    country, date_begin, date_end)
         filtered_download(
             polygon=polygon,
             begin_ts=date_begin,
