@@ -7,6 +7,7 @@
 import datetime
 import logging
 import os
+from dateutil import tz
 
 import s5a
 
@@ -49,8 +50,8 @@ def write_to_database(session, data):
     """
     # Iterate through the points of the Scan object
     points = []
-    time_min = datetime.datetime.max
-    time_max = datetime.datetime.min
+    time_min = datetime.datetime.now().astimezone(tz.tzutc())
+    time_max = datetime.datetime.fromtimestamp(0).astimezone(tz.tzutc())
     for point in data.points:
         points.append({
             'value': point.value,
