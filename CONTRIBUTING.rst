@@ -57,7 +57,7 @@ A reviewer will be assigned to your pull request to ensure that there are no iss
 Once everything is fine, the reviewer will merge the pull request.
 Please communicate with the reviewer to address any issues.
 
-Please remember that reviews are only human as well.
+Please remember that reviewers are only human as well.
 
 
 Merging
