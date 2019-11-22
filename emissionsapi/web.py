@@ -99,61 +99,53 @@ def parse_wkt(f):
     return decorated
 
 
-def cache_with_session(begin_name=None, end_name=None):
-    """Function decorator caching responses based on their request parameters
-    in the PostgreSQL database.
+def cache_with_session(function):
+    """Function wrapper caching responses based on their request parameters in
+    the PostgreSQL database.
 
     The established database session is passed to the wrapped function as first
     argument much like :func:`~emissionsapi.db.with_session` in case no cached
     value for this request is present yet.
 
-    Argument names for the beginning and the end of a time frame can be passed
-    to this decorator. They will automatically be parsed as datetime and stored
-    alongside the cached data to determine if the cached values needs to be
-    purged when importing new data.
+    Argument names for beginning and end of a time frame affecting the cache
+    are automatically assumed to be named ``begin`` and ``end``.  These are
+    stored alongside the cached data to determine if the cached values needs to
+    be purged when importing new data.
 
-    :param begin_name: Name of the argument containing the value defining the
-                       beginning of the requested time frame.
-    :type begin_name: string
-    :param end_name: Name of the argument containing the value defining the end
-                     of the requested time frame.
-    :type end_name: string
-    :return: decorator
+    :return: Function wrapper
     :rtype: func
     """
-    def decorator(function):
-        date_args = [x for x in [begin_name, end_name] if x]
+    date_args = [x for x in ['begin', 'end'] if x]
 
-        @parse_date(*date_args)
-        @emissionsapi.db.with_session
-        @wraps(function)
-        def wrapper(session, *args, **kwargs):
-            # Internal parameter for debugging possible future cache problems
-            # Deliberately not publishing this via OpenAPI specification
-            if request.args.get('cache', '1').lower() in ['false', 'no', '0']:
-                return function(session, *args, **kwargs)
-            # get time frame parameters
-            begin = begin_name and kwargs.get(begin_name)
-            end = end_name and kwargs.get(end_name)
+    @parse_date(*date_args)
+    @emissionsapi.db.with_session
+    @wraps(function)
+    def wrapper(session, *args, **kwargs):
+        # Internal parameter for debugging possible future cache problems
+        # Deliberately not publishing this via OpenAPI specification
+        if request.args.get('cache', '1').lower() in ['false', 'no', '0']:
+            return function(session, *args, **kwargs)
+        # get time frame parameters
+        begin = kwargs.get('begin')
+        end = kwargs.get('end')
 
-            # construct a primary key for this request
-            req = json.dumps((request.path, request.args), sort_keys=True)
-            for cache in session.query(emissionsapi.db.Cache)\
-                                .filter(emissionsapi.db.Cache.request == req):
-                logger.debug('Using cache')
-                return cache.response
+        # construct a primary key for this request
+        req = json.dumps((request.path, request.args), sort_keys=True)
+        for cache in session.query(emissionsapi.db.Cache)\
+                            .filter(emissionsapi.db.Cache.request == req):
+            logger.debug('Using cache')
+            return cache.response
 
-            # not in cache, put in cache
-            result = function(session, *args, **kwargs)
-            session.add(emissionsapi.db.Cache(
-                request=req,
-                begin=begin,
-                end=end,
-                response=result))
-            session.commit()
-            return result
-        return wrapper
-    return decorator
+        # not in cache, put in cache
+        result = function(session, *args, **kwargs)
+        session.add(emissionsapi.db.Cache(
+            request=req,
+            begin=begin,
+            end=end,
+            response=result))
+        session.commit()
+        return result
+    return wrapper
 
 
 @parse_wkt
@@ -207,7 +199,7 @@ def get_data(session, wkt=None, distance=None, begin=None, end=None,
 
 
 @parse_wkt
-@cache_with_session('begin', 'end')
+@cache_with_session
 def get_average(session, wkt=None, distance=None, begin=None, end=None,
                 limit=None, offset=None, **kwargs):
     """Get daily average for a specified area filtered by time.
@@ -249,7 +241,7 @@ def get_average(session, wkt=None, distance=None, begin=None, end=None,
 
 
 @parse_wkt
-@cache_with_session('begin', 'end')
+@cache_with_session
 def get_statistics(session, interval='day', wkt=None, distance=None,
                    begin=None, end=None, limit=None, offset=None, **kwargs):
     """Get statistical data like amount, average, min, or max values for a
