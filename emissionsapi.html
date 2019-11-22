@@ -211,6 +211,57 @@ locations taken into consideration are (in this particular order):</p>
 <span id="emissionsapi-db-module"></span><h2>emissionsapi.db module<a class="headerlink" href="#module-emissionsapi.db" title="Permalink to this headline">¶</a></h2>
 <p>Database layer for the Emmission API.</p>
 <dl class="class">
+<dt id="emissionsapi.db.Cache">
+<em class="property">class </em><code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">Cache</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.Cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<p>ORM object for the request cache</p>
+<dl class="attribute">
+<dt id="emissionsapi.db.Cache.begin">
+<code class="sig-name descname">begin</code><a class="headerlink" href="#emissionsapi.db.Cache.begin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Begin of the time interval involved in this request (used for
+efficiently invalidating caches)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="emissionsapi.db.Cache.end">
+<code class="sig-name descname">end</code><a class="headerlink" href="#emissionsapi.db.Cache.end" title="Permalink to this definition">¶</a></dt>
+<dd><p>End of the time interval involved in this request (used for efficiently
+invalidating caches)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="emissionsapi.db.Cache.invalidate">
+<em class="property">classmethod </em><code class="sig-name descname">invalidate</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">earliest</em>, <em class="sig-param">latest</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.Cache.invalidate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invalidates/deletes all cached responses in the given interval to
+ensure these data is generated anew. This is meant to be run when the
+underlying data for this interval changes, for instance since new data
+has been imported.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p></li>
+<li><p><strong>earliest</strong> (<em>datetime.datetime</em>) – Earliest time of the interval to invalidate</p></li>
+<li><p><strong>latest</strong> (<em>datetime.datetime</em>) – Latest time of the interval to invalidate</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="emissionsapi.db.Cache.request">
+<code class="sig-name descname">request</code><a class="headerlink" href="#emissionsapi.db.Cache.request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Primary key identifying the request</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="emissionsapi.db.Cache.response">
+<code class="sig-name descname">response</code><a class="headerlink" href="#emissionsapi.db.Cache.response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cached response</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="emissionsapi.db.Carbonmonoxide">
 <em class="property">class </em><code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">Carbonmonoxide</code><span class="sig-paren">(</span><em class="sig-param">value</em>, <em class="sig-param">longitude</em>, <em class="sig-param">latitude</em>, <em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.Carbonmonoxide" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
@@ -520,6 +571,28 @@ consecutive vertex of the polygon.</p>
 <span id="emissionsapi-web-module"></span><h2>emissionsapi.web module<a class="headerlink" href="#module-emissionsapi.web" title="Permalink to this headline">¶</a></h2>
 <p>Web application to deliver the data stored in the database via an API to
 the users.</p>
+<dl class="function">
+<dt id="emissionsapi.web.cache_with_session">
+<code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">cache_with_session</code><span class="sig-paren">(</span><em class="sig-param">function</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.cache_with_session" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function wrapper caching responses based on their request parameters in
+the PostgreSQL database.</p>
+<p>The established database session is passed to the wrapped function as first
+argument much like <a class="reference internal" href="#emissionsapi.db.with_session" title="emissionsapi.db.with_session"><code class="xref py py-func docutils literal notranslate"><span class="pre">with_session()</span></code></a> in case no cached
+value for this request is present yet.</p>
+<p>Argument names for beginning and end of a time frame affecting the cache
+are automatically assumed to be named <code class="docutils literal notranslate"><span class="pre">begin</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code>.  These are
+stored alongside the cached data to determine if the cached values needs to
+be purged when importing new data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Function wrapper</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>func</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="function">
 <dt id="emissionsapi.web.entrypoint">
 <code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">entrypoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.entrypoint" title="Permalink to this definition">¶</a></dt>
