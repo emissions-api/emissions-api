@@ -20,12 +20,8 @@ paths:
       description: |
           Get all points in [GeoJSON](https://geojson.org/) format.
 
-          The parameters `geoframe`, `country`, `polygon` and `point` overwrite each other so that only one will be used even if multiple parameters are provided.
-          The order of parameter precedence is:
-            1. geoframe
-            2. country
-            3. polygon
-            4. point
+          The parameters `geoframe`, `country`, `polygon` and `point` are mutually exclusive.
+          Providing one of these parameters is mandatory.
       parameters:
         - $ref: '#/components/parameters/product'
         - $ref: '#/components/parameters/geoframe'
@@ -51,12 +47,8 @@ paths:
       description: |
           Get daily average for a specified area filtered by time.
 
-          The parameters `geoframe`, `country`, `polygon` and `point` overwrite each other so that only one will be used even if multiple parameters are provided.
-          The order of parameter precedence is:
-            1. geoframe
-            2. country
-            3. polygon
-            4. point
+          The parameters `geoframe`, `country`, `polygon` and `point` are mutually exclusive.
+          Providing one of these parameters is mandatory.
       parameters:
         - $ref: '#/components/parameters/product'
         - $ref: '#/components/parameters/geoframe'
@@ -82,12 +74,8 @@ paths:
       description: |
           Get statistical values for specified time intervals.
 
-          The parameters `geoframe`, `country`, `polygon` and `point` overwrite each other so that only one will be used even if multiple parameters are provided.
-          The order of parameter precedence is:
-            1. geoframe
-            2. country
-            3. polygon
-            4. point
+          The parameters `geoframe`, `country`, `polygon` and `point` are mutually exclusive.
+          Providing one of these parameters is mandatory.
       parameters:
         - $ref: '#/components/parameters/product'
         - $ref: '#/components/parameters/geoframe'
@@ -182,9 +170,8 @@ components:
       description: |
         Defines an area from which measurements included in the response are taken.
 
-        The parameter must be in the form `lon1,lat1,lon2,lat2`,
+        The parameter is an array in the form `lon1,lat1,lon2,lat2`,
         representing the upper left and lower right corners of a rectangle.
-      example: [15, 45, 20, 40]
     point:
       in: query
       name: point
@@ -197,7 +184,6 @@ components:
       description: |
           Defines a single `point` in the form longitude,latitude.
           The nearest point in the grid is used for calculations.
-      example: [8.0498, 52.27264]
     country:
       in: query
       name: country
@@ -209,7 +195,6 @@ components:
 
         The country is selected using an [ISO-3166, two-letter or three-letter country code
         ](https://www.iban.com/country-codes).
-      example: DE
     polygon:
       in: query
       name: polygon
@@ -221,7 +206,7 @@ components:
       description: |
         Defines an area from which measurements included in the response are taken.
 
-        The parameter must be in the form `lon1,lat1,lon2,lat2,…`.
+        The parameter is an array in the form `lon1,lat1,lon2,lat2,…`.
         Every value pair represents a vertex of longitude and latitude.
         The polygon is then defined as the line segments of the consecutive vertices.
 
