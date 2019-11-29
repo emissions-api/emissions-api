@@ -1,0 +1,23 @@
+version: 2
+jobs:
+  requirements.txt:
+    docker:
+      - image: debian:buster
+    steps:
+      - checkout
+      - run:
+          name: install with requirements.txt
+          command: |
+              apt update
+              apt install -y python3 python3-gdal python3-psycopg2 python3-pycurl \
+                  python3-numpy python3-venv
+              python3 -m venv --system-site-packages env
+              . env/bin/activate
+              pip install -r requirements.txt
+              deactivate
+
+workflows:
+  version: 2
+  install-on-debian:
+    jobs:
+      - requirements.txt

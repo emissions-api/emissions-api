@@ -13,7 +13,6 @@ This is the main repository for the `Emissions API <https://emissions-api.org/>`
 Prerequisites
 -------------
 
-
 * `SQLAlchemy <https://sqlalchemy.org>`_
 * `GeoAlchemy2 <https://github.com/geoalchemy/geoalchemy2>`_
 * `psycopg2 <https://pypi.org/project/psycopg2/>`_
