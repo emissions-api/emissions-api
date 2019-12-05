@@ -9,30 +9,6 @@ python: "3.6"
 
 jobs:
   include:
-    - stage: quick tests
-      env: name=flake8
-      install:
-        - pip install flake8
-      script:
-        - flake8 emissionsapi
-
-    - stage: quick tests
-      env: name=PostGIS
-      addons:
-        postgresql: 9.6
-        apt:
-          packages:
-            - postgresql-9.6-postgis-2.4
-            - python3-gdal
-            - python3-pycurl
-            - python3-psycopg2
-      before_script:
-        - psql -U postgres -c 'create database emissionsapi;'
-        - psql -U postgres -c 'create extension postgis' emissionsapi
-        - cp .testdata/emissionsapi.yml .
-      script:
-        - python -m emissionsapi.preprocess
-
     - stage: deployment
       env: name=gh-pages
       addons:

@@ -1,2 +1,2 @@
-database: postgresql://postgres:@127.0.0.1/emissionsapi
+database: postgresql://emissionsapi:emissionsapi@localhost/emissionsapi
 storage: .testdata/

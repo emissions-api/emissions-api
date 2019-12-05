@@ -1,0 +1,77 @@
+version: 2
+jobs:
+  flake8:
+    docker:
+      - image: python:3.7
+    steps:
+      - checkout
+      - run:
+          name: install flake8
+          command: pip install flake8
+      - run:
+          name: test with flake8
+          command: flake8 emissionsapi
+  install buster:
+    docker:
+      - image: debian:buster
+    steps:
+      - checkout
+      - run:
+          name: install on buster
+          command: |
+            apt update
+            apt install -y python3 python3-gdal python3-psycopg2 python3-pycurl \
+                python3-numpy python3-venv
+            python3 -m venv --system-site-packages env
+            ./env/bin/pip install -r requirements.txt
+            cp .testdata/emissionsapi.yml .
+      - run:
+          name: test installation
+          command: |
+              . ./env/bin/activate
+              python -c "import emissionsapi"
+              python -c "import emissionsapi.web"
+              python -c "import emissionsapi.download"
+              python -c "import emissionsapi.db"
+              python -c "import emissionsapi.preprocess"
+  preprocess:
+    docker:
+      - image: debian:buster
+      - image: circleci/postgres:11-postgis
+        environment:
+          POSTGRES_USER: emissionsapi
+          POSTGRES_PASSWORD: emissionsapi
+          POSTGRES_DB: emissionsapi
+    steps:
+      - checkout
+      - run:
+          name: install emissionsapi
+          command: |
+            apt update
+            apt install -y python3 python3-gdal python3-psycopg2 python3-pycurl \
+                python3-numpy python3-venv
+            python3 -m venv --system-site-packages env
+            ./env/bin/pip install -r requirements.txt
+            cp .testdata/emissionsapi.yml .
+      - run:
+          name: Waiting for Postgres to be ready
+          command: |
+              for i in `seq 1 10`;
+              do
+                  python3 -c "import socket; import sys; socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect_ex(('localhost', 5432)) and sys.exit(1)" && echo Success && exit 0
+                  echo -n .
+                  sleep 1
+              done
+              echo Failed waiting for Postgres && exit 1
+      - run:
+          name: preprocess test data
+          command: ./env/bin/python -m emissionsapi.preprocess
+workflows:
+  version: 2
+  simple tests:
+    jobs:
+      - flake8
+      - install buster
+  integration tests:
+    jobs:
+      - preprocess
