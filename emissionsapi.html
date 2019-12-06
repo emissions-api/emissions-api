@@ -212,8 +212,8 @@ locations taken into consideration are (in this particular order):</p>
 <p>Database layer for the Emmission API.</p>
 <dl class="class">
 <dt id="emissionsapi.db.Cache">
-<em class="property">class </em><code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">Cache</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.Cache" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<em class="property">class </em><code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">Cache</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.Cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.declarative_base</span></code></p>
 <p>ORM object for the request cache</p>
 <dl class="attribute">
 <dt id="emissionsapi.db.Cache.begin">
@@ -264,7 +264,7 @@ has been imported.</p>
 <dl class="class">
 <dt id="emissionsapi.db.Carbonmonoxide">
 <em class="property">class </em><code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">Carbonmonoxide</code><span class="sig-paren">(</span><em class="sig-param">value</em>, <em class="sig-param">longitude</em>, <em class="sig-param">latitude</em>, <em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.Carbonmonoxide" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.declarative_base</span></code></p>
 <p>ORM object for carbon monoxide point</p>
 <dl class="attribute">
 <dt id="emissionsapi.db.Carbonmonoxide.geom">
@@ -294,8 +294,8 @@ has been imported.</p>
 
 <dl class="class">
 <dt id="emissionsapi.db.File">
-<em class="property">class </em><code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">File</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.File" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<em class="property">class </em><code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">File</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.File" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.declarative_base</span></code></p>
 <p>ORM object for the nc files.</p>
 <dl class="attribute">
 <dt id="emissionsapi.db.File.filename">
@@ -413,17 +413,15 @@ the specified time interval:</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="emissionsapi.db.insert">
-<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">insert</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">data</em>, <em class="sig-param">table_name='carbonmonoxide'</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.insert" title="Permalink to this definition">¶</a></dt>
+<dt id="emissionsapi.db.insert_dataset">
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">insert_dataset</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">data</em>, <em class="sig-param">tbl=&lt;class 'emissionsapi.db.Carbonmonoxide'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.insert_dataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Batch insert data into the database using PostGIS specific functions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p></li>
-<li><p><strong>data</strong> (<em>list</em>) – List of dictionaries with entries for timestamp, longitude,
-latitude and value</p></li>
-<li><p><strong>table_name</strong> (<em>str</em>) – Name of database table to insert data into, defaults to
-table for carbon monoxide values.</p></li>
+<li><p><strong>data</strong> (<em>pandas.core.frame.DataFrame</em>) – DataFrame containing value, timestamp, longitude and latitude</p></li>
+<li><p><strong>tbl</strong> (<em>sqlalchemy.ext.declarative.api.DeclarativeMeta</em>) – Base class representing the database table for the data</p></li>
 </ul>
 </dd>
 </dl>
@@ -505,27 +503,28 @@ defaults to None</p></li>
 <span id="emissionsapi-preprocess-module"></span><h2>emissionsapi.preprocess module<a class="headerlink" href="#module-emissionsapi.preprocess" title="Permalink to this headline">¶</a></h2>
 <p>Preprocess the locally stored data and store them in the database.</p>
 <dl class="function">
-<dt id="emissionsapi.preprocess.entrypoint">
-<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">entrypoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.entrypoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Entrypoint for running this as a module or from the binary.
-Triggers the preprocessing of the data.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="emissionsapi.preprocess.list_ncfiles">
 <code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">list_ncfiles</code><span class="sig-paren">(</span><em class="sig-param">session</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.list_ncfiles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generator yielding all nc files in download path.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="emissionsapi.preprocess.main">
+<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entrypoint for running this as a module or from the binary.
+Triggers the preprocessing of the data.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="emissionsapi.preprocess.write_to_database">
-<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">write_to_database</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.write_to_database" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">write_to_database</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">data</em>, <em class="sig-param">filepath</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.write_to_database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write data to the PostGIS database</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p></li>
-<li><p><strong>data</strong> (<em>emissionsapi.preprocess.Scan</em>) – Data to add to the database</p></li>
+<li><p><strong>data</strong> (<em>pandas.core.frame.DataFrame</em>) – Data to add to the database</p></li>
+<li><p><strong>filepath</strong> (<em>str</em>) – Path to the file being imported</p></li>
 </ul>
 </dd>
 </dl>
