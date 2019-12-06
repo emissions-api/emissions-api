@@ -1,129 +1,59 @@
-
 Emissions API
 =============
 
-
-.. image:: https://travis-ci.com/emissions-api/emissions-api.svg?branch=master
-   :target: https://travis-ci.com/emissions-api/emissions-api
+.. image:: https://img.shields.io/travis/com/emissions-api/emissions-api?label=Docs
+   :target: https://docs.emissions-api.org
+   :alt: Documentation Status
+.. image:: https://img.shields.io/circleci/build/github/emissions-api/emissions-api?label=Build
+   :target: https://circleci.com/gh/emissions-api/emissions-api
    :alt: Build Status
-
 
 This is the main repository for the `Emissions API <https://emissions-api.org/>`_.
 
-Prerequisites
--------------
+If you just want to use Emissions API as a service, take a look at our `API documentation <https://demo.emissions-api.org/>`_
+or visit our `website <https://emissions-api.org/>`_ for additional information and examples.
 
+Below you will find a small introduction about setting the services in this repository up for development.
 
-* `SQLAlchemy <https://sqlalchemy.org>`_
-* `GeoAlchemy2 <https://github.com/geoalchemy/geoalchemy2>`_
-* `psycopg2 <https://pypi.org/project/psycopg2/>`_
-* `Connexion <https://github.com/zalando/connexion>`_
-* `swagger-ui-bundle <https://pypi.org/project/swagger-ui-bundle/>`_
-* `geojson <https://pypi.org/project/geojson/>`_
-* PyYAML
-* `sentinel5dl <https://github.com/emissions-api/sentinel5dl>`_
-* `sentinel5algorithms <https://github.com/emissions-api/sentinel5algorithms>`_
-* `python-dateutil <https://pypi.org/project/python-dateutil/>`_
+If you want to take a deeper dive into this, you can take a look at the `documentation <https://docs.emissions-api.org/>`_,
+visit the `issues <https://github.com/emissions-api/emissions-api/issues>`_
+or take a look into the `libraries and tools <https://github.com/emissions-api>`_ we created around this project.
 
-These can be installed by executing
+Installation
+------------
+
+To install the requirements execute
 
 .. code-block:: bash
 
    pip install -r requirements.txt
 
-GDAL for Windows
-^^^^^^^^^^^^^^^^
+You might have to explicitly deal with C-dependencies like ``psycopg2`` yourself,
+One way to do this is to use your corresponding system packages.
 
-Follow `this guide <https://sandbox.idre.ucla.edu/sandbox/tutorials/installing-gdal-for-windows>`_
-to install GDAL.
-For some reason pip have trouble to install the gdal package using pip.
-The easiest way to fix this is to manually install the wheel package from
-`lfd.uci.edu <https://www.lfd.uci.edu/~gohlke/pythonlibs/#gdal>`_.
-Note that the packages are unoffical windows binaries.
-Install the wheel package with
+After that you can run the different services using
 
-.. code-block:: bash
-
-   pip install <FILENAME>
-
-Installation
-------------
-
-Note that you do not need to install this project to run the different
-parts of it.
-But you can install this tool and its binaries in your environment by executing
-
-.. code-block:: bash
-
-   python setup.py install
+* **download**\ : ``python -m emissionsapi.download``
+* **preprocess**\ : ``python -m emissionsapi.preprocess``
+* **web**\ : ``python -m emissionsapi.web``
 
 Configuration
 -------------
 
 Emissions API will look for configuration files in the following order:
 
-
-* ./emissionsapi.yml
-* ~/emissionsapi.yml
-* /etc/emissionsapi.yml
+* ``./emissionsapi.yml``
+* ``~/emissionsapi.yml``
+* ``/etc/emissionsapi.yml``
 
 A configuration file template can be found at ``etc/emissionsapi.yml``.
 To get started, just copy this to the main project directory and adjust the
 values if the defaults do not work for you.
 
-Documentation
--------------
-
-To build the documentation you need to have ``sphinx`` and ``sphinx-rtd-theme``.
-
-With that installed, simply run
-
-.. code-block:: bash
-
-   make -C docs clean html
-
-Execute
--------
-
-To execute the programs in this project run
-
-
-* **download**\ : ``python -m emissionsapi.download``
-* **preprocess**\ : ``python -m emissionsapi.preprocess``
-* **web**\ : ``python -m emissionsapi.web``
-
-or execute the binaries after installation
-
-
-* **download**\ : ``emissionsapi-download``
-* **preprocess**\ : ``emissionsapi-preprocess``
-* **web**\ : ``emissionsapi-web``
-
 Database Setup
 --------------
 
 This project is using a `PostgreSQL <https://postgresql.org>`_ database with the `PostGIS <https://postgis.net>`_ extension.
-Attention: PostGIS is not yet available for the newest PostgreSQL v.12.
 
 There is a simple ``docker-compose.yml`` file to make it easier to setup a
 database for development.
-
-You can also setup the database on your own.
-
-Database Migration
-^^^^^^^^^^^^^^^^^^
-
-For database migration we are using `Alembic <https://alembic.sqlalchemy.org/en/latest/>`_.
-If you have a database that is already on the latest database schema, just execute
-
-.. code-block:: bash
-
-   alembic stamp head
-
-to add the alembic metadata to the database and make it ready for later migration.
-
-If you want to migrate your database to the latest version, just execute
-
-.. code-block:: bash
-
-   alembic upgrade head

@@ -6,6 +6,7 @@ Welcome to Emissions API's documentation!
    :caption: Contents:
 
    installation.rst
+   database.rst
    emissionsapi.rst
 
 Indices and tables
