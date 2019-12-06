@@ -4,6 +4,6 @@ GeoAlchemy2==0.6.3
 geojson==2.5.0
 python-dateutil==2.8.1
 sentinel5dl==0.6
-s5a==0.2
+s5a==0.3
 SQLAlchemy==1.3.11
 swagger-ui-bundle==0.0.6

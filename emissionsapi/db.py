@@ -13,8 +13,9 @@ from sqlalchemy import and_, or_, create_engine, Column, DateTime, Integer, \
         Float, String, PickleType
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.sql import text
 
+import pandas
+import psycopg2.extensions
 import geoalchemy2
 
 from emissionsapi.config import config
@@ -32,6 +33,11 @@ __session__ = None
 
 # Base Class of all ORM objects.
 Base = declarative_base()
+
+# Add psycopg2 adapter for pandas Series
+psycopg2.extensions.register_adapter(
+        pandas.core.series.Series,
+        lambda arr: psycopg2.extensions.adapt(list(arr)))
 
 
 class File(Base):
@@ -151,23 +157,24 @@ def get_session():
     return __session__()
 
 
-def insert(session, data, table_name=Carbonmonoxide.__table__.name):
+def insert_dataset(session, data, tbl=Carbonmonoxide):
     '''Batch insert data into the database using PostGIS specific functions.
 
     :param session: SQLAlchemy Session
     :type session: sqlalchemy.orm.session.Session
-    :param data: List of dictionaries with entries for timestamp, longitude,
-                 latitude and value
-    :type data: list
-    :param table_name: Name of database table to insert data into, defaults to
-                       table for carbon monoxide values.
-    :type table_name: str
+    :param data: DataFrame containing value, timestamp, longitude and latitude
+    :type data: pandas.core.frame.DataFrame
+    :param tbl: Base class representing the database table for the data
+    :type tbl: sqlalchemy.ext.declarative.api.DeclarativeMeta
     '''
-    statement = text(f'insert into {table_name} '
-                     '(value, timestamp, geom) '
-                     'values (:value, :timestamp, '
-                     '        ST_MakePoint(:longitude, :latitude))')
-    session.execute(statement, data)
+    columns = [tbl.value, tbl.timestamp, tbl.geom]
+    values = sqlalchemy.select([sqlalchemy.func.unnest(data.value),
+                                sqlalchemy.func.unnest(data.timestamp),
+                                sqlalchemy.func.ST_MakePoint(
+                                    sqlalchemy.func.unnest(data.longitude),
+                                    sqlalchemy.func.unnest(data.latitude))])
+    query = sqlalchemy.insert(tbl).from_select(columns, values)
+    session.execute(query)
 
 
 def get_points(session):

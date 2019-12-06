@@ -21,7 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'emissionsapi-download=emissionsapi.download:download',
-            'emissionsapi-preprocess=emissionsapi.preprocess:entrypoint',
+            'emissionsapi-preprocess=emissionsapi.preprocess:main',
             'emissionsapi-web=emissionsapi.web:entrypoint',
         ],
     },
