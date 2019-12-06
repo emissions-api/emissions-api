@@ -3,7 +3,7 @@
 # This software is available under the terms of an MIT license.
 # See LICENSE fore more information.
 '''
-Load and handle Emission API configuration.
+Load and handle Emissions API configuration.
 '''
 
 import yaml
