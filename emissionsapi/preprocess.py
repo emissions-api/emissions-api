@@ -4,10 +4,8 @@
 # See LICENSE fore more information.
 """Preprocess the locally stored data and store them in the database.
 """
-import datetime
 import logging
 import os
-from dateutil import tz
 
 import s5a
 
@@ -40,59 +38,48 @@ def list_ncfiles(session):
 
 
 @emissionsapi.db.with_session
-def write_to_database(session, data):
+def write_to_database(session, data, filepath):
     """Write data to the PostGIS database
 
     :param session: SQLAlchemy Session
     :type session: sqlalchemy.orm.session.Session
     :param data: Data to add to the database
-    :type data: emissionsapi.preprocess.Scan
+    :type data: pandas.core.frame.DataFrame
+    :param filepath: Path to the file being imported
+    :type filepath: str
     """
-    # Iterate through the points of the Scan object
-    points = []
-    time_min = datetime.datetime.now().astimezone(tz.tzutc())
-    time_max = datetime.datetime.fromtimestamp(0).astimezone(tz.tzutc())
-    for point in data.points:
-        points.append({
-            'value': point.value,
-            'longitude': point.longitude,
-            'latitude': point.latitude,
-            'timestamp': point.timestamp
-        })
-        if point.timestamp > time_max:
-            time_max = point.timestamp
-        if point.timestamp < time_min:
-            time_min = point.timestamp
-    # Add all points
-    if points:
-        emissionsapi.db.insert(session, points)
+    # Insert data
+    emissionsapi.db.insert_dataset(session, data)
+
     # Add file to database
-    filename = os.path.basename(data.filepath)
+    filename = os.path.basename(filepath)
     session.add(emissionsapi.db.File(filename=filename))
+
     # Invalidate cache
-    emissionsapi.db.Cache.invalidate(session, time_min, time_max)
+    timestamp = data.timestamp
+    emissionsapi.db.Cache.invalidate(session, timestamp.min(), timestamp.max())
+
     # Commit the changes done in the session
     session.commit()
 
 
-def entrypoint():
+def main():
     """Entrypoint for running this as a module or from the binary.
     Triggers the preprocessing of the data.
     """
     # Iterate through all find nc files
     for ncfile in list_ncfiles():
-        logger.info("Pre-processing '%s'", ncfile)
-        # Read data from nc file
         logger.info("Reading file '%s'", ncfile)
-        scan = s5a.Scan(ncfile)
-        logger.info("Filtering %s points by quality", scan.len())
-        # filter data for quality >=50
-        scan.filter_by_quality(50)
-        logger.info("Writing %s points to the database", scan.len())
-        # Write the filtered data to the database
-        write_to_database(scan)
-    pass
+        scan = s5a.load_ncfile(ncfile)
+
+        logger.info("Filtering %s points by quality", scan.size)
+        scan = s5a.filter_by_quality(scan)
+
+        logger.info('Writing %s points to database', scan.size)
+        write_to_database(scan, ncfile)
+
+        logger.info('Finished database import')
 
 
 if __name__ == "__main__":
-    entrypoint()
+    main()

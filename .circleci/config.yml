@@ -20,7 +20,7 @@ jobs:
           name: install on buster
           command: |
             apt update
-            apt install -y python3 python3-gdal python3-psycopg2 python3-pycurl \
+            apt install -y python3 python3-psycopg2 python3-pycurl \
                 python3-numpy python3-venv
             python3 -m venv --system-site-packages env
             ./env/bin/pip install -r requirements.txt
@@ -48,7 +48,7 @@ jobs:
           name: install emissionsapi
           command: |
             apt update
-            apt install -y python3 python3-gdal python3-psycopg2 python3-pycurl \
+            apt install -y python3 python3-psycopg2 python3-pycurl \
                 python3-numpy python3-venv
             python3 -m venv --system-site-packages env
             ./env/bin/pip install -r requirements.txt

@@ -53,3 +53,16 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 # html_static_path = ['_static']
+
+autodoc_mock_imports = [
+        'connexion',
+        'dateutil',
+        'flask',
+        'geoalchemy2',
+        'geojson',
+        'pandas',
+        'psycopg2',
+        's5a',
+        'sentinel5dl',
+        'sqlalchemy',
+        'yaml']

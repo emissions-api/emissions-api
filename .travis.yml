@@ -14,9 +14,7 @@ jobs:
       addons:
         apt:
           packages:
-            - python3-gdal
             - python3-pycurl
-            - python3-psycopg2
       install:
         - pip install sphinx sphinx-rtd-theme
         - pip install -r requirements.txt
