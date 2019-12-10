@@ -68,7 +68,7 @@ def main():
     Triggers the preprocessing of the data.
     """
     # Iterate through all find nc files
-    for ncfile in list_ncfiles():
+    for ncfile in sorted(list_ncfiles()):
         logger.info("Reading file '%s'", ncfile)
         scan = s5a.load_ncfile(ncfile)
 
