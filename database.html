@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Installation &mdash; Emissions API  documentation</title>
+  <title>Database &mdash; Emissions API  documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Database" href="database.html" />
-    <link rel="prev" title="Welcome to Emissions API’s documentation!" href="index.html" /> 
+    <link rel="next" title="Python API" href="emissionsapi.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -82,11 +82,11 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#linux-fedora">Linux (Fedora)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#database-migration">Database Migration</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="database.html">Database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="emissionsapi.html">Python API</a></li>
 </ul>
 
@@ -133,13 +133,13 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Installation</li>
+      <li>Database</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/installation.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/database.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -152,34 +152,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="linux-fedora">
-<h2>Linux (Fedora)<a class="headerlink" href="#linux-fedora" title="Permalink to this headline">¶</a></h2>
-<p><em>Tested on Fedora 30</em></p>
-<p>The Emissions API relies on a few C libraries. The easiest way to get those as
-well as their python bindings is to use dnf and get them from the system
-repositories:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%&gt;</span> <span class="n">dnf</span> <span class="n">install</span> <span class="n">python3</span><span class="o">-</span><span class="n">gdal</span> <span class="n">python3</span><span class="o">-</span><span class="n">psycopg2</span> <span class="n">python3</span><span class="o">-</span><span class="n">pycurl</span> <span class="n">python3</span><span class="o">-</span><span class="n">numpy</span>
+  <div class="section" id="database">
+<h1>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="database-migration">
+<h2>Database Migration<a class="headerlink" href="#database-migration" title="Permalink to this headline">¶</a></h2>
+<p>For database migration, we use <a class="reference external" href="https://alembic.sqlalchemy.org/en/latest/">Alembic</a>.
+To add the alembic metadata to the database and make it ready for later migration, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>alembic stamp head
 </pre></div>
 </div>
-<p>All other dependencies can easily be installed using pip. For this we use a
-virtual environment to avoid installing local dependencies globally in the
-system. In the project folder, create and activate the virtual environment
-allowing access to system packages as well:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%&gt;</span> <span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="o">--</span><span class="n">system</span><span class="o">-</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span> <span class="n">venv</span>
-<span class="o">%&gt;</span> <span class="o">.</span> <span class="o">./</span><span class="n">venv</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
-</pre></div>
-</div>
-<p>Remember to always use the environment while working on the
-project since only this will give you access to the additional local libraries
-you installed.</p>
-<p>Finally, install all necessary requirements using pip:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">venv</span><span class="p">)</span> <span class="o">%&gt;</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
-</pre></div>
-</div>
-<p>You can now use the Emissions API. E.g. launch the web interface by running:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">venv</span><span class="p">)</span> <span class="o">%&gt;</span> <span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">emissionsapi</span><span class="o">.</span><span class="n">web</span>
+<p>to add the alembic metadata to the database and make it ready for later migration.</p>
+<p>If you want to migrate your database to the latest version, just execute</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>alembic upgrade head
 </pre></div>
 </div>
 </div>
@@ -193,10 +177,10 @@ you installed.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="database.html" class="btn btn-neutral float-right" title="Database" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="emissionsapi.html" class="btn btn-neutral float-right" title="Python API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Emissions API’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
