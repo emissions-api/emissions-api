@@ -19,7 +19,23 @@ commands:
               python3 -m venv << parameters.virtualenv >>
               cp .testdata/emissionsapi.yml .
               << parameters.virtualenv >>/bin/pip install -r requirements.txt
-
+  wait_for_database:
+    description: command to wait on the database become available
+    parameters:
+      port:
+        type: string
+        default: "5432"
+    steps:
+      - run:
+          name: Waiting for Postgres to be ready
+          command: |
+              for i in `seq 1 10`;
+              do
+                  python3 -c "import socket; import sys; socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect_ex(('localhost', << parameters.port >>)) and sys.exit(1)" && echo Success && exit 0
+                  echo -n .
+                  sleep 1
+              done
+              echo Failed waiting for Postgres && exit 1
 jobs:
   flake8:
     docker:
@@ -74,19 +90,42 @@ jobs:
     steps:
       - checkout
       - installation
-      - run:
-          name: Waiting for Postgres to be ready
-          command: |
-              for i in `seq 1 10`;
-              do
-                  python3 -c "import socket; import sys; socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect_ex(('localhost', 5432)) and sys.exit(1)" && echo Success && exit 0
-                  echo -n .
-                  sleep 1
-              done
-              echo Failed waiting for Postgres && exit 1
+      - wait_for_database
       - run:
           name: preprocess test data
           command: ./env/bin/python -m emissionsapi.preprocess
+  database migration:
+    docker:
+      - image: debian:buster
+      - image: circleci/postgres:11-postgis
+        environment:
+          POSTGRES_USER: emissionsapi
+          POSTGRES_PASSWORD: emissionsapi
+          POSTGRES_DB: emissionsapi
+    steps:
+      - checkout
+      - run:
+          name: install git and checkout master
+          command: |
+              apt update
+              apt install -y git
+              git checkout master
+      - installation
+      - wait_for_database
+      - run:
+          name: Prepare Database
+          command: |
+              ./env/bin/python setup.py install
+              ./env/bin/python -m emissionsapi.preprocess
+              ./env/bin/alembic stamp head
+      - checkout
+      - installation
+      - run:
+          name: migrate database
+          command: |
+              ./env/bin/python setup.py install
+              ./env/bin/alembic upgrade head
+
 workflows:
   version: 2
   simple tests:
@@ -96,3 +135,8 @@ workflows:
   integration tests:
     jobs:
       - preprocess
+      - database migration:
+          filters:
+            branches:
+              ignore:
+                - master
