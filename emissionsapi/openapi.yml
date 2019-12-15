@@ -14,7 +14,7 @@ externalDocs:
   description: Source code documentation
   url: https://docs.emissions-api.org
 paths:
-  /api/v1/geo.json:
+  /api/v1/{product}/geo.json:
     get:
       operationId: emissionsapi.web.get_data
       description: |
@@ -27,6 +27,7 @@ paths:
             3. polygon
             4. point
       parameters:
+        - $ref: '#/components/parameters/product'
         - $ref: '#/components/parameters/geoframe'
         - $ref: '#/components/parameters/country'
         - $ref: '#/components/parameters/polygon'
@@ -44,7 +45,7 @@ paths:
                 $ref: '#/components/schemas/Feature Collection'
         400:
           description: Parameter error
-  /api/v1/average.json:
+  /api/v1/{product}/average.json:
     get:
       operationId: emissionsapi.web.get_average
       description: |
@@ -57,6 +58,7 @@ paths:
             3. polygon
             4. point
       parameters:
+        - $ref: '#/components/parameters/product'
         - $ref: '#/components/parameters/geoframe'
         - $ref: '#/components/parameters/country'
         - $ref: '#/components/parameters/polygon'
@@ -74,7 +76,7 @@ paths:
                 $ref: '#/components/schemas/Averages'
         400:
           description: Parameter error
-  /api/v1/statistics.json:
+  /api/v1/{product}/statistics.json:
     get:
       operationId: emissionsapi.web.get_statistics
       description: |
@@ -87,6 +89,7 @@ paths:
             3. polygon
             4. point
       parameters:
+        - $ref: '#/components/parameters/product'
         - $ref: '#/components/parameters/geoframe'
         - $ref: '#/components/parameters/country'
         - $ref: '#/components/parameters/polygon'
@@ -98,7 +101,7 @@ paths:
         - $ref: '#/components/parameters/offset'
       responses:
         200:
-          description: Array of statistical data about carbon monoxide for specified intervals.
+          description: Array of statistical data about the chosen product for specified intervals.
           content:
             application/json:
               schema:
@@ -120,6 +123,13 @@ paths:
 
 components:
   parameters:
+    product:
+      in: path
+      name: product
+      required: yes
+      schema:
+        type: string
+        enum: {{ products }}
     limit:
       in: query
       name: limit
@@ -243,7 +253,7 @@ components:
               properties:  # This is the name of the key
                 type: object
                 properties:
-                  carbonmonixide:
+                  value:
                     type: number
                     example: 0.0273975990712643
                   timestamp:
@@ -264,7 +274,7 @@ components:
                     example: "Point"
     Averages:
       type: array
-      description: Array of daily carbon monoxide values.
+      description: Array of daily values of the chosen product.
       items:
         type: object
         properties:
@@ -279,7 +289,7 @@ components:
             example: 2019-02-10T13:03:40.254000Z
     Statistics:
       type: array
-      description: Array of statistical data about carbon monoxide for specified intervals.
+      description: Array of statistical data about the chosen product for specified intervals.
       items:
         type: object
         properties:

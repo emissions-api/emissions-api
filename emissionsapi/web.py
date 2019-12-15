@@ -17,12 +17,16 @@ from flask import redirect, request
 from h3 import h3
 
 import emissionsapi.db
+from emissionsapi.config import config
 from emissionsapi.country_shapes import CountryNotFound, get_country_wkt
 from emissionsapi.utils import bounding_box_to_wkt, polygon_to_wkt, \
     RESTParamError
 
 # Logger
 logger = logging.getLogger(__name__)
+
+# Supported products
+products = config('ui', 'products') or ['carbonmonoxide']
 
 
 def parse_date(*keys):
@@ -87,7 +91,7 @@ def parse_wkt(f):
                 kwargs['wkt'] = polygon_to_wkt(polygon)
             except RESTParamError as err:
                 return str(err), 400
-        # parse paramter point
+        # parse parameter point
         elif point is not None:
             try:
                 logger.debug('Try to parse point')
@@ -194,7 +198,7 @@ def get_data(session, wkt=None, distance=None, begin=None, end=None,
         features.append(geojson.Feature(
             geometry=geojson.Point((longitude, latitude)),
             properties={
-                "carbonmonoxide": value,
+                "value": value,
                 "timestamp": timestamp
             }))
     # Create feature collection from gathered points
@@ -276,6 +280,7 @@ def get_statistics(session, interval='day', wkt=None, distance=None,
     .. _date_trunc: https://postgresql.org/docs/9.1/functions-datetime.html
     .. _ST_DWithin: https://postgis.net/docs/ST_DWithin.html
     """
+
     query = emissionsapi.db.get_statistics(session)
     # Filter result
     query = emissionsapi.db.filter_query(
@@ -322,7 +327,8 @@ app = connexion.App(__name__)
 
 # Add swagger description to api
 app.add_api(os.path.join(os.path.abspath(
-    os.path.dirname(__file__)), 'openapi.yml'), )
+    os.path.dirname(__file__)), 'openapi.yml'),
+    arguments={'products': products})
 
 # Create app to run with wsgi server
 application = app.app
