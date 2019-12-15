@@ -13,3 +13,10 @@ storage: data
 # Number of parallel workers preprocessing the data
 # Default: 1
 workers: 1
+
+# UI Settings
+ui:
+  # List of products present in the ui
+  # Default: ['carbonmonoxide']
+  products:
+    - carbonmonoxide
