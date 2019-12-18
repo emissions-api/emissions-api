@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Database &mdash; Emissions API  documentation</title>
+  <title>Development &mdash; Emissions API  documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Python API" href="emissionsapi.html" />
-    <link rel="prev" title="Development" href="development.html" /> 
+    <link rel="next" title="Database" href="database.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -83,11 +83,11 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Database</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#database-migration">Database Migration</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="database.html">Database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="emissionsapi.html">Python API</a></li>
 </ul>
 
@@ -134,13 +134,13 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Database</li>
+      <li>Development</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/database.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/development.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -153,18 +153,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="database">
-<h1>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="database-migration">
-<h2>Database Migration<a class="headerlink" href="#database-migration" title="Permalink to this headline">¶</a></h2>
-<p>For database migration, we use <a class="reference external" href="https://alembic.sqlalchemy.org/en/latest/">Alembic</a>.
-To add the alembic metadata to the database and make it ready for later migration, run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>alembic stamp head
-</pre></div>
-</div>
-<p>to add the alembic metadata to the database and make it ready for later migration.</p>
-<p>If you want to migrate your database to the latest version, just execute</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>alembic upgrade head
+  <div class="section" id="development">
+<h1>Development<a class="headerlink" href="#development" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<p>For dependencies in this project we are following the guidelines from the <a class="reference external" href="https://packaging.python.org/discussions/install-requires-vs-requirements/">Python Packaging Guide</a>.</p>
+<p>So in detail we are using the <cite>install_requires</cite> in the <a class="reference external" href="https://github.com/emissions-api/emissions-api/blob/master/setup.py">setup.py</a> to specify a list of dependencies this <em>project minimally needs to run correctly</em>.
+Whereas in the <a class="reference external" href="https://github.com/emissions-api/emissions-api/blob/master/requirements.txt">requirements.txt</a> we define the <em>complete Python environment</em> with <em>pinned versions for the purpose of achieving repeatable installations</em>.
+So the <a class="reference external" href="https://github.com/emissions-api/emissions-api/blob/master/requirements.txt">requirements.txt</a> also includes the dependencies of the dependencies and the tools we are using for our setup.</p>
+<p>So what has to be done, if you want to add a new dependency?
+Well simply try to follow the guideline in the <a class="reference external" href="https://packaging.python.org/discussions/install-requires-vs-requirements/">Python Packaging Guide</a>.</p>
+<p>Also if you want to update the <a class="reference external" href="https://github.com/emissions-api/emissions-api/blob/master/requirements.txt">requirements.txt</a> and don’t know how, the following steps might be handy.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create temporary virtual environment and install the current requirements</span>
+python3 -m venv /tmp/env
+. /tmp/env/bin/activate
+pip install -r requirements.txt
+<span class="c1"># Install your new fancy package</span>
+pip install my-fancy-package
+<span class="c1"># Update the whole list of dependencies</span>
+pip freeze &gt; requirements.txt
 </pre></div>
 </div>
 </div>
@@ -178,10 +185,10 @@ To add the alembic metadata to the database and make it ready for later migratio
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="emissionsapi.html" class="btn btn-neutral float-right" title="Python API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="database.html" class="btn btn-neutral float-right" title="Database" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="development.html" class="btn btn-neutral float-left" title="Development" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
