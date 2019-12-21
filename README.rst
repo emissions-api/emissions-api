@@ -10,7 +10,7 @@ Emissions API
 
 This is the main repository for the `Emissions API <https://emissions-api.org/>`_.
 
-If you just want to use Emissions API as a service, take a look at our `API documentation <https://demo.emissions-api.org/>`_
+If you just want to use Emissions API as a service, take a look at our `API documentation <https://api.emissions-api.org/>`_
 or visit our `website <https://emissions-api.org/>`_ for additional information and examples.
 
 Below you will find a small introduction about setting the services in this repository up for development.
