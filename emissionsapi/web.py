@@ -281,7 +281,9 @@ def get_statistics(session, interval='day', wkt=None, distance=None,
     query = emissionsapi.db.limit_offset_query(
         query, limit=limit, offset=offset)
 
-    return [{'value': {
+    return [
+        {
+            'value': {
                 'count': count,
                 'average': avg,
                 'standard deviation': stddev,
@@ -290,9 +292,10 @@ def get_statistics(session, interval='day', wkt=None, distance=None,
             'time': {
                 'min': min_time,
                 'max': max_time,
-                'interval_start': inter}}
-            for count, avg, stddev, min_val, max_val, min_time, max_time, inter
-            in query]
+                'interval_start': inter}
+        }
+        for count, avg, stddev, min_val, max_val, min_time, max_time, inter
+        in query]
 
 
 # Create connexion app
