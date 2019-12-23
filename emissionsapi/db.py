@@ -9,8 +9,8 @@ from functools import wraps
 import logging
 
 import sqlalchemy
-from sqlalchemy import and_, or_, create_engine, Column, DateTime, Integer, \
-        Float, String, PickleType
+from sqlalchemy import and_, or_, create_engine, Column, DateTime, Float, \
+    String, PickleType
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -36,8 +36,8 @@ Base = declarative_base()
 
 # Add psycopg2 adapter for pandas Series
 psycopg2.extensions.register_adapter(
-        pandas.core.series.Series,
-        lambda arr: psycopg2.extensions.adapt(list(arr)))
+    pandas.core.series.Series,
+    lambda arr: psycopg2.extensions.adapt(list(arr)))
 
 
 class AlembicVersion(Base):
@@ -100,13 +100,12 @@ class Carbonmonoxide(Base):
     """ORM object for carbon monoxide point
     """
     __tablename__ = 'carbonmonoxide'
-    id = Column(Integer, primary_key=True)
-    """ Data sample identifier (primary key)"""
     value = Column(Float)
     """Carbon monoxide value"""
-    timestamp = Column(DateTime, index=True)
+    timestamp = Column(DateTime, primary_key=True)
     """Timestamp of measurement"""
-    geom = Column(geoalchemy2.Geometry(geometry_type="POINT"))
+    geom = Column(geoalchemy2.Geometry(
+        geometry_type="POINT"), primary_key=True)
     """Location (PostGis type)"""
 
     def __init__(self, value, longitude, latitude, timestamp):
