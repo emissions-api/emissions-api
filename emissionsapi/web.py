@@ -6,8 +6,9 @@
 the users.
 """
 from functools import wraps
-import logging
 import dateutil.parser
+import logging
+import os.path
 
 import connexion
 import json
@@ -298,7 +299,8 @@ def get_statistics(session, interval='day', wkt=None, distance=None,
 app = connexion.App(__name__)
 
 # Add swagger description to api
-app.add_api('openapi.yml', )
+app.add_api(os.path.join(os.path.abspath(
+    os.path.dirname(__file__)), 'openapi.yml'), )
 
 # Create app to run with wsgi server
 application = app.app
