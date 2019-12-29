@@ -185,13 +185,13 @@ def get_data(session, wkt=None, distance=None, begin=None, end=None,
     query = emissionsapi.db.limit_offset_query(
         query, limit=limit, offset=offset)
 
-    for obj, longitude, latitude in query:
+    for value, timestamp, longitude, latitude in query:
         # Create and append single features.
         features.append(geojson.Feature(
             geometry=geojson.Point((longitude, latitude)),
             properties={
-                "carbonmonoxide": obj.value,
-                "timestamp": obj.timestamp
+                "carbonmonoxide": value,
+                "timestamp": timestamp
             }))
     # Create feature collection from gathered points
     feature_collection = geojson.FeatureCollection(features)

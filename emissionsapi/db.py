@@ -187,12 +187,13 @@ def get_points(session):
 
     :param session: SQLAlchemy Session
     :type session: sqlalchemy.orm.session.Session
-    :return: SQLAlchemy Query with tuple of Carbonmonoxide object,
-             longitude and latitude.
+    :return: SQLAlchemy Query returning tuples of value, timestamp, longitude,
+             and latitude.
     :rtype: sqlalchemy.orm.query.Query
     """
     return session.query(
-        Carbonmonoxide,
+        Carbonmonoxide.value,
+        Carbonmonoxide.timestamp,
         Carbonmonoxide.geom.ST_X(),
         Carbonmonoxide.geom.ST_Y())
 
