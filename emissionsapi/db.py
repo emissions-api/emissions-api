@@ -96,23 +96,11 @@ class Cache(Base):
         session.commit()
 
 
-class Carbonmonoxide(Base):
-    """ORM object for carbon monoxide point
-    """
-    __tablename__ = 'carbonmonoxide'
-    value = Column(Float)
-    """Carbon monoxide value"""
-    timestamp = Column(DateTime, primary_key=True)
-    """Timestamp of measurement"""
-    geom = Column(geoalchemy2.Geometry(
-        geometry_type="POINT"), primary_key=True)
-    """Location (PostGis type)"""
-
-    def __init__(self, value, longitude, latitude, timestamp):
-        self.value = value
-        self.timestamp = timestamp
-        self.geom = geoalchemy2.elements.WKTElement(
-            f"POINT({longitude} {latitude})")
+carbonmonoxide = sqlalchemy.Table(
+    'carbonmonoxide', Base.metadata,
+    Column('value', Float),
+    Column('timestamp', DateTime, index=True),
+    Column('geom', geoalchemy2.Geometry(geometry_type='POINT')))
 
 
 def with_session(f):
@@ -161,7 +149,7 @@ def get_session():
     return __session__()
 
 
-def insert_dataset(session, data, tbl=Carbonmonoxide):
+def insert_dataset(session, data, tbl=carbonmonoxide):
     '''Batch insert data into the database using PostGIS specific functions.
 
     :param session: SQLAlchemy Session
@@ -171,13 +159,12 @@ def insert_dataset(session, data, tbl=Carbonmonoxide):
     :param tbl: Base class representing the database table for the data
     :type tbl: sqlalchemy.ext.declarative.api.DeclarativeMeta
     '''
-    columns = [tbl.value, tbl.timestamp, tbl.geom]
     values = sqlalchemy.select([sqlalchemy.func.unnest(data.value),
                                 sqlalchemy.func.unnest(data.timestamp),
                                 sqlalchemy.func.ST_MakePoint(
                                     sqlalchemy.func.unnest(data.longitude),
                                     sqlalchemy.func.unnest(data.latitude))])
-    query = sqlalchemy.insert(tbl).from_select(columns, values)
+    query = sqlalchemy.insert(tbl).from_select(tbl.columns, values)
     session.execute(query)
 
 
@@ -191,10 +178,10 @@ def get_points(session):
     :rtype: sqlalchemy.orm.query.Query
     """
     return session.query(
-        Carbonmonoxide.value,
-        Carbonmonoxide.timestamp,
-        Carbonmonoxide.geom.ST_X(),
-        Carbonmonoxide.geom.ST_Y())
+        carbonmonoxide.c.value,
+        carbonmonoxide.c.timestamp,
+        carbonmonoxide.c.geom.ST_X(),
+        carbonmonoxide.c.geom.ST_Y())
 
 
 def get_averages(session):
@@ -207,11 +194,11 @@ def get_averages(session):
              truncated by day.
     :rtype: sqlalchemy.orm.query.Query
     """
-    day = sqlalchemy.func.date(Carbonmonoxide.timestamp)
+    day = sqlalchemy.func.date(carbonmonoxide.c.timestamp)
     return session.query(
-        sqlalchemy.func.avg(Carbonmonoxide.value),
-        sqlalchemy.func.max(Carbonmonoxide.timestamp),
-        sqlalchemy.func.min(Carbonmonoxide.timestamp),
+        sqlalchemy.func.avg(carbonmonoxide.c.value),
+        sqlalchemy.func.max(carbonmonoxide.c.timestamp),
+        sqlalchemy.func.min(carbonmonoxide.c.timestamp),
         day).group_by(day)
 
 
@@ -241,15 +228,15 @@ def get_statistics(session, interval_length='day'):
     .. _date_trunc: https://postgresql.org/docs/9.1/functions-datetime.html
     """
     interval = sqlalchemy.func.date_trunc(interval_length,
-                                          Carbonmonoxide.timestamp)
+                                          carbonmonoxide.c.timestamp)
     return session.query(
-        sqlalchemy.func.count(Carbonmonoxide.value),
-        sqlalchemy.func.avg(Carbonmonoxide.value),
-        sqlalchemy.func.stddev(Carbonmonoxide.value),
-        sqlalchemy.func.min(Carbonmonoxide.value),
-        sqlalchemy.func.max(Carbonmonoxide.value),
-        sqlalchemy.func.min(Carbonmonoxide.timestamp),
-        sqlalchemy.func.max(Carbonmonoxide.timestamp),
+        sqlalchemy.func.count(carbonmonoxide.c.value),
+        sqlalchemy.func.avg(carbonmonoxide.c.value),
+        sqlalchemy.func.stddev(carbonmonoxide.c.value),
+        sqlalchemy.func.min(carbonmonoxide.c.value),
+        sqlalchemy.func.max(carbonmonoxide.c.value),
+        sqlalchemy.func.min(carbonmonoxide.c.timestamp),
+        sqlalchemy.func.max(carbonmonoxide.c.timestamp),
         interval).group_by(interval)
 
 
@@ -276,18 +263,18 @@ def filter_query(query, wkt=None, distance=None, begin=None, end=None):
     if wkt is not None:
         if distance is not None:
             query = query.filter(geoalchemy2.func.ST_DWITHIN(
-                Carbonmonoxide.geom, wkt, distance))
+                carbonmonoxide.c.geom, wkt, distance))
         else:
             query = query.filter(geoalchemy2.func.ST_WITHIN(
-                Carbonmonoxide.geom, wkt))
+                carbonmonoxide.c.geom, wkt))
 
     # Filter for points after the time specified as begin
     if begin is not None:
-        query = query.filter(begin <= Carbonmonoxide.timestamp)
+        query = query.filter(begin <= carbonmonoxide.c.timestamp)
 
     # Filter for points before the time specified as end
     if end is not None:
-        query = query.filter(end > Carbonmonoxide.timestamp)
+        query = query.filter(end > carbonmonoxide.c.timestamp)
 
     return query
 
