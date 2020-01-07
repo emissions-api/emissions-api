@@ -28,7 +28,7 @@ pyrsistent==0.15.6
 python-dateutil==2.8.1
 python-editor==1.0.4
 pytz==2019.3
-PyYAML==5.2
+PyYAML==5.3
 requests==2.22.0
 s5a==0.3
 sentinel5dl==0.6
