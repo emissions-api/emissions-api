@@ -1,28 +1,23 @@
 Installation
 ============
 
-Linux (Fedora)
---------------
+Linux (Fedora 31)
+-----------------
 
-*Tested on Fedora 30*
+Emissions API relies on a few C libraries.
+To be able to build the python bindings for these libraries, we first need to install a few development libraries::
 
-The Emissions API relies on a few C libraries. The easiest way to get those as
-well as their python bindings is to use dnf and get them from the system
-repositories::
+   %> dnf install gcc python3-devel libpq-devel libcurl-devel
 
-   %> dnf install python3-gdal python3-psycopg2 python3-pycurl python3-numpy
+All other dependencies can easily be installed using pip.
+For this we use a virtual environment to avoid installing local dependencies globally in the system.
+In the project folder, create and activate the virtual environment::
 
-All other dependencies can easily be installed using pip. For this we use a
-virtual environment to avoid installing local dependencies globally in the
-system. In the project folder, create and activate the virtual environment
-allowing access to system packages as well::
-
-   %> python3 -m venv --system-site-packages venv
+   %> python3 -m venv venv
    %> . ./venv/bin/activate
 
-Remember to always use the environment while working on the
-project since only this will give you access to the additional local libraries
-you installed.
+Remember to always use the environment while working on the project.
+Only this will give you access to the additional local libraries you installed.
 
 Finally, install all necessary requirements using pip::
 

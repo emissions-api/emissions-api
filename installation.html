@@ -83,7 +83,7 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#linux-fedora">Linux (Fedora)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#linux-fedora-31">Linux (Fedora 31)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
@@ -155,26 +155,22 @@
             
   <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="linux-fedora">
-<h2>Linux (Fedora)<a class="headerlink" href="#linux-fedora" title="Permalink to this headline">¶</a></h2>
-<p><em>Tested on Fedora 30</em></p>
-<p>The Emissions API relies on a few C libraries. The easiest way to get those as
-well as their python bindings is to use dnf and get them from the system
-repositories:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%&gt;</span> <span class="n">dnf</span> <span class="n">install</span> <span class="n">python3</span><span class="o">-</span><span class="n">gdal</span> <span class="n">python3</span><span class="o">-</span><span class="n">psycopg2</span> <span class="n">python3</span><span class="o">-</span><span class="n">pycurl</span> <span class="n">python3</span><span class="o">-</span><span class="n">numpy</span>
+<div class="section" id="linux-fedora-31">
+<h2>Linux (Fedora 31)<a class="headerlink" href="#linux-fedora-31" title="Permalink to this headline">¶</a></h2>
+<p>Emissions API relies on a few C libraries.
+To be able to build the python bindings for these libraries, we first need to install a few development libraries:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%&gt;</span> <span class="n">dnf</span> <span class="n">install</span> <span class="n">gcc</span> <span class="n">python3</span><span class="o">-</span><span class="n">devel</span> <span class="n">libpq</span><span class="o">-</span><span class="n">devel</span> <span class="n">libcurl</span><span class="o">-</span><span class="n">devel</span>
 </pre></div>
 </div>
-<p>All other dependencies can easily be installed using pip. For this we use a
-virtual environment to avoid installing local dependencies globally in the
-system. In the project folder, create and activate the virtual environment
-allowing access to system packages as well:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%&gt;</span> <span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="o">--</span><span class="n">system</span><span class="o">-</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span> <span class="n">venv</span>
+<p>All other dependencies can easily be installed using pip.
+For this we use a virtual environment to avoid installing local dependencies globally in the system.
+In the project folder, create and activate the virtual environment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%&gt;</span> <span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="n">venv</span>
 <span class="o">%&gt;</span> <span class="o">.</span> <span class="o">./</span><span class="n">venv</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
 </pre></div>
 </div>
-<p>Remember to always use the environment while working on the
-project since only this will give you access to the additional local libraries
-you installed.</p>
+<p>Remember to always use the environment while working on the project.
+Only this will give you access to the additional local libraries you installed.</p>
 <p>Finally, install all necessary requirements using pip:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">venv</span><span class="p">)</span> <span class="o">%&gt;</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
