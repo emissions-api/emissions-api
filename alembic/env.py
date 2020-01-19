@@ -1,11 +1,15 @@
 from logging.config import fileConfig
 
+import os
+import sys
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
 
-import emissionsapi.db
+home_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
+sys.path.insert(1, home_dir)
+import emissionsapi.db  # noqa: E402
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
