@@ -275,37 +275,6 @@ has been imported.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="emissionsapi.db.Carbonmonoxide">
-<em class="property">class </em><code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">Carbonmonoxide</code><span class="sig-paren">(</span><em class="sig-param">value</em>, <em class="sig-param">longitude</em>, <em class="sig-param">latitude</em>, <em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.Carbonmonoxide" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.declarative_base</span></code></p>
-<p>ORM object for carbon monoxide point</p>
-<dl class="attribute">
-<dt id="emissionsapi.db.Carbonmonoxide.geom">
-<code class="sig-name descname">geom</code><a class="headerlink" href="#emissionsapi.db.Carbonmonoxide.geom" title="Permalink to this definition">¶</a></dt>
-<dd><p>Location (PostGis type)</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="emissionsapi.db.Carbonmonoxide.id">
-<code class="sig-name descname">id</code><a class="headerlink" href="#emissionsapi.db.Carbonmonoxide.id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Data sample identifier (primary key)</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="emissionsapi.db.Carbonmonoxide.timestamp">
-<code class="sig-name descname">timestamp</code><a class="headerlink" href="#emissionsapi.db.Carbonmonoxide.timestamp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Timestamp of measurement</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="emissionsapi.db.Carbonmonoxide.value">
-<code class="sig-name descname">value</code><a class="headerlink" href="#emissionsapi.db.Carbonmonoxide.value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Carbon monoxide value</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="emissionsapi.db.File">
 <em class="property">class </em><code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">File</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.File" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.declarative_base</span></code></p>
@@ -427,7 +396,7 @@ the specified time interval:</p>
 
 <dl class="function">
 <dt id="emissionsapi.db.insert_dataset">
-<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">insert_dataset</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">data</em>, <em class="sig-param">tbl=&lt;class 'emissionsapi.db.Carbonmonoxide'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.insert_dataset" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">insert_dataset</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">data</em>, <em class="sig-param">tbl=sqlalchemy.Table</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.insert_dataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Batch insert data into the database using PostGIS specific functions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
