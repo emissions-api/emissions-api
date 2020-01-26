@@ -21,7 +21,6 @@ setup(
         'GeoAlchemy2',
         'geojson',
         'python-dateutil',
-        'sentinel5dl',
         's5a',
         'SQLAlchemy',
     ],
@@ -30,7 +29,6 @@ setup(
     long_description_content_type='text/x-rst',
     entry_points={
         'console_scripts': [
-            'emissionsapi-download=emissionsapi.download:download',
             'emissionsapi-preprocess=emissionsapi.preprocess:main',
             'emissionsapi-web=emissionsapi.web:entrypoint',
         ],

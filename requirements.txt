@@ -1,6 +1,5 @@
 alembic==1.4.0
 attrs==19.3.0
-certifi==2019.11.28
 cftime==1.0.4.2
 chardet==3.0.4
 Click==7.0
@@ -23,7 +22,6 @@ numpy==1.18.1
 openapi-spec-validator==0.2.8
 pandas==1.0.1
 psycopg2==2.8.4
-pycurl==7.43.0.5
 pyrsistent==0.15.7
 python-dateutil==2.8.1
 python-editor==1.0.4
@@ -31,8 +29,6 @@ pytz==2019.3
 PyYAML==5.3
 requests==2.22.0
 s5a==0.4
-sentinel5dl==1.0
-six==1.14.0
 SQLAlchemy==1.3.13
 swagger-ui-bundle==0.0.6
 urllib3==1.25.8
