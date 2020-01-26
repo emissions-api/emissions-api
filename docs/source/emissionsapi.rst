@@ -25,14 +25,6 @@ emissionsapi.db module
    :undoc-members:
    :show-inheritance:
 
-emissionsapi.download module
-----------------------------
-
-.. automodule:: emissionsapi.download
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 emissionsapi.preprocess module
 ------------------------------
 

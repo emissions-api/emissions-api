@@ -33,7 +33,6 @@ One way to do this is to use your corresponding system packages.
 
 After that you can run the different services using
 
-* **download**\ : ``python -m emissionsapi.download``
 * **preprocess**\ : ``python -m emissionsapi.preprocess``
 * **web**\ : ``python -m emissionsapi.web``
 

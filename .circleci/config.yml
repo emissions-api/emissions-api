@@ -11,7 +11,9 @@ commands:
           name: install base dependencies
           command: |
               apt update
-              apt install -y build-essential libcurl4-gnutls-dev libgnutls28-dev \
+              # libcurl4-gnutls-dev libgnutls28-dev can be remove later, but for now they are used for the migration tests
+              apt install -y build-essential \
+                  libcurl4-gnutls-dev libgnutls28-dev \
                   libpq-dev python3 python3-venv python3-dev cmake git
       - run:
           name: install emissions-api in virtualenv
@@ -60,7 +62,6 @@ jobs:
               . env/bin/activate
               python -c "import emissionsapi"
               python -c "import emissionsapi.web"
-              python -c "import emissionsapi.download"
               python -c "import emissionsapi.db"
               python -c "import emissionsapi.preprocess"
               deactivate
@@ -71,7 +72,6 @@ jobs:
             python setup.py install
             cd /
             python -c "import emissionsapi"
-            python -c "import emissionsapi.download"
             python -c "import emissionsapi.db"
             python -c "import emissionsapi.preprocess"
             python -c "import emissionsapi.web"
