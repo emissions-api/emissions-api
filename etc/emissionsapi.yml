@@ -6,6 +6,10 @@ database: postgresql://emissionsapi:emissionsapi@127.0.0.1/emissionsapi
 # Default: data
 storage: data
 
+# Number of parallel workers preprocessing the data
+# Default: 1
+workers: 1
+
 # Configure which data to download from the ESA archives
 download:
   date:
