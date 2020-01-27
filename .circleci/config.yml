@@ -76,7 +76,7 @@ jobs:
             python -c "import emissionsapi.preprocess"
             python -c "import emissionsapi.web"
             deactivate
-  preprocess:
+  preprocess and serve:
     docker:
       - image: debian:buster
       - image: circleci/postgres:11-postgis
@@ -91,6 +91,13 @@ jobs:
       - run:
           name: preprocess test data
           command: ./env/bin/python -m emissionsapi.preprocess
+      - run:
+          name: check webinterface
+          command: |
+              ./env/bin/pip install robotframework RESTinstance
+              ./env/bin/python -m emissionsapi.web &> /dev/null &
+              sleep 2
+              ./env/bin/robot .robot/webserver.robot
   database migration:
     docker:
       - image: debian:buster
@@ -133,7 +140,7 @@ workflows:
       - install buster
   integration tests:
     jobs:
-      - preprocess
+      - preprocess and serve
       - database migration:
           filters:
             branches:
