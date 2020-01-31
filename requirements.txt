@@ -21,7 +21,7 @@ MarkupSafe==1.1.1
 netCDF4==1.5.3
 numpy==1.18.1
 openapi-spec-validator==0.2.8
-pandas==0.25.3
+pandas==1.0.0
 psycopg2==2.8.4
 pycurl==7.43.0.4
 pyrsistent==0.15.7
