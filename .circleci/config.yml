@@ -53,33 +53,29 @@ jobs:
       - image: debian:buster
     steps:
       - checkout
-      - installation:
-          virtualenv: /tmp/env
+      - installation
       - run:
           name: check installation
           command: |
-              . /tmp/env/bin/activate
+              . env/bin/activate
               python -c "import emissionsapi"
               python -c "import emissionsapi.web"
               python -c "import emissionsapi.download"
               python -c "import emissionsapi.db"
               python -c "import emissionsapi.preprocess"
               deactivate
-              rm -r /tmp/env
       - run:
           name: install as module
           command: |
-            python3 -m venv /tmp/module-env
-            /tmp/module-env/bin/python setup.py install
+            . env/bin/activate
+            python setup.py install
             cd /
-            . /tmp/module-env/bin/activate
             python -c "import emissionsapi"
             python -c "import emissionsapi.download"
             python -c "import emissionsapi.db"
             python -c "import emissionsapi.preprocess"
             python -c "import emissionsapi.web"
             deactivate
-            rm -r /tmp/module-env
   preprocess:
     docker:
       - image: debian:buster
