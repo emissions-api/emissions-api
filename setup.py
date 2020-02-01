@@ -16,10 +16,12 @@ setup(
     url='https://github.com/emissions-api/emissions-api',
     packages=find_packages(),
     install_requires=[
-        'psycopg2',
         'connexion',
         'GeoAlchemy2',
         'geojson',
+        'geopandas',
+        'iso3166',
+        'psycopg2',
         'python-dateutil',
         's5a',
         'SQLAlchemy',

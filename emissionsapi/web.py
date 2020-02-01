@@ -16,7 +16,7 @@ import geojson
 from flask import redirect, request
 
 import emissionsapi.db
-from emissionsapi.country_bounding_boxes import country_bounding_boxes
+from emissionsapi.country_shapes import CountryNotFound, get_country_wkt
 from emissionsapi.utils import bounding_box_to_wkt, polygon_to_wkt, \
     RESTParamError
 
@@ -75,10 +75,10 @@ def parse_wkt(f):
         # parse parameter country
         elif country is not None:
             logger.debug('Try parsing country')
-            if country not in country_bounding_boxes:
+            try:
+                kwargs['wkt'] = get_country_wkt(country)
+            except CountryNotFound:
                 return 'Unknown country code.', 400
-            kwargs['wkt'] = bounding_box_to_wkt(
-                *country_bounding_boxes[country][1])
         # parse parameter polygon
         elif polygon is not None:
             try:
