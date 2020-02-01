@@ -171,7 +171,7 @@ components:
         Specifies a bounding box of the specified country
         from which measurements included in the response are taken.
 
-        The country is selected using an [ISO-3166, two-letter country code
+        The country is selected using an [ISO-3166, two-letter or three-letter country code
         ](https://www.iban.com/country-codes).
       example: DE
     polygon:
