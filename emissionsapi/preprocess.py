@@ -4,6 +4,7 @@
 # See LICENSE fore more information.
 """Preprocess the locally stored data and store them in the database.
 """
+import glob
 import logging
 import multiprocessing
 import os
@@ -25,20 +26,28 @@ workers = config('workers') or 1
 
 @emissionsapi.db.with_session
 def list_ncfiles(session):
-    """Generator yielding all nc files in download path.
+    """list all nc files in storage.
+
+    :param session: SQLAlchemy Session
+    :type session: sqlalchemy.orm.session.Session
+    :return: Set of all unprocessed files
+    :rtype: set
     """
-    # Iterate through the files and directories in storage path
-    for f in os.listdir(storage):
-        # Check if file was already added
-        if session.query(emissionsapi.db.File)\
-                  .filter(emissionsapi.db.File.filename == f).count():
-            logger.info("Skipping %s", f)
-            continue
-        # Join directory and filename
-        filepath = os.path.join(storage, f)
-        # yield file ending with '.nc'
-        if os.path.isfile(filepath) and filepath.endswith('.nc'):
-            yield filepath
+    # Get all *.nc files as set
+    files = set(glob.glob(os.path.join(storage, "*.nc")))
+    logger.info('%s nc files to process', len(files))
+
+    # Get all already processes files from the database as set
+    processed_files = {
+        os.path.join(storage, x.filename) for x in session.query(
+            emissionsapi.db.File.filename)}
+    logger.info('%s nc files already processed in total', len(processed_files))
+
+    # Get difference
+    files_to_process = files.difference(processed_files)
+    logger.info('%s nc files still to process', len(files_to_process))
+
+    return files_to_process
 
 
 @emissionsapi.db.with_session
