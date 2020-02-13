@@ -86,11 +86,11 @@
 <li class="toctree-l1"><a class="reference internal" href="database.html">Database</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Python API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.config">emissionsapi.config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.country_bounding_boxes">emissionsapi.country_bounding_boxes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#emissionsapi-country-bounding-boxes-module">emissionsapi.country_bounding_boxes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.db">emissionsapi.db module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.preprocess">emissionsapi.preprocess module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.utils">emissionsapi.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.web">emissionsapi.web module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#emissionsapi-web-module">emissionsapi.web module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi">Module contents</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#emissions-api">Emissions API</a></li>
 </ul>
@@ -205,8 +205,8 @@ locations taken into consideration are (in this particular order):</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-emissionsapi.country_bounding_boxes">
-<span id="emissionsapi-country-bounding-boxes-module"></span><h2>emissionsapi.country_bounding_boxes module<a class="headerlink" href="#module-emissionsapi.country_bounding_boxes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="emissionsapi-country-bounding-boxes-module">
+<h2>emissionsapi.country_bounding_boxes module<a class="headerlink" href="#emissionsapi-country-bounding-boxes-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-emissionsapi.db">
 <span id="emissionsapi-db-module"></span><h2>emissionsapi.db module<a class="headerlink" href="#module-emissionsapi.db" title="Permalink to this headline">¶</a></h2>
@@ -526,169 +526,8 @@ consecutive vertex of the polygon.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-emissionsapi.web">
-<span id="emissionsapi-web-module"></span><h2>emissionsapi.web module<a class="headerlink" href="#module-emissionsapi.web" title="Permalink to this headline">¶</a></h2>
-<p>Web application to deliver the data stored in the database via an API to
-the users.</p>
-<dl class="function">
-<dt id="emissionsapi.web.cache_with_session">
-<code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">cache_with_session</code><span class="sig-paren">(</span><em class="sig-param">function</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.cache_with_session" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function wrapper caching responses based on their request parameters in
-the PostgreSQL database.</p>
-<p>The established database session is passed to the wrapped function as first
-argument much like <a class="reference internal" href="#emissionsapi.db.with_session" title="emissionsapi.db.with_session"><code class="xref py py-func docutils literal notranslate"><span class="pre">with_session()</span></code></a> in case no cached
-value for this request is present yet.</p>
-<p>Argument names for beginning and end of a time frame affecting the cache
-are automatically assumed to be named <code class="docutils literal notranslate"><span class="pre">begin</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code>.  These are
-stored alongside the cached data to determine if the cached values needs to
-be purged when importing new data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Function wrapper</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>func</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="emissionsapi.web.entrypoint">
-<code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">entrypoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.entrypoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Entrypoint for running this as a module or from the binary.
-It starts the Connexion Debug Server. It is not meant to be used for
-production, but only during the development.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="emissionsapi.web.get_average">
-<code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">get_average</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">wkt=None</em>, <em class="sig-param">distance=None</em>, <em class="sig-param">begin=None</em>, <em class="sig-param">end=None</em>, <em class="sig-param">limit=None</em>, <em class="sig-param">offset=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.get_average" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get daily average for a specified area filtered by time.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy session</p></li>
-<li><p><strong>wkt</strong> (<em>string</em><em>, </em><em>optional</em>) – Well-known text representation of geometry, defaults to None.</p></li>
-<li><p><strong>distance</strong> (<em>float</em><em>, </em><em>optional</em>) – Distance as defined in PostGIS’ <a class="reference external" href="https://postgis.net/docs/ST_DWithin.html">ST_DWithin</a> function.</p></li>
-<li><p><strong>begin</strong> (<em>datetime.datetime</em>) – Filter out points before this date</p></li>
-<li><p><strong>end</strong> (<em>datetime.datetime</em>) – filter out points after this date</p></li>
-<li><p><strong>limit</strong> (<em>int</em>) – Limit number of returned items</p></li>
-<li><p><strong>offset</strong> (<em>int</em>) – Specify the offset of the first item to return</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of calculated averages</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="emissionsapi.web.get_data">
-<code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">wkt=None</em>, <em class="sig-param">distance=None</em>, <em class="sig-param">begin=None</em>, <em class="sig-param">end=None</em>, <em class="sig-param">limit=None</em>, <em class="sig-param">offset=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.get_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get data in GeoJSON format.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy session</p></li>
-<li><p><strong>wkt</strong> (<em>string</em><em>, </em><em>optional</em>) – Well-known text representation of geometry, defaults to None.</p></li>
-<li><p><strong>distance</strong> (<em>float</em><em>, </em><em>optional</em>) – Distance as defined in PostGIS’ <a class="reference external" href="https://postgis.net/docs/ST_DWithin.html">ST_DWithin</a> function.</p></li>
-<li><p><strong>end</strong> (<em>datetime.datetime</em>) – filter out points after this date</p></li>
-<li><p><strong>limit</strong> (<em>int</em>) – Limit number of returned items</p></li>
-<li><p><strong>offset</strong> (<em>int</em>) – Specify the offset of the first item to return</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Feature Collection with requested Points</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>geojson.FeatureCollection</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="emissionsapi.web.get_statistics">
-<code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">get_statistics</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">interval='day'</em>, <em class="sig-param">wkt=None</em>, <em class="sig-param">distance=None</em>, <em class="sig-param">begin=None</em>, <em class="sig-param">end=None</em>, <em class="sig-param">limit=None</em>, <em class="sig-param">offset=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.get_statistics" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get statistical data like amount, average, min, or max values for a
-specified time interval. Optionally, time and location filters can be
-applied.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy session</p></li>
-<li><p><strong>interval</strong> (<em>str</em>) – Length of the time interval for which data is being
-aggregated as accepted by PostgreSQL’s <a class="reference external" href="https://postgresql.org/docs/9.1/functions-datetime.html">date_trunc</a>
-function like <code class="docutils literal notranslate"><span class="pre">day</span></code> or <code class="docutils literal notranslate"><span class="pre">week</span></code>.</p></li>
-<li><p><strong>wkt</strong> (<em>string</em><em>, </em><em>optional</em>) – Well-known text representation of geometry, defaults to None.</p></li>
-<li><p><strong>distance</strong> (<em>float</em><em>, </em><em>optional</em>) – Distance as defined in PostGIS’ <a class="reference external" href="https://postgis.net/docs/ST_DWithin.html">ST_DWithin</a> function.</p></li>
-<li><p><strong>begin</strong> (<em>datetime.datetime</em>) – Filter out points before this date</p></li>
-<li><p><strong>end</strong> (<em>datetime.datetime</em>) – filter out points after this date</p></li>
-<li><p><strong>limit</strong> (<em>int</em>) – Limit number of returned items</p></li>
-<li><p><strong>offset</strong> (<em>int</em>) – Specify the offset of the first item to return</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of statistical values</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="emissionsapi.web.home">
-<code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">home</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.home" title="Permalink to this definition">¶</a></dt>
-<dd><p>Redirect / to the swagger ui</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Redirect response</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>werkzeug.wrappers.response.Response</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="emissionsapi.web.parse_date">
-<code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">parse_date</code><span class="sig-paren">(</span><em class="sig-param">*keys</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.parse_date" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function wrapper replacing string date arguments with
-datetime.datetime</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>keys</strong> (<em>list</em>) – keys to be parsed and replaced</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>wrapper function</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>func</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="emissionsapi.web.parse_wkt">
-<code class="sig-prename descclassname">emissionsapi.web.</code><code class="sig-name descname">parse_wkt</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.web.parse_wkt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function wrapper replacing ‘geoframe’, ‘country’ and ‘polygon’ with a
-WKT polygon.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>f</strong> (<em>Function</em>) – Function to call</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>e</strong> – Possible exception of f</p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Result of f</p>
-</dd>
-</dl>
-</dd></dl>
-
+<div class="section" id="emissionsapi-web-module">
+<h2>emissionsapi.web module<a class="headerlink" href="#emissionsapi-web-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-emissionsapi">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-emissionsapi" title="Permalink to this headline">¶</a></h2>
