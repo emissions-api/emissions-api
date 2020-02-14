@@ -1,6 +1,6 @@
 alembic==1.4.0
 attrs==19.3.0
-cftime==1.0.4.2
+cftime==1.1.0
 chardet==3.0.4
 Click==7.0
 click-plugins==1.1.1
