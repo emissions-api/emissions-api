@@ -7,7 +7,7 @@ Linux (Fedora 31)
 Emissions API relies on a few C libraries.
 To be able to build the python bindings for these libraries, we first need to install a few development libraries::
 
-   %> dnf install gcc python3-devel libpq-devel libcurl-devel
+   %> dnf install gcc python3-devel libpq-devel
 
 All other dependencies can easily be installed using pip.
 For this we use a virtual environment to avoid installing local dependencies globally in the system.
