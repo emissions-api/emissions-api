@@ -300,3 +300,17 @@ def limit_offset_query(query, limit=None, offset=None):
     if offset is not None:
         query = query.offset(offset)
     return query
+
+
+def get_data_range(session):
+    """Get the range of data currently available from the API.
+
+    :param session: SQLAlchemy Session
+    :type session: sqlalchemy.orm.session.Session
+    :return: SQLAlchemy Query requesting the minimum and maximum measurement
+             time from all values.
+    :rtype: sqlalchemy.orm.query.Query
+    """
+    return session.query(
+        sqlalchemy.func.min(carbonmonoxide.c.timestamp),
+        sqlalchemy.func.max(carbonmonoxide.c.timestamp))
