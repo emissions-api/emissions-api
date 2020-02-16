@@ -105,6 +105,18 @@ paths:
                 $ref: '#/components/schemas/Statistics'
         400:
           description: Parameter error
+  /api/v1/data-range.json:
+    get:
+      operationId: emissionsapi.web.get_data_range
+      description: |
+          Get the range of data currently available from the API.
+      responses:
+        200:
+          description: Object describing the range of data available.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataRange'
 
 components:
   parameters:
@@ -301,3 +313,12 @@ components:
               interval_start:
                 type: date-time
                 example: 2019-02-10T00:00:00Z
+    DataRange:
+      type: object
+      properties:
+        first:
+          type: date-time
+          example: 2019-02-10T13:05:08.812000Z
+        last:
+          type: date-time
+          example: 2019-02-10T13:03:40.254000Z

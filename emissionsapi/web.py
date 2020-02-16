@@ -298,6 +298,22 @@ def get_statistics(session, interval='day', wkt=None, distance=None,
         in query]
 
 
+@emissionsapi.db.with_session
+def get_data_range(session):
+    """Get the range of data currently available from the API.
+
+    :param session: SQLAlchemy session
+    :type session: sqlalchemy.orm.session.Session
+    :return: Object describing the range of data available
+    :rtype: dict
+    """
+    query = emissionsapi.db.get_data_range(session)
+
+    for min_time, max_time in query:
+        return {'first': min_time,
+                'last': max_time}
+
+
 # Create connexion app
 app = connexion.App(__name__)
 
