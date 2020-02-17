@@ -454,7 +454,18 @@ defaults to None</p></li>
 <dl class="function">
 <dt id="emissionsapi.preprocess.list_ncfiles">
 <code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">list_ncfiles</code><span class="sig-paren">(</span><em class="sig-param">session</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.list_ncfiles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generator yielding all nc files in download path.</p>
+<dd><p>list all nc files in storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Set of all unprocessed files</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
