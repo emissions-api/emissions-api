@@ -330,6 +330,24 @@ truncated by day.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="emissionsapi.db.get_data_range">
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_data_range</code><span class="sig-paren">(</span><em class="sig-param">session</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_data_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the range of data currently available from the API.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>SQLAlchemy Query requesting the minimum and maximum measurement
+time from all values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>sqlalchemy.orm.query.Query</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="emissionsapi.db.get_points">
 <code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_points</code><span class="sig-paren">(</span><em class="sig-param">session</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all points.</p>
