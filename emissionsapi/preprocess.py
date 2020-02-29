@@ -23,6 +23,9 @@ storage = config('storage') or 'data'
 # Number of workers to preprocess
 workers = config('workers') or 1
 
+# H3 Resolution
+resolution = config('resolution') or 4
+
 
 @emissionsapi.db.with_session
 def list_ncfiles(session):
@@ -93,6 +96,11 @@ def preprocess_file(ncfile):
     if len(scan) == 0:
         logger.warning("No points left after filtering of '%s'", ncfile)
         return
+
+    logger.info("Apply H3 grid to '%s' points of file '%s'", len(scan), ncfile)
+    scan = s5a.point_to_h3(scan, resolution=resolution)
+    scan = s5a.aggregate_h3(scan)
+    scan = s5a.h3_to_point(scan)
 
     logger.info("Writing %s points from '%s' to database", len(scan), ncfile)
     write_to_database(scan, ncfile)
