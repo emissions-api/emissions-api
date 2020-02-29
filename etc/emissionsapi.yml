@@ -2,6 +2,10 @@
 # Default: postgresql://user:user@localhost/db
 database: postgresql://emissionsapi:emissionsapi@127.0.0.1/emissionsapi
 
+# H3 Resolution for point reduction, see https://uber.github.io/h3/#/documentation/core-library/resolution-table.
+# Default: 4
+resolution: 4
+
 # Storage directory location.
 # Default: data
 storage: data
