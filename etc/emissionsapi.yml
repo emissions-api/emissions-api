@@ -6,17 +6,14 @@ database: postgresql://emissionsapi:emissionsapi@127.0.0.1/emissionsapi
 # Default: 4
 resolution: 4
 
-# Storage directory location.
-# Default: data
-storage: data
-
 # Number of parallel workers preprocessing the data
 # Default: 1
 workers: 1
 
-# UI Settings
-ui:
-  # List of products present in the ui
-  # Default: ['carbonmonoxide']
-  products:
-    - carbonmonoxide
+# List of products and where to find them.
+# "product" is pointing to the product/product layer in the nc file.
+# Default: [{"carbonmonoxide": {"storage": "data", "product": "carbonmonoxide_total_column"} ]
+products:
+  carbonmonoxide:
+    storage: data
+    product: carbonmonoxide_total_column

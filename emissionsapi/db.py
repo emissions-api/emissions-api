@@ -28,6 +28,14 @@ logger = logging.getLogger(__name__)
 # Retrieved as environment variable.
 database = config('database') or 'postgresql://user:user@localhost/db'
 
+# Products
+products = config('products') or {
+    'carbonmonoxide': {
+        'storage': 'data',
+        'product': 'carbonmonoxide_total_column'
+    }
+}
+
 # H3 Resolution
 resolution = config('resolution') or 4
 
@@ -99,11 +107,12 @@ class Cache(Base):
         session.commit()
 
 
-carbonmonoxide = sqlalchemy.Table(
-    'carbonmonoxide', Base.metadata,
-    Column('value', Float),
-    Column('timestamp', DateTime, index=True),
-    Column('geom', geoalchemy2.Geometry(geometry_type='POINT')))
+for name, attributes in products.items():
+    attributes['table'] = sqlalchemy.Table(
+        name, Base.metadata,
+        Column('value', Float),
+        Column('timestamp', DateTime, index=True),
+        Column('geom', geoalchemy2.Geometry(geometry_type='POINT')))
 
 
 def with_session(f):
@@ -152,7 +161,7 @@ def get_session():
     return __session__()
 
 
-def insert_dataset(session, data, tbl=carbonmonoxide):
+def insert_dataset(session, data, tbl):
     '''Batch insert data into the database using PostGIS specific functions.
 
     :param session: SQLAlchemy Session
@@ -171,47 +180,53 @@ def insert_dataset(session, data, tbl=carbonmonoxide):
     session.execute(query)
 
 
-def get_points(session):
+def get_points(session, tbl):
     """Get all points.
 
     :param session: SQLAlchemy Session
     :type session: sqlalchemy.orm.session.Session
+    :param tbl: Table to get data from
+    :type tbl: sqlalchemy.sql.schema.Table
     :return: SQLAlchemy Query returning tuples of value, timestamp, longitude,
              and latitude.
     :rtype: sqlalchemy.orm.query.Query
     """
     return session.query(
-        carbonmonoxide.c.value,
-        carbonmonoxide.c.timestamp,
-        carbonmonoxide.c.geom.ST_X(),
-        carbonmonoxide.c.geom.ST_Y())
+        tbl.c.value,
+        tbl.c.timestamp,
+        tbl.c.geom.ST_X(),
+        tbl.c.geom.ST_Y())
 
 
-def get_averages(session):
+def get_averages(session, tbl):
     """Get daily averages of all points.
 
     :param session: SQLAlchemy Session
     :type session: sqlalchemy.orm.session.Session
+    :param tbl: Table to get data from
+    :type tbl: sqlalchemy.sql.schema.Table
     :return: SQLAlchemy Query with tuple of the daily carbon monoxide average,
              the maximal timestamp the minimal timestamp and the timestamp
              truncated by day.
     :rtype: sqlalchemy.orm.query.Query
     """
-    day = sqlalchemy.func.date(carbonmonoxide.c.timestamp)
+    day = sqlalchemy.func.date(tbl.c.timestamp)
     return session.query(
-        sqlalchemy.func.avg(carbonmonoxide.c.value),
-        sqlalchemy.func.max(carbonmonoxide.c.timestamp),
-        sqlalchemy.func.min(carbonmonoxide.c.timestamp),
+        sqlalchemy.func.avg(tbl.c.value),
+        sqlalchemy.func.max(tbl.c.timestamp),
+        sqlalchemy.func.min(tbl.c.timestamp),
         day).group_by(day)
 
 
-def get_statistics(session, interval_length='day'):
+def get_statistics(session, tbl, interval_length='day'):
     """Get statistical data like amount, average, min, or max values for a
     specified time interval. Optionally, time and location filters can be
     applied.
 
     :param session: SQLAlchemy Session
     :type session: sqlalchemy.orm.session.Session
+    :param tbl: Table to get data from
+    :type tbl: sqlalchemy.sql.schema.Table
     :param interval_length: Length of the time interval for which data is being
                             aggregated as accepted by PostgreSQL's date_trunc_
                             function like ``day`` or ``week``.
@@ -220,9 +235,9 @@ def get_statistics(session, interval_length='day'):
              the specified time interval:
 
              - number of considered measurements
-             - average carbon monoxide value
-             - minimum carbon monoxide value
-             - maximum carbon monoxide value
+             - average product value
+             - minimum product value
+             - maximum product value
              - time of the first measurement
              - time of the last measurement
              - start of the interval
@@ -231,23 +246,25 @@ def get_statistics(session, interval_length='day'):
     .. _date_trunc: https://postgresql.org/docs/9.1/functions-datetime.html
     """
     interval = sqlalchemy.func.date_trunc(interval_length,
-                                          carbonmonoxide.c.timestamp)
+                                          tbl.c.timestamp)
     return session.query(
-        sqlalchemy.func.count(carbonmonoxide.c.value),
-        sqlalchemy.func.avg(carbonmonoxide.c.value),
-        sqlalchemy.func.stddev(carbonmonoxide.c.value),
-        sqlalchemy.func.min(carbonmonoxide.c.value),
-        sqlalchemy.func.max(carbonmonoxide.c.value),
-        sqlalchemy.func.min(carbonmonoxide.c.timestamp),
-        sqlalchemy.func.max(carbonmonoxide.c.timestamp),
+        sqlalchemy.func.count(tbl.c.value),
+        sqlalchemy.func.avg(tbl.c.value),
+        sqlalchemy.func.stddev(tbl.c.value),
+        sqlalchemy.func.min(tbl.c.value),
+        sqlalchemy.func.max(tbl.c.value),
+        sqlalchemy.func.min(tbl.c.timestamp),
+        sqlalchemy.func.max(tbl.c.timestamp),
         interval).group_by(interval)
 
 
-def filter_query(query, wkt=None, distance=None, begin=None, end=None):
+def filter_query(query, tbl, wkt=None, distance=None, begin=None, end=None):
     """Filter query by time and location.
 
     :param query: SQLAlchemy Query
     :type query: sqlalchemy.orm.Query
+    :param tbl: Table to get data from
+    :type tbl: sqlalchemy.sql.schema.Table
     :param wkt: WKT Element specifying an area in which to search for points,
                 defaults to None.
     :type wkt: geoalchemy2.WKTElement, optional
@@ -266,18 +283,18 @@ def filter_query(query, wkt=None, distance=None, begin=None, end=None):
     if wkt is not None:
         if distance is not None:
             query = query.filter(geoalchemy2.func.ST_DWITHIN(
-                carbonmonoxide.c.geom, wkt, distance))
+                tbl.c.geom, wkt, distance))
         else:
             query = query.filter(geoalchemy2.func.ST_WITHIN(
-                carbonmonoxide.c.geom, wkt))
+                tbl.c.geom, wkt))
 
     # Filter for points after the time specified as begin
     if begin is not None:
-        query = query.filter(begin <= carbonmonoxide.c.timestamp)
+        query = query.filter(begin <= tbl.c.timestamp)
 
     # Filter for points before the time specified as end
     if end is not None:
-        query = query.filter(end > carbonmonoxide.c.timestamp)
+        query = query.filter(end > tbl.c.timestamp)
 
     return query
 
@@ -305,15 +322,17 @@ def limit_offset_query(query, limit=None, offset=None):
     return query
 
 
-def get_data_range(session):
+def get_data_range(session, tbl):
     """Get the range of data currently available from the API.
 
     :param session: SQLAlchemy Session
     :type session: sqlalchemy.orm.session.Session
+    :param tbl: Table to get data from
+    :type tbl: sqlalchemy.sql.schema.Table
     :return: SQLAlchemy Query requesting the minimum and maximum measurement
              time from all values.
     :rtype: sqlalchemy.orm.query.Query
     """
     return session.query(
-        sqlalchemy.func.min(carbonmonoxide.c.timestamp),
-        sqlalchemy.func.max(carbonmonoxide.c.timestamp))
+        sqlalchemy.func.min(tbl.c.timestamp),
+        sqlalchemy.func.max(tbl.c.timestamp))
