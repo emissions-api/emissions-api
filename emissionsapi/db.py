@@ -28,6 +28,9 @@ logger = logging.getLogger(__name__)
 # Retrieved as environment variable.
 database = config('database') or 'postgresql://user:user@localhost/db'
 
+# H3 Resolution
+resolution = config('resolution') or 4
+
 # Global session variable. Set on initialization.
 __session__ = None
 
