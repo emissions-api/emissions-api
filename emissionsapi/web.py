@@ -14,6 +14,7 @@ import connexion
 import json
 import geojson
 from flask import redirect, request
+from h3 import h3
 
 import emissionsapi.db
 from emissionsapi.country_shapes import CountryNotFound, get_country_wkt
@@ -90,10 +91,12 @@ def parse_wkt(f):
         elif point is not None:
             try:
                 logger.debug('Try to parse point')
-                kwargs['wkt'] = f'POINT({point[0]} {point[1]})'
-                # Take a radius from 0.2 decimal degree which are approx.
-                # 22264 meter
-                kwargs['distance'] = 0.2
+                point = h3.h3_to_geo(h3.geo_to_h3(
+                    point[1], point[0], emissionsapi.db.resolution))
+                kwargs['wkt'] = f'POINT({point[1]} {point[0]})'
+                # Take a radius from 0.01 decimal degree which are approx.
+                # 1113 meter
+                kwargs['distance'] = 0.01
             except KeyError:
                 return 'Invalid point', 400
         return f(*args, **kwargs)

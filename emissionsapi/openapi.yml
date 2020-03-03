@@ -172,7 +172,7 @@ components:
         minItems: 2
       description: |
           Defines a single `point` in the form longitude,latitude.
-          Only data in approximately 22km radius around this point is considered for the result.
+          The nearest point in the grid is used for calculations.
       example: [8.0498, 52.27264]
     country:
       in: query
