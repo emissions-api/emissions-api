@@ -13,6 +13,7 @@ setup(
     name='emissions-api',
     author='Emissions API Developers',
     license='MIT',
+    version='2',
     url='https://github.com/emissions-api/emissions-api',
     packages=find_packages(),
     install_requires=[

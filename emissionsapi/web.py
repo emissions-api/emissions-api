@@ -17,7 +17,6 @@ from flask import redirect, request
 from h3 import h3
 
 import emissionsapi.db
-from emissionsapi.config import config
 from emissionsapi.country_shapes import CountryNotFound, get_country_wkt
 from emissionsapi.utils import bounding_box_to_wkt, polygon_to_wkt, \
     RESTParamError
@@ -25,8 +24,31 @@ from emissionsapi.utils import bounding_box_to_wkt, polygon_to_wkt, \
 # Logger
 logger = logging.getLogger(__name__)
 
-# Supported products
-products = config('ui', 'products') or ['carbonmonoxide']
+
+def get_table(f):
+    '''Function wrapper getting the corresponding table to a product.
+
+    :param f: Function to call
+    :type f: Function
+    :raises e: Possible exception of f
+    :return: Result of f
+    '''
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        logger.debug('Try getting table to product')
+        product = kwargs.get('product')
+
+        # Error cases should never happen,
+        # since connexion only allows valid values.
+        if not product:
+            return 'No product specified', 400
+        try:
+            tbl = emissionsapi.db.products[product]['table']
+        except KeyError:
+            return 'Unsupported product specified', 400
+
+        return f(*args, **kwargs, tbl=tbl)
+    return wrapper
 
 
 def parse_date(*keys):
@@ -156,11 +178,12 @@ def cache_with_session(function):
     return wrapper
 
 
+@get_table
 @parse_wkt
 @parse_date('begin', 'end')
 @emissionsapi.db.with_session
 def get_data(session, wkt=None, distance=None, begin=None, end=None,
-             limit=None, offset=None, **kwargs):
+             limit=None, offset=None, tbl=None, **kwargs):
     """Get data in GeoJSON format.
 
     :param session: SQLAlchemy session
@@ -177,6 +200,8 @@ def get_data(session, wkt=None, distance=None, begin=None, end=None,
     :type limit: int
     :param offset: Specify the offset of the first item to return
     :type offset: int
+    :param tbl: Table to get data from, defaults to None
+    :type tbl: sqlalchemy.sql.schema.Table, optional
     :return: Feature Collection with requested Points
     :rtype: geojson.FeatureCollection
 
@@ -185,10 +210,10 @@ def get_data(session, wkt=None, distance=None, begin=None, end=None,
     # Init feature list
     features = []
     # Iterate through database query
-    query = emissionsapi.db.get_points(session)
+    query = emissionsapi.db.get_points(session, tbl)
     # Filter result
     query = emissionsapi.db.filter_query(
-        query, wkt=wkt, distance=distance, begin=begin, end=end)
+        query, tbl, wkt=wkt, distance=distance, begin=begin, end=end)
     # Apply limit and offset
     query = emissionsapi.db.limit_offset_query(
         query, limit=limit, offset=offset)
@@ -206,10 +231,11 @@ def get_data(session, wkt=None, distance=None, begin=None, end=None,
     return feature_collection
 
 
+@get_table
 @parse_wkt
 @cache_with_session
 def get_average(session, wkt=None, distance=None, begin=None, end=None,
-                limit=None, offset=None, **kwargs):
+                limit=None, offset=None, tbl=None, **kwargs):
     """Get daily average for a specified area filtered by time.
 
     :param session: SQLAlchemy session
@@ -226,15 +252,17 @@ def get_average(session, wkt=None, distance=None, begin=None, end=None,
     :type limit: int
     :param offset: Specify the offset of the first item to return
     :type offset: int
+    :param tbl: Table to get data from, defaults to None
+    :type tbl: sqlalchemy.sql.schema.Table, optional
     :return: List of calculated averages
     :rtype: list
 
     .. _ST_DWithin: https://postgis.net/docs/ST_DWithin.html
     """
-    query = emissionsapi.db.get_averages(session)
+    query = emissionsapi.db.get_averages(session, tbl)
     # Filter result
     query = emissionsapi.db.filter_query(
-        query, wkt=wkt, distance=distance, begin=begin, end=end)
+        query, tbl, wkt=wkt, distance=distance, begin=begin, end=end)
     # Apply limit and offset
     query = emissionsapi.db.limit_offset_query(
         query, limit=limit, offset=offset)
@@ -248,10 +276,12 @@ def get_average(session, wkt=None, distance=None, begin=None, end=None,
     return result
 
 
+@get_table
 @parse_wkt
 @cache_with_session
 def get_statistics(session, interval='day', wkt=None, distance=None,
-                   begin=None, end=None, limit=None, offset=None, **kwargs):
+                   begin=None, end=None, limit=None, offset=None, tbl=None,
+                   **kwargs):
     """Get statistical data like amount, average, min, or max values for a
     specified time interval. Optionally, time and location filters can be
     applied.
@@ -274,17 +304,18 @@ def get_statistics(session, interval='day', wkt=None, distance=None,
     :type limit: int
     :param offset: Specify the offset of the first item to return
     :type offset: int
+    :param tbl: Table to get data from, defaults to None
+    :type tbl: sqlalchemy.sql.schema.Table, optional
     :return: List of statistical values
     :rtype: list
 
     .. _date_trunc: https://postgresql.org/docs/9.1/functions-datetime.html
     .. _ST_DWithin: https://postgis.net/docs/ST_DWithin.html
     """
-
-    query = emissionsapi.db.get_statistics(session)
+    query = emissionsapi.db.get_statistics(session, tbl)
     # Filter result
     query = emissionsapi.db.filter_query(
-        query, wkt=wkt, distance=distance, begin=begin, end=end)
+        query, tbl, wkt=wkt, distance=distance, begin=begin, end=end)
     # Apply limit and offset
     query = emissionsapi.db.limit_offset_query(
         query, limit=limit, offset=offset)
@@ -306,20 +337,37 @@ def get_statistics(session, interval='day', wkt=None, distance=None,
         in query]
 
 
+@get_table
 @emissionsapi.db.with_session
-def get_data_range(session):
+def get_data_range(session, tbl=None, **kwargs):
     """Get the range of data currently available from the API.
 
     :param session: SQLAlchemy session
     :type session: sqlalchemy.orm.session.Session
+    :param tbl: Table to get data from, defaults to None
+    :type tbl: sqlalchemy.sql.schema.Table, optional
     :return: Object describing the range of data available
     :rtype: dict
     """
-    query = emissionsapi.db.get_data_range(session)
+    query = emissionsapi.db.get_data_range(session, tbl)
 
     for min_time, max_time in query:
         return {'first': min_time,
                 'last': max_time}
+
+
+def get_products():
+    """Get all products currently available from the API.
+
+    :return: Dictionary describing the available products.
+    :rtype: dict
+    """
+    return [
+        {
+            'name': name,
+            'product_variable': attributes['product']
+        } for name, attributes in emissionsapi.db.products.items()
+    ]
 
 
 # Create connexion app
@@ -328,7 +376,7 @@ app = connexion.App(__name__)
 # Add swagger description to api
 app.add_api(os.path.join(os.path.abspath(
     os.path.dirname(__file__)), 'openapi.yml'),
-    arguments={'products': products})
+    arguments={'products': list(emissionsapi.db.products.keys())})
 
 # Create app to run with wsgi server
 application = app.app

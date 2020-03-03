@@ -5,7 +5,7 @@ info:
       Emissions API’s mission is to provide easy access to this data without
       the need of being an expert in satellite data analysis and without having
       to process terabytes of data.
-  version: "0.1"
+  version: "2"
   contact:
     name: The Emissions API Developers
     url: https://emissions-api.org
@@ -14,7 +14,7 @@ externalDocs:
   description: Source code documentation
   url: https://docs.emissions-api.org
 paths:
-  /api/v1/{product}/geo.json:
+  /api/v2/{product}/geo.json:
     get:
       operationId: emissionsapi.web.get_data
       description: |
@@ -45,7 +45,7 @@ paths:
                 $ref: '#/components/schemas/Feature Collection'
         400:
           description: Parameter error
-  /api/v1/{product}/average.json:
+  /api/v2/{product}/average.json:
     get:
       operationId: emissionsapi.web.get_average
       description: |
@@ -76,7 +76,7 @@ paths:
                 $ref: '#/components/schemas/Averages'
         400:
           description: Parameter error
-  /api/v1/{product}/statistics.json:
+  /api/v2/{product}/statistics.json:
     get:
       operationId: emissionsapi.web.get_statistics
       description: |
@@ -108,11 +108,13 @@ paths:
                 $ref: '#/components/schemas/Statistics'
         400:
           description: Parameter error
-  /api/v1/data-range.json:
+  /api/v2/{product}/data-range.json:
     get:
       operationId: emissionsapi.web.get_data_range
       description: |
           Get the range of data currently available from the API.
+      parameters:
+        - $ref: '#/components/parameters/product'
       responses:
         200:
           description: Object describing the range of data available.
@@ -120,6 +122,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DataRange'
+  /api/v2/products.json:
+    get:
+      operationId: emissionsapi.web.get_products
+      description: |
+          Get the currently available products from the API.
+      responses:
+        200:
+          description: List of Products.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Products'
 
 components:
   parameters:
@@ -332,3 +346,17 @@ components:
         last:
           type: date-time
           example: 2019-02-10T13:03:40.254000Z
+    Products:
+      type: array
+      description: Products of the API.
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            example: carbonmonoxide
+            description: Name of the product
+          product_variable:
+            type: string
+            example: carbonmonoxide_total_column
+            description: Name of the variable as defined from the ESA from within the processed files.

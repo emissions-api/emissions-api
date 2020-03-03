@@ -5,6 +5,7 @@
 """Preprocess the locally stored data and store them in the database.
 """
 import glob
+import itertools
 import logging
 import multiprocessing
 import os
@@ -17,19 +18,18 @@ import emissionsapi.db
 # Logger
 logger = logging.getLogger(__name__)
 
-# Path where to store the data
-storage = config('storage') or 'data'
-
 # Number of workers to preprocess
 workers = config('workers') or 1
 
 
 @emissionsapi.db.with_session
-def list_ncfiles(session):
+def list_ncfiles(session, storage):
     """list all nc files in storage.
 
     :param session: SQLAlchemy Session
     :type session: sqlalchemy.orm.session.Session
+    :param storage: Path to the directory containing the *.nc files
+    :type storage: str
     :return: Set of all unprocessed files
     :rtype: set
     """
@@ -51,18 +51,22 @@ def list_ncfiles(session):
 
 
 @emissionsapi.db.with_session
-def write_to_database(session, data, filepath):
+def write_to_database(session, data, filepath, tbl):
     """Write data to the PostGIS database
 
     :param session: SQLAlchemy Session
     :type session: sqlalchemy.orm.session.Session
+    :param tbl: Table to to write data to
+    :type tbl: sqlalchemy.sql.schema.Table
     :param data: Data to add to the database
     :type data: pandas.core.frame.DataFrame
     :param filepath: Path to the file being imported
     :type filepath: str
+    :param tbl: Table to to write data to
+    :type tbl: sqlalchemy.sql.schema.Table
     """
     # Insert data
-    emissionsapi.db.insert_dataset(session, data)
+    emissionsapi.db.insert_dataset(session, data, tbl)
 
     # Add file to database
     filename = os.path.basename(filepath)
@@ -76,14 +80,19 @@ def write_to_database(session, data, filepath):
     session.commit()
 
 
-def preprocess_file(ncfile):
+def preprocess_file(ncfile, tbl, product):
     '''Preprocess a single file and write it to the database
 
     :param ncfile: path to the ncfile to preprocess
     :type ncfile: str
+    :param tbl: Table to to write data to
+    :type tbl: sqlalchemy.sql.schema.Table
+    :param product: The name of the product to load from the files
+    :type product: str
+
     '''
-    logger.info("Reading file '%s'", ncfile)
-    scan = s5a.load_ncfile(ncfile)
+    logger.info("Reading '%s' from file '%s'", product, ncfile)
+    scan = s5a.load_ncfile(ncfile, data_variable_name=product)
 
     logger.info("Filtering %s points by quality of file '%s'", len(scan),
                 ncfile)
@@ -100,7 +109,7 @@ def preprocess_file(ncfile):
     scan = s5a.h3_to_point(scan)
 
     logger.info("Writing %s points from '%s' to database", len(scan), ncfile)
-    write_to_database(scan, ncfile)
+    write_to_database(scan, ncfile, tbl)
 
     logger.info("Finished writing points from '%s' to database", ncfile)
 
@@ -109,9 +118,15 @@ def main():
     """Entrypoint for running this as a module or from the binary.
     Triggers the preprocessing of the data.
     """
-    # Iterate through all find nc files
-    with multiprocessing.Pool(workers) as p:
-        p.map(preprocess_file, sorted(list_ncfiles()))
+
+    for name, attributes in emissionsapi.db.products.items():
+        logger.info('Preprocessing product %s', name)
+        # Iterate through all nc files
+        with multiprocessing.Pool(workers) as p:
+            p.starmap(preprocess_file, zip(
+                sorted(list_ncfiles(attributes['storage'])),
+                itertools.repeat(attributes['table']),
+                itertools.repeat(attributes.get('product'))))
 
     logger.info('Finished database import')
 
