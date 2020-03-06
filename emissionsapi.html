@@ -288,12 +288,13 @@ has been imported.</p>
 
 <dl class="function">
 <dt id="emissionsapi.db.filter_query">
-<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">filter_query</code><span class="sig-paren">(</span><em class="sig-param">query</em>, <em class="sig-param">wkt=None</em>, <em class="sig-param">distance=None</em>, <em class="sig-param">begin=None</em>, <em class="sig-param">end=None</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.filter_query" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">filter_query</code><span class="sig-paren">(</span><em class="sig-param">query</em>, <em class="sig-param">tbl</em>, <em class="sig-param">wkt=None</em>, <em class="sig-param">distance=None</em>, <em class="sig-param">begin=None</em>, <em class="sig-param">end=None</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.filter_query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filter query by time and location.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>query</strong> (<em>sqlalchemy.orm.Query</em>) – SQLAlchemy Query</p></li>
+<li><p><strong>tbl</strong> (<em>sqlalchemy.sql.schema.Table</em>) – Table to get data from</p></li>
 <li><p><strong>wkt</strong> (<em>geoalchemy2.WKTElement</em><em>, </em><em>optional</em>) – WKT Element specifying an area in which to search for points,
 defaults to None.</p></li>
 <li><p><strong>distance</strong> (<em>float</em><em>, </em><em>optional</em>) – Distance as defined in PostGIS’ <a class="reference external" href="https://postgis.net/docs/ST_DWithin.html">ST_DWithin</a> function.</p></li>
@@ -312,11 +313,14 @@ defaults to None.</p></li>
 
 <dl class="function">
 <dt id="emissionsapi.db.get_averages">
-<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_averages</code><span class="sig-paren">(</span><em class="sig-param">session</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_averages" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_averages</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tbl</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_averages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get daily averages of all points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p></li>
+<li><p><strong>tbl</strong> (<em>sqlalchemy.sql.schema.Table</em>) – Table to get data from</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>SQLAlchemy Query with tuple of the daily carbon monoxide average,
@@ -331,11 +335,14 @@ truncated by day.</p>
 
 <dl class="function">
 <dt id="emissionsapi.db.get_data_range">
-<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_data_range</code><span class="sig-paren">(</span><em class="sig-param">session</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_data_range" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_data_range</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tbl</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_data_range" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the range of data currently available from the API.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p></li>
+<li><p><strong>tbl</strong> (<em>sqlalchemy.sql.schema.Table</em>) – Table to get data from</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>SQLAlchemy Query requesting the minimum and maximum measurement
@@ -349,11 +356,14 @@ time from all values.</p>
 
 <dl class="function">
 <dt id="emissionsapi.db.get_points">
-<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_points</code><span class="sig-paren">(</span><em class="sig-param">session</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_points" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_points</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tbl</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p></li>
+<li><p><strong>tbl</strong> (<em>sqlalchemy.sql.schema.Table</em>) – Table to get data from</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>SQLAlchemy Query returning tuples of value, timestamp, longitude,
@@ -378,7 +388,7 @@ and latitude.</p>
 
 <dl class="function">
 <dt id="emissionsapi.db.get_statistics">
-<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_statistics</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">interval_length='day'</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_statistics" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_statistics</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tbl</em>, <em class="sig-param">interval_length='day'</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_statistics" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get statistical data like amount, average, min, or max values for a
 specified time interval. Optionally, time and location filters can be
 applied.</p>
@@ -386,6 +396,7 @@ applied.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p></li>
+<li><p><strong>tbl</strong> (<em>sqlalchemy.sql.schema.Table</em>) – Table to get data from</p></li>
 <li><p><strong>interval_length</strong> (<em>str</em>) – Length of the time interval for which data is being
 aggregated as accepted by PostgreSQL’s <a class="reference external" href="https://postgresql.org/docs/9.1/functions-datetime.html">date_trunc</a>
 function like <code class="docutils literal notranslate"><span class="pre">day</span></code> or <code class="docutils literal notranslate"><span class="pre">week</span></code>.</p></li>
@@ -396,9 +407,9 @@ function like <code class="docutils literal notranslate"><span class="pre">day</
 the specified time interval:</p>
 <ul class="simple">
 <li><p>number of considered measurements</p></li>
-<li><p>average carbon monoxide value</p></li>
-<li><p>minimum carbon monoxide value</p></li>
-<li><p>maximum carbon monoxide value</p></li>
+<li><p>average product value</p></li>
+<li><p>minimum product value</p></li>
+<li><p>maximum product value</p></li>
 <li><p>time of the first measurement</p></li>
 <li><p>time of the last measurement</p></li>
 <li><p>start of the interval</p></li>
@@ -413,7 +424,7 @@ the specified time interval:</p>
 
 <dl class="function">
 <dt id="emissionsapi.db.insert_dataset">
-<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">insert_dataset</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">data</em>, <em class="sig-param">tbl=sqlalchemy.Table</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.insert_dataset" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">insert_dataset</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">data</em>, <em class="sig-param">tbl</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.insert_dataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Batch insert data into the database using PostGIS specific functions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -471,11 +482,14 @@ defaults to None</p></li>
 <p>Preprocess the locally stored data and store them in the database.</p>
 <dl class="function">
 <dt id="emissionsapi.preprocess.list_ncfiles">
-<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">list_ncfiles</code><span class="sig-paren">(</span><em class="sig-param">session</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.list_ncfiles" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">list_ncfiles</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">storage</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.list_ncfiles" title="Permalink to this definition">¶</a></dt>
 <dd><p>list all nc files in storage.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p></li>
+<li><p><strong>storage</strong> (<em>str</em>) – Path to the directory containing the <a href="#id1"><span class="problematic" id="id2">*</span></a>.nc files</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Set of all unprocessed files</p>
@@ -495,25 +509,31 @@ Triggers the preprocessing of the data.</p>
 
 <dl class="function">
 <dt id="emissionsapi.preprocess.preprocess_file">
-<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">preprocess_file</code><span class="sig-paren">(</span><em class="sig-param">ncfile</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.preprocess_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">preprocess_file</code><span class="sig-paren">(</span><em class="sig-param">ncfile</em>, <em class="sig-param">tbl</em>, <em class="sig-param">product</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.preprocess_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Preprocess a single file and write it to the database</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ncfile</strong> (<em>str</em>) – path to the ncfile to preprocess</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ncfile</strong> (<em>str</em>) – path to the ncfile to preprocess</p></li>
+<li><p><strong>tbl</strong> (<em>sqlalchemy.sql.schema.Table</em>) – Table to to write data to</p></li>
+<li><p><strong>product</strong> (<em>str</em>) – The name of the product to load from the files</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="emissionsapi.preprocess.write_to_database">
-<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">write_to_database</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">data</em>, <em class="sig-param">filepath</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.write_to_database" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">write_to_database</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">data</em>, <em class="sig-param">filepath</em>, <em class="sig-param">tbl</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.write_to_database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write data to the PostGIS database</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p></li>
+<li><p><strong>tbl</strong> (<em>sqlalchemy.sql.schema.Table</em>) – Table to to write data to</p></li>
 <li><p><strong>data</strong> (<em>pandas.core.frame.DataFrame</em>) – Data to add to the database</p></li>
 <li><p><strong>filepath</strong> (<em>str</em>) – Path to the file being imported</p></li>
+<li><p><strong>tbl</strong> – Table to to write data to</p></li>
 </ul>
 </dd>
 </dl>
