@@ -29,7 +29,7 @@ openapi-spec-validator==0.2.8
 pandas==1.0.1
 psycopg2==2.8.4
 pyproj==2.5.0
-pyrsistent==0.15.7
+pyrsistent==0.16.0
 python-dateutil==2.8.1
 python-editor==1.0.4
 pytz==2019.3
