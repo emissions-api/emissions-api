@@ -86,7 +86,7 @@
 <li class="toctree-l1"><a class="reference internal" href="database.html">Database</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Python API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.config">emissionsapi.config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#emissionsapi-country-bounding-boxes-module">emissionsapi.country_bounding_boxes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#emissionsapi-country-shapes-module">emissionsapi.country_shapes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.db">emissionsapi.db module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.preprocess">emissionsapi.preprocess module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.utils">emissionsapi.utils module</a></li>
@@ -205,8 +205,8 @@ locations taken into consideration are (in this particular order):</p>
 </dd></dl>
 
 </div>
-<div class="section" id="emissionsapi-country-bounding-boxes-module">
-<h2>emissionsapi.country_bounding_boxes module<a class="headerlink" href="#emissionsapi-country-bounding-boxes-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="emissionsapi-country-shapes-module">
+<h2>emissionsapi.country_shapes module<a class="headerlink" href="#emissionsapi-country-shapes-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-emissionsapi.db">
 <span id="emissionsapi-db-module"></span><h2>emissionsapi.db module<a class="headerlink" href="#module-emissionsapi.db" title="Permalink to this headline">¶</a></h2>
@@ -413,7 +413,7 @@ defaults to None</p></li>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p></li>
-<li><p><strong>storage</strong> (<em>str</em>) – Path to the directory containing the <a href="#id1"><span class="problematic" id="id2">*</span></a>.nc files</p></li>
+<li><p><strong>storage</strong> (<em>str</em>) – Path to the directory containing the <cite>*.nc</cite> files</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
