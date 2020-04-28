@@ -60,6 +60,7 @@ autodoc_mock_imports = [
         'flask',
         'geoalchemy2',
         'geojson',
+        'geopandas',
         'pandas',
         'psycopg2',
         's5a',
