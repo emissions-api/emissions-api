@@ -121,8 +121,13 @@ def main():
 
     for name, attributes in emissionsapi.db.products.items():
         logger.info('Preprocessing product %s', name)
+
+        def init():
+            # Clear session maker in fork, due to libpq
+            emissionsapi.db.__session__ = None
+
         # Iterate through all nc files
-        with multiprocessing.Pool(workers) as p:
+        with multiprocessing.Pool(workers, init) as p:
             p.starmap(preprocess_file, zip(
                 sorted(list_ncfiles(attributes['storage'])),
                 itertools.repeat(attributes['table']),
