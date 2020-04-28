@@ -28,7 +28,7 @@ def list_ncfiles(session, storage):
 
     :param session: SQLAlchemy Session
     :type session: sqlalchemy.orm.session.Session
-    :param storage: Path to the directory containing the *.nc files
+    :param storage: Path to the directory containing the `*.nc` files
     :type storage: str
     :return: Set of all unprocessed files
     :rtype: set
