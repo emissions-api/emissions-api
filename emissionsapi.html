@@ -166,9 +166,9 @@
 <div class="section" id="module-emissionsapi.config">
 <span id="emissionsapi-config-module"></span><h2>emissionsapi.config module<a class="headerlink" href="#module-emissionsapi.config" title="Permalink to this headline">¶</a></h2>
 <p>Load and handle Emissions API configuration.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="emissionsapi.config.config">
-<code class="sig-prename descclassname">emissionsapi.config.</code><code class="sig-name descname">config</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.config.config" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.config.</code><code class="sig-name descname">config</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.config.config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a specific configuration value or the whole configuration, loading
 the configuration file if it was not before.</p>
 <dl class="field-list simple">
@@ -181,7 +181,7 @@ the configuration file if it was not before.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="emissionsapi.config.configuration_file">
 <code class="sig-prename descclassname">emissionsapi.config.</code><code class="sig-name descname">configuration_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.config.configuration_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the best match for the configuration file.  The configuration file
@@ -198,7 +198,7 @@ locations taken into consideration are (in this particular order):</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="emissionsapi.config.update_configuration">
 <code class="sig-prename descclassname">emissionsapi.config.</code><code class="sig-name descname">update_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.config.update_configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update configuration.</p>
@@ -211,84 +211,9 @@ locations taken into consideration are (in this particular order):</p>
 <div class="section" id="module-emissionsapi.db">
 <span id="emissionsapi-db-module"></span><h2>emissionsapi.db module<a class="headerlink" href="#module-emissionsapi.db" title="Permalink to this headline">¶</a></h2>
 <p>Database layer for the Emmission API.</p>
-<dl class="class">
-<dt id="emissionsapi.db.AlembicVersion">
-<em class="property">class </em><code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">AlembicVersion</code><span class="sig-paren">(</span><em class="sig-param">*args: Any</em>, <em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.AlembicVersion" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.declarative_base</span></code></p>
-<dl class="attribute">
-<dt id="emissionsapi.db.AlembicVersion.version_num">
-<code class="sig-name descname">version_num</code><a class="headerlink" href="#emissionsapi.db.AlembicVersion.version_num" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="emissionsapi.db.Cache">
-<em class="property">class </em><code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">Cache</code><span class="sig-paren">(</span><em class="sig-param">*args: Any</em>, <em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.Cache" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.declarative_base</span></code></p>
-<p>ORM object for the request cache</p>
-<dl class="attribute">
-<dt id="emissionsapi.db.Cache.begin">
-<code class="sig-name descname">begin</code><a class="headerlink" href="#emissionsapi.db.Cache.begin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Begin of the time interval involved in this request (used for
-efficiently invalidating caches)</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="emissionsapi.db.Cache.end">
-<code class="sig-name descname">end</code><a class="headerlink" href="#emissionsapi.db.Cache.end" title="Permalink to this definition">¶</a></dt>
-<dd><p>End of the time interval involved in this request (used for efficiently
-invalidating caches)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="emissionsapi.db.Cache.invalidate">
-<em class="property">classmethod </em><code class="sig-name descname">invalidate</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">earliest</em>, <em class="sig-param">latest</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.Cache.invalidate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invalidates/deletes all cached responses in the given interval to
-ensure these data is generated anew. This is meant to be run when the
-underlying data for this interval changes, for instance since new data
-has been imported.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p></li>
-<li><p><strong>earliest</strong> (<em>datetime.datetime</em>) – Earliest time of the interval to invalidate</p></li>
-<li><p><strong>latest</strong> (<em>datetime.datetime</em>) – Latest time of the interval to invalidate</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="emissionsapi.db.Cache.request">
-<code class="sig-name descname">request</code><a class="headerlink" href="#emissionsapi.db.Cache.request" title="Permalink to this definition">¶</a></dt>
-<dd><p>Primary key identifying the request</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="emissionsapi.db.Cache.response">
-<code class="sig-name descname">response</code><a class="headerlink" href="#emissionsapi.db.Cache.response" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cached response</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="emissionsapi.db.File">
-<em class="property">class </em><code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">File</code><span class="sig-paren">(</span><em class="sig-param">*args: Any</em>, <em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.File" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.declarative_base</span></code></p>
-<p>ORM object for the nc files.</p>
-<dl class="attribute">
-<dt id="emissionsapi.db.File.filename">
-<code class="sig-name descname">filename</code><a class="headerlink" href="#emissionsapi.db.File.filename" title="Permalink to this definition">¶</a></dt>
-<dd><p>Name of processed data file</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="function">
+<dl class="py function">
 <dt id="emissionsapi.db.filter_query">
-<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">filter_query</code><span class="sig-paren">(</span><em class="sig-param">query</em>, <em class="sig-param">tbl</em>, <em class="sig-param">wkt=None</em>, <em class="sig-param">distance=None</em>, <em class="sig-param">begin=None</em>, <em class="sig-param">end=None</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.filter_query" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">filter_query</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query</span></em>, <em class="sig-param"><span class="n">tbl</span></em>, <em class="sig-param"><span class="n">wkt</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">distance</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">begin</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">end</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.filter_query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filter query by time and location.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -311,9 +236,9 @@ defaults to None.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="emissionsapi.db.get_averages">
-<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_averages</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tbl</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_averages" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_averages</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">tbl</span></em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_averages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get daily averages of all points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -333,9 +258,9 @@ truncated by day.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="emissionsapi.db.get_data_range">
-<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_data_range</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tbl</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_data_range" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_data_range</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">tbl</span></em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_data_range" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the range of data currently available from the API.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -354,9 +279,9 @@ time from all values.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="emissionsapi.db.get_points">
-<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_points</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tbl</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_points" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_points</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">tbl</span></em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -375,7 +300,7 @@ and latitude.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="emissionsapi.db.get_session">
 <code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_session</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_session" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a new session.</p>
@@ -386,9 +311,9 @@ and latitude.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="emissionsapi.db.get_statistics">
-<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_statistics</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">tbl</em>, <em class="sig-param">interval_length='day'</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_statistics" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">get_statistics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">tbl</span></em>, <em class="sig-param"><span class="n">interval_length</span><span class="o">=</span><span class="default_value">'day'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.get_statistics" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get statistical data like amount, average, min, or max values for a
 specified time interval. Optionally, time and location filters can be
 applied.</p>
@@ -422,9 +347,9 @@ the specified time interval:</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="emissionsapi.db.insert_dataset">
-<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">insert_dataset</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">data</em>, <em class="sig-param">tbl</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.insert_dataset" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">insert_dataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">tbl</span></em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.insert_dataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Batch insert data into the database using PostGIS specific functions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -437,9 +362,9 @@ the specified time interval:</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="emissionsapi.db.limit_offset_query">
-<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">limit_offset_query</code><span class="sig-paren">(</span><em class="sig-param">query</em>, <em class="sig-param">limit=None</em>, <em class="sig-param">offset=None</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.limit_offset_query" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">limit_offset_query</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query</span></em>, <em class="sig-param"><span class="n">limit</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">offset</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.limit_offset_query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply limit and offset to the query.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -459,9 +384,9 @@ defaults to None</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="emissionsapi.db.with_session">
-<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">with_session</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.with_session" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.db.</code><code class="sig-name descname">with_session</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f</span></em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.db.with_session" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper for f to make a SQLAlchemy session present within the function</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -480,9 +405,9 @@ defaults to None</p></li>
 <div class="section" id="module-emissionsapi.preprocess">
 <span id="emissionsapi-preprocess-module"></span><h2>emissionsapi.preprocess module<a class="headerlink" href="#module-emissionsapi.preprocess" title="Permalink to this headline">¶</a></h2>
 <p>Preprocess the locally stored data and store them in the database.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="emissionsapi.preprocess.list_ncfiles">
-<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">list_ncfiles</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">storage</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.list_ncfiles" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">list_ncfiles</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">storage</span></em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.list_ncfiles" title="Permalink to this definition">¶</a></dt>
 <dd><p>list all nc files in storage.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -500,16 +425,16 @@ defaults to None</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="emissionsapi.preprocess.main">
 <code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entrypoint for running this as a module or from the binary.
 Triggers the preprocessing of the data.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="emissionsapi.preprocess.preprocess_file">
-<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">preprocess_file</code><span class="sig-paren">(</span><em class="sig-param">ncfile</em>, <em class="sig-param">tbl</em>, <em class="sig-param">product</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.preprocess_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">preprocess_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ncfile</span></em>, <em class="sig-param"><span class="n">tbl</span></em>, <em class="sig-param"><span class="n">product</span></em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.preprocess_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Preprocess a single file and write it to the database</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -522,9 +447,9 @@ Triggers the preprocessing of the data.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="emissionsapi.preprocess.write_to_database">
-<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">write_to_database</code><span class="sig-paren">(</span><em class="sig-param">session</em>, <em class="sig-param">data</em>, <em class="sig-param">filepath</em>, <em class="sig-param">tbl</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.write_to_database" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.preprocess.</code><code class="sig-name descname">write_to_database</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">filepath</span></em>, <em class="sig-param"><span class="n">tbl</span></em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.preprocess.write_to_database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write data to the PostGIS database</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -542,23 +467,23 @@ Triggers the preprocessing of the data.</p>
 </div>
 <div class="section" id="module-emissionsapi.utils">
 <span id="emissionsapi-utils-module"></span><h2>emissionsapi.utils module<a class="headerlink" href="#module-emissionsapi.utils" title="Permalink to this headline">¶</a></h2>
-<dl class="exception">
+<dl class="py exception">
 <dt id="emissionsapi.utils.RESTParamError">
 <em class="property">exception </em><code class="sig-prename descclassname">emissionsapi.utils.</code><code class="sig-name descname">RESTParamError</code><a class="headerlink" href="#emissionsapi.utils.RESTParamError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
 <p>User-specific exception, used in <a class="reference internal" href="#emissionsapi.utils.polygon_to_wkt" title="emissionsapi.utils.polygon_to_wkt"><code class="xref py py-func docutils literal notranslate"><span class="pre">polygon_to_wkt()</span></code></a>.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="emissionsapi.utils.bounding_box_to_wkt">
-<code class="sig-prename descclassname">emissionsapi.utils.</code><code class="sig-name descname">bounding_box_to_wkt</code><span class="sig-paren">(</span><em class="sig-param">lon1</em>, <em class="sig-param">lat1</em>, <em class="sig-param">lon2</em>, <em class="sig-param">lat2</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.utils.bounding_box_to_wkt" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.utils.</code><code class="sig-name descname">bounding_box_to_wkt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lon1</span></em>, <em class="sig-param"><span class="n">lat1</span></em>, <em class="sig-param"><span class="n">lon2</span></em>, <em class="sig-param"><span class="n">lat2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.utils.bounding_box_to_wkt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a bounding box specified by its top-left and bottom-right
 coordinates to a wkt string defining a polygon.</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="emissionsapi.utils.polygon_to_wkt">
-<code class="sig-prename descclassname">emissionsapi.utils.</code><code class="sig-name descname">polygon_to_wkt</code><span class="sig-paren">(</span><em class="sig-param">polygon</em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.utils.polygon_to_wkt" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">emissionsapi.utils.</code><code class="sig-name descname">polygon_to_wkt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">polygon</span></em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.utils.polygon_to_wkt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a list of points to a WKT string defining a polygon.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
