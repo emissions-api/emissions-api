@@ -9,10 +9,10 @@ emissionsapi.config module
    :undoc-members:
    :show-inheritance:
 
-emissionsapi.country\_bounding\_boxes module
+emissionsapi.country_shapes module
 --------------------------------------------
 
-.. automodule:: emissionsapi.country_bounding_boxes
+.. automodule:: emissionsapi.country_shapes
    :members:
    :undoc-members:
    :show-inheritance:
