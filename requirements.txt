@@ -32,7 +32,7 @@ pyproj==2.6.1.post1
 pyrsistent==0.16.0
 python-dateutil==2.8.1
 python-editor==1.0.4
-pytz==2019.3
+pytz==2020.1
 PyYAML==5.3.1
 requests==2.23.0
 s5a==0.4
