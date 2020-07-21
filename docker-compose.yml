@@ -1,9 +1,10 @@
 version: '2'
 services:
   db:
-    image: mdillon/postgis
+    container_name: emissionsapi-postgres
+    image: docker.io/mdillon/postgis
     ports:
-      - 5432:5432
+      - 127.0.0.1:5432:5432
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: user
