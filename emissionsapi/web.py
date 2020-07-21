@@ -375,7 +375,7 @@ def get_products():
     return [
         {
             'name': name,
-            'product_variable': attributes['product']
+            'product_variable': attributes.get('product')
         } for name, attributes in emissionsapi.db.products.items()
     ]
 
