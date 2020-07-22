@@ -26,7 +26,7 @@ munch==2.5.0
 netCDF4==1.5.3
 numpy==1.19.0
 openapi-spec-validator==0.2.8
-pandas==1.0.3
+pandas==1.0.5
 psycopg2==2.8.5
 pyproj==2.6.1.post1
 pyrsistent==0.16.0
