@@ -9,7 +9,7 @@ cligj==0.5.0
 connexion==2.7.0
 Fiona==1.8.13.post1
 Flask==1.1.2
-GeoAlchemy2==0.7.0
+GeoAlchemy2==0.8.4
 geojson==2.5.0
 geopandas==0.7.0
 gunicorn==20.0.4
