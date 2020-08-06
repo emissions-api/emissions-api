@@ -10,10 +10,22 @@ resolution: 4
 # Default: 1
 workers: 1
 
+# Earliest data to process from the autoupdater.
+# The autoupdater will only search for data after this date.
+# Defaults: '2020-01-01'
+earliest_data: '2019-01-01'
+
 # List of products and where to find them.
 # "product" is pointing to the product/product layer in the nc file.
-# Default: [{"carbonmonoxide": {"storage": "data", "product": "carbonmonoxide_total_column"} ]
+# Default: {
+#     "carbonmonoxide": {
+#        "storage": "data",
+#        "product": "carbonmonoxide_total_column"
+#        "product_key": "L2__CO____"
+#     }
+# }
 products:
   carbonmonoxide:
     storage: data
     product: carbonmonoxide_total_column
+    product_key: L2__CO____

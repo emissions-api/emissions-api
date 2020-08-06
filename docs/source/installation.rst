@@ -21,7 +21,7 @@ Only this will give you access to the additional local libraries you installed.
 
 Finally, install all necessary requirements using pip::
 
-   (venv) %> pip install -r requirements.txt
+   (venv) %> PYCURL_SSL_LIBRARY=openssl pip install -r requirements.txt
 
 You can now use the Emissions API. E.g. launch the web interface by running::
 
