@@ -25,6 +25,7 @@ setup(
         'psycopg2',
         'python-dateutil',
         's5a',
+        'sentinel5dl',
         'SQLAlchemy',
     ],
     include_package_data=True,
@@ -34,6 +35,7 @@ setup(
         'console_scripts': [
             'emissionsapi-preprocess=emissionsapi.preprocess:main',
             'emissionsapi-web=emissionsapi.web:entrypoint',
+            'emissionsapi-autoupdater=emissionsapi.autoupdater:main',
         ],
     },
 )

@@ -34,6 +34,7 @@ One way to do this is to use your corresponding system packages.
 After that you can run the different services using
 
 * **preprocess**\ : ``python -m emissionsapi.preprocess``
+* **autoupdater**\ : ``python -m emissionsapi.autoupdater``
 * **web**\ : ``python -m emissionsapi.web``
 
 Configuration

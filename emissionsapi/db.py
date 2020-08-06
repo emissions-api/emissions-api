@@ -32,7 +32,8 @@ database = config('database') or 'postgresql://user:user@localhost/db'
 products = config('products') or {
     'carbonmonoxide': {
         'storage': 'data',
-        'product': 'carbonmonoxide_total_column'
+        'product': 'carbonmonoxide_total_column',
+        'product_key': 'L2__CO____'
     }
 }
 
