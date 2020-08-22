@@ -322,7 +322,8 @@ def get_statistics(session, interval='day', wkt=None, distance=None,
     .. _date_trunc: https://postgresql.org/docs/9.1/functions-datetime.html
     .. _ST_DWithin: https://postgis.net/docs/ST_DWithin.html
     """
-    query = emissionsapi.db.get_statistics(session, tbl)
+    query = emissionsapi.db.get_statistics(
+        session, tbl, interval_length=interval)
     # Filter result
     query = emissionsapi.db.filter_query(
         query, tbl, wkt=wkt, distance=distance, begin=begin, end=end)
