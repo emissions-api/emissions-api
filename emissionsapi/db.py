@@ -26,7 +26,8 @@ logger = logging.getLogger(__name__)
 # Database uri as described in
 # https://docs.sqlalchemy.org/en/13/core/engines.html#database-urls
 # Retrieved as environment variable.
-database = config('database') or 'postgresql://user:user@localhost/db'
+database = config('database') \
+        or 'postgresql://emissionsapi:emissionsapi@localhost/emissionsapi'
 
 # Products
 products = config('products') or {

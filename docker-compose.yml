@@ -6,6 +6,6 @@ services:
     ports:
       - 127.0.0.1:5432:5432
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: user
-      POSTGRES_DB: db
+      POSTGRES_USER: emissionsapi
+      POSTGRES_PASSWORD: emissionsapi
+      POSTGRES_DB: emissionsapi
