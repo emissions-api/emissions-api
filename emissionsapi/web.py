@@ -113,7 +113,7 @@ def parse_wkt(f):
         elif country is not None:
             logger.debug('Try parsing country')
             try:
-                kwargs['wkt'] = get_country_wkt(country)
+                kwargs['wkt'] = get_country_wkt(country.upper())
             except CountryNotFound:
                 return 'Unknown country code.', 400
         # parse parameter polygon
