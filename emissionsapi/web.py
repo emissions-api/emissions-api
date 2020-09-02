@@ -12,8 +12,7 @@ import os.path
 
 import connexion
 import json
-import geojson
-from flask import redirect, request
+from flask import redirect, request, jsonify
 from h3 import h3
 
 import emissionsapi.db
@@ -217,8 +216,6 @@ def get_data(session, wkt=None, distance=None, begin=None, end=None,
 
     .. _ST_DWithin: https://postgis.net/docs/ST_DWithin.html
     """
-    # Init feature list
-    features = []
     # Iterate through database query
     query = emissionsapi.db.get_points(session, tbl)
     # Filter result
@@ -228,17 +225,20 @@ def get_data(session, wkt=None, distance=None, begin=None, end=None,
     query = emissionsapi.db.limit_offset_query(
         query, limit=limit, offset=offset)
 
-    for value, timestamp, longitude, latitude in query:
-        # Create and append single features.
-        features.append(geojson.Feature(
-            geometry=geojson.Point((longitude, latitude)),
-            properties={
-                "value": value,
-                "timestamp": timestamp
-            }))
-    # Create feature collection from gathered points
-    feature_collection = geojson.FeatureCollection(features)
-    return feature_collection
+    return jsonify({
+        'features': [{
+            'geometry': {
+                'coordinates': [longitude, latitude],
+                'type': 'Point',
+            },
+            'properties': {
+                'timestamp': timestamp.isoformat('T') + 'Z',
+                'value': value,
+            },
+            'type': 'Feature'
+        } for value, timestamp, longitude, latitude in query],
+        "type": "FeatureCollection"
+    })
 
 
 @get_table
