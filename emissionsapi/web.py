@@ -95,9 +95,6 @@ def parse_wkt(f):
 
         number_of_parameter = sum(x is not None for x in (
             geoframe, country, polygon, point))
-        if number_of_parameter == 0:
-            return ("You need to specify one of 'geoframe', "
-                    "'country', 'polygon' and 'point'", 400)
         if number_of_parameter > 1:
             return ("'geoframe', 'country', 'polygon' and "
                     "'point' are mutually exclusive", 400)

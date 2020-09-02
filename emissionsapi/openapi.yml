@@ -21,7 +21,6 @@ paths:
           Get all points in [GeoJSON](https://geojson.org/) format.
 
           The parameters `geoframe`, `country`, `polygon` and `point` are mutually exclusive.
-          Providing one of these parameters is mandatory.
       parameters:
         - $ref: '#/components/parameters/product'
         - $ref: '#/components/parameters/geoframe'
