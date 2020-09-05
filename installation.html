@@ -175,7 +175,7 @@ In the project folder, create and activate the virtual environment:</p>
 <p>Remember to always use the environment while working on the project.
 Only this will give you access to the additional local libraries you installed.</p>
 <p>Finally, install all necessary requirements using pip:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">venv</span><span class="p">)</span> <span class="o">%&gt;</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">venv</span><span class="p">)</span> <span class="o">%&gt;</span> <span class="n">PYCURL_SSL_LIBRARY</span><span class="o">=</span><span class="n">openssl</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
 <p>You can now use the Emissions API. E.g. launch the web interface by running:</p>

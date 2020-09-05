@@ -1,6 +1,14 @@
 Python API
 ==========
 
+emissionsapi.autoupdater module
+-------------------------------
+
+.. automodule:: emissionsapi.autoupdater
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 emissionsapi.config module
 --------------------------
 
