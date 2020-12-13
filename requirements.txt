@@ -13,7 +13,7 @@ Flask==1.1.2
 GeoAlchemy2==0.8.4
 geopandas==0.8.1
 gunicorn==20.0.4
-h3==3.6.4
+h3==3.7.0
 idna==2.10
 inflection==0.5.1
 iso3166==1.0.1
