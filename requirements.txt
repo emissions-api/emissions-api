@@ -8,7 +8,7 @@ click-plugins==1.1.1
 clickclick==1.2.2
 cligj==0.5.0
 connexion==2.7.0
-Fiona==1.8.13.post1
+Fiona==1.8.18
 Flask==1.1.2
 GeoAlchemy2==0.8.4
 geopandas==0.8.1
