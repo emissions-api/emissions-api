@@ -1,0 +1,18 @@
+version: '2'
+services:
+  db:
+    container_name: emissionsapi-postgres
+    image: registry.hub.docker.com/postgis/postgis:12-master
+    ports:
+      - 127.0.0.1:5432:5432
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: user
+      POSTGRES_DB: db
+  emissionsapi:
+    container_name: emissionsapi-web
+    build:
+      context: ..
+      dockerfile: .github/emissionsapi.dockerfile
+    ports:
+      - 127.0.0.1:8000:8000

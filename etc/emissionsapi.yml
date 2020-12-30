@@ -12,8 +12,13 @@ workers: 1
 
 # Earliest data to process from the autoupdater.
 # The autoupdater will only search for data after this date.
-# Defaults: '2020-01-01'
+# Defaults: '2019-01-01'
 earliest_data: '2019-01-01'
+
+# latest data to process from the autoupdater.
+# The autoupdater will only search for data before this date.
+# Defaults to current date
+latest_data:
 
 # List of products and where to find them.
 # "product" is pointing to the product/product layer in the nc file.
