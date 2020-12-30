@@ -1,0 +1,12 @@
+database: postgresql://user:user@emissionsapi-postgres/db
+resolution: 4
+earliest_data: '2020-12-08T10:00:00'
+latest_data: '2020-12-08T13:00:00'
+workers: 4
+products:
+  methane:
+    product: methane_mixing_ratio_bias_corrected
+    product_key: L2__CH4___
+  carbonmonoxide:
+    product: carbonmonoxide_total_column
+    product_key: L2__CO____

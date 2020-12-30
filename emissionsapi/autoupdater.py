@@ -20,6 +20,11 @@ workers = config('workers') or 1
 # Earliest data to process
 earliest_data = datetime.datetime.fromisoformat(
     config('earliest_data') or '2019-01-01')
+# Latest data to process
+latest_data = (
+    datetime.datetime.fromisoformat(config('latest_data')) if config(
+        'latest_data') else datetime.datetime.now()
+)
 
 
 def generate_intervals(start, end, days=5):
@@ -56,12 +61,12 @@ def get_intervals_to_process(session, table, exclude_existing=True):
     '''
     # Ignore the existing data and return the full interval
     if not exclude_existing:
-        return generate_intervals(earliest_data, datetime.datetime.now())
+        return generate_intervals(earliest_data, latest_data)
 
     # No data present, so return the full interal
     first, last = db.get_data_range(session, table).first()
     if not first or not last:
-        return generate_intervals(earliest_data, datetime.datetime.now())
+        return generate_intervals(earliest_data, latest_data)
 
     # Configured earliest data is behind the current last.
     # We use earliest data as a hard limit for the starting date.
@@ -71,12 +76,12 @@ def get_intervals_to_process(session, table, exclude_existing=True):
             ' is after the last value in the database (%s) for %s.'
             ' Using "earliest data" as a hard limit for the starting date.',
             earliest_data, last, table)
-        return generate_intervals(earliest_data, datetime.datetime.now())
+        return generate_intervals(earliest_data, latest_data)
 
     # Return interval excluding existing data
     return itertools.chain(
         generate_intervals(earliest_data, first),
-        generate_intervals(last, datetime.datetime.now())
+        generate_intervals(last, latest_data)
     )
 
 

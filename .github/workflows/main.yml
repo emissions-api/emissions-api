@@ -1,0 +1,26 @@
+name: Integration Test
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  install-autoupdate-api:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build emissions-api
+        run: docker-compose -f .github/docker-compose.yml build emissionsapi
+      - name: Spin up database and emissions-api web server
+        run: docker-compose -f .github/docker-compose.yml up -d
+      - name: Wait for database
+        run: until PGPASSWORD=user psql -h 127.0.0.1 -U user db -c '\q'; do sleep 1; done
+      - name: Check if emissions-api web server is up
+        run: nc -z 127.0.0.1 8000
+      - name: Download and import data into the emissions-api service
+        run: docker-compose -f .github/docker-compose.yml exec -T emissionsapi /opt/emissions-api/venv/bin/emissionsapi-autoupdater
+      - name: Check API
+        run: .github/api-test.sh
+      - name: Show logs
+        if: ${{ failure() }}
+        run: docker-compose -f .github/docker-compose.yml logs
