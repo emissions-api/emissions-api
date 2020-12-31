@@ -38,17 +38,6 @@ commands:
               done
               echo Failed waiting for Postgres && exit 1
 jobs:
-  flake8:
-    docker:
-      - image: python:3.7
-    steps:
-      - checkout
-      - run:
-          name: install flake8
-          command: pip install flake8
-      - run:
-          name: test with flake8
-          command: flake8 emissionsapi
   install buster:
     docker:
       - image: debian:buster
@@ -128,7 +117,6 @@ workflows:
   version: 2
   simple tests:
     jobs:
-      - flake8
       - install buster
   integration tests:
     jobs:
