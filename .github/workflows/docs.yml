@@ -1,0 +1,32 @@
+name: Build and deploy Docs
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.8'
+      - name: Install
+        run: pip install sphinx sphinx-rtd-theme
+      - name: Build
+        run: |
+            make -C docs clean html
+            touch docs/build/html/.nojekyll
+            echo docs.emissions-api.org > docs/build/html/CNAME
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        if: ${{ github.ref == 'refs/heads/master' }}
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: docs/build/html
+          CLEAN: true
