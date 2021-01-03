@@ -29,7 +29,6 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -87,7 +86,7 @@
 <li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
 <li class="toctree-l1"><a class="reference internal" href="database.html">Database</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Python API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#emissionsapi-autoupdater-module">emissionsapi.autoupdater module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.autoupdater">emissionsapi.autoupdater module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.config">emissionsapi.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#emissionsapi-country-shapes-module">emissionsapi.country_shapes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-emissionsapi.db">emissionsapi.db module</a></li>
@@ -167,8 +166,79 @@
             
   <div class="section" id="python-api">
 <h1>Python API<a class="headerlink" href="#python-api" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="emissionsapi-autoupdater-module">
-<h2>emissionsapi.autoupdater module<a class="headerlink" href="#emissionsapi-autoupdater-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-emissionsapi.autoupdater">
+<span id="emissionsapi-autoupdater-module"></span><h2>emissionsapi.autoupdater module<a class="headerlink" href="#module-emissionsapi.autoupdater" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="emissionsapi.autoupdater.generate_intervals">
+<code class="sig-prename descclassname">emissionsapi.autoupdater.</code><code class="sig-name descname">generate_intervals</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span></em>, <em class="sig-param"><span class="n">end</span></em>, <em class="sig-param"><span class="n">days</span><span class="o">=</span><span class="default_value">5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.autoupdater.generate_intervals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator for intervals between start and end in days intervals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>datetime.datetime</em>) – Starting datetime for the intervals.</p></li>
+<li><p><strong>end</strong> (<em>datetime.datetime</em>) – End datetime for the intervals.</p></li>
+<li><p><strong>days</strong> (<em>int</em><em>, </em><em>optional</em>) – Days for each interval, defaults to 5</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yield</dt>
+<dd class="field-even"><p>Start and end date of the next interval.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="emissionsapi.autoupdater.get_intervals_to_process">
+<code class="sig-prename descclassname">emissionsapi.autoupdater.</code><code class="sig-name descname">get_intervals_to_process</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">table</span></em>, <em class="sig-param"><span class="n">exclude_existing</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.autoupdater.get_intervals_to_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all intervals with associated product files to process.
+Intervals with existing data will be skipped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p></li>
+<li><p><strong>table</strong> (<em>sqlalchemy.sql.schema.Table</em>) – Table to search for existing data.</p></li>
+<li><p><strong>ignore_existing</strong> (<em>bool</em><em>, </em><em>optional</em>) – Exclude existing intervals, defaults to True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Generator yielding the next interval.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>generator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="emissionsapi.autoupdater.main">
+<code class="sig-prename descclassname">emissionsapi.autoupdater.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.autoupdater.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entrypoint for running this as a module or from the binary.
+Triggers the autoupdater.
+The autoupdater will download and add all missing product files
+of the configured products and the configured interval to the database.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="emissionsapi.autoupdater.single_file_update">
+<code class="sig-prename descclassname">emissionsapi.autoupdater.</code><code class="sig-name descname">single_file_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">session</span></em>, <em class="sig-param"><span class="n">product_file</span></em>, <em class="sig-param"><span class="n">directory</span></em>, <em class="sig-param"><span class="n">product</span></em><span class="sig-paren">)</span><a class="headerlink" href="#emissionsapi.autoupdater.single_file_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download a single file, add it to the database
+and delete the file afterwards.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>sqlalchemy.orm.session.Session</em>) – SQLAlchemy Session</p></li>
+<li><p><strong>product_file</strong> (<em>dict</em>) – Metadata of a single product file
+as received from sentinal5dl.search.</p></li>
+<li><p><strong>directory</strong> (<em>string</em>) – Directory to download file to.</p></li>
+<li><p><strong>product</strong> (<em>dict</em>) – Type of the processed product.
+An entry of emissionsapi.db.products.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 <div class="section" id="module-emissionsapi.config">
 <span id="emissionsapi-config-module"></span><h2>emissionsapi.config module<a class="headerlink" href="#module-emissionsapi.config" title="Permalink to this headline">¶</a></h2>
