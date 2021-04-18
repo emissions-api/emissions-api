@@ -19,7 +19,7 @@ inflection==0.5.1
 iso3166==1.0.1
 iso8601==0.1.13
 itsdangerous==1.1.0
-Jinja2==2.11.2
+Jinja2==2.11.3
 jsonschema==3.2.0
 Mako==1.1.3
 MarkupSafe==1.1.1
