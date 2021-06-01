@@ -44,4 +44,4 @@ six==1.15.0
 SQLAlchemy==1.4.12
 swagger-ui-bundle==0.0.8
 urllib3==1.26.4
-Werkzeug==1.0.1
+Werkzeug==2.0.1
