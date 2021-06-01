@@ -18,7 +18,7 @@ idna==3.1
 inflection==0.5.1
 iso3166==1.0.1
 iso8601==0.1.14
-itsdangerous==1.1.0
+itsdangerous==2.0.1
 Jinja2==2.11.3
 jsonschema==3.2.0
 Mako==1.1.4
