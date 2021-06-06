@@ -16,7 +16,7 @@ jobs:
       - name: Wait for database
         run: until PGPASSWORD=user psql -h 127.0.0.1 -U user db -c '\q'; do sleep 1; done
       - name: Check if emissions-api web server is up
-        run: nc -z 127.0.0.1 8000
+        run: nc -z 127.0.0.1 8000 || ( docker logs emissionsapi-web && false )
       - name: Download and import data into the emissions-api service
         run: docker-compose -f .github/docker-compose.yml exec -T emissionsapi /opt/emissions-api/venv/bin/emissionsapi-autoupdater
       - name: Check API
