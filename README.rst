@@ -4,9 +4,9 @@ Emissions API
 .. image:: https://img.shields.io/travis/com/emissions-api/emissions-api?label=Docs
    :target: https://docs.emissions-api.org
    :alt: Documentation Status
-.. image:: https://img.shields.io/circleci/build/github/emissions-api/emissions-api?label=Build
-   :target: https://circleci.com/gh/emissions-api/emissions-api
-   :alt: Build Status
+.. image:: https://github.com/emissions-api/emissions-api/actions/workflows/main.yml/badge.svg
+   :target: https://github.com/emissions-api/emissions-api/actions/workflows/main.yml
+   :alt: Integration Test
 
 This is the main repository for the `Emissions API <https://emissions-api.org/>`_.
 
