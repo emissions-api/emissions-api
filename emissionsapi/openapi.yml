@@ -127,7 +127,7 @@ components:
     product:
       in: path
       name: product
-      required: yes
+      required: true
       schema:
         type: string
         enum: {{ products }}
@@ -280,10 +280,12 @@ components:
             type: number
             example: 0.0312481193586528
           start:
-            type: date-time
+            type: string
+            format: date-time
             example: 2019-02-10T13:05:08.812000Z
           end:
-            type: date-time
+            type: string
+            format: date-time
             example: 2019-02-10T13:03:40.254000Z
     Statistics:
       type: array
@@ -313,22 +315,27 @@ components:
             type: object
             properties:
               min:
-                type: date-time
+                type: string
+                format: date-time
                 example: 2019-02-10T13:05:08.812000Z
               max:
-                type: date-time
+                type: string
+                format: date-time
                 example: 2019-02-10T13:03:40.254000Z
               interval_start:
-                type: date-time
+                type: string
+                format: date-time
                 example: 2019-02-10T00:00:00Z
     DataRange:
       type: object
       properties:
         first:
-          type: date-time
+          type: string
+          format: date-time
           example: 2019-02-10T13:05:08.812000Z
         last:
-          type: date-time
+          type: string
+          format: date-time
           example: 2019-02-10T13:03:40.254000Z
     Products:
       type: array
