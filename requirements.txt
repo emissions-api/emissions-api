@@ -27,7 +27,7 @@ munch==2.5.0
 netCDF4==1.5.6
 numpy==1.20.3
 openapi-spec-validator==0.3.1
-pandas==1.2.4
+pandas==1.2.5
 psycopg2==2.8.6
 pycurl==7.43.0.6
 pyproj==3.1.0
