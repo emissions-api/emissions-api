@@ -43,5 +43,5 @@ Shapely==1.7.1
 six==1.16.0
 SQLAlchemy==1.4.20
 swagger-ui-bundle==0.0.8
-urllib3==1.26.5
+urllib3==1.26.6
 Werkzeug==2.0.1
