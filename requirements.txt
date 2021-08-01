@@ -17,7 +17,7 @@ h3==3.7.3
 idna==2.10
 inflection==0.5.1
 iso3166==1.0.1
-iso8601==0.1.14
+iso8601==0.1.16
 itsdangerous==2.0.1
 Jinja2==3.0.1
 jsonschema==3.2.0
