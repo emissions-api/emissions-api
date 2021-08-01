@@ -36,7 +36,7 @@ python-dateutil==2.8.1
 python-editor==1.0.4
 pytz==2021.1
 PyYAML==5.4.1
-requests==2.25.1
+requests==2.26.0
 s5a==0.4
 sentinel5dl==1.0
 Shapely==1.7.1
