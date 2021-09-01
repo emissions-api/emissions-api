@@ -41,7 +41,7 @@ s5a==0.4
 sentinel5dl==1.0
 Shapely==1.7.1
 six==1.16.0
-SQLAlchemy==1.4.20
+SQLAlchemy==1.4.23
 swagger-ui-bundle==0.0.8
 urllib3==1.26.6
 Werkzeug==2.0.1
