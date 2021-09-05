@@ -21,7 +21,7 @@ iso8601==0.1.14
 itsdangerous==2.0.1
 Jinja2==3.0.1
 jsonschema==3.2.0
-Mako==1.1.4
+Mako==1.1.5
 MarkupSafe==2.0.1
 munch==2.5.0
 netCDF4==1.5.7
