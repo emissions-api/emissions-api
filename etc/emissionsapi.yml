@@ -35,3 +35,13 @@ products:
     storage: data
     product: carbonmonoxide_total_column
     product_key: L2__CO____
+
+# Level of details used for logging
+# Valid options are:
+#  - TRACE
+#  - DEBUG
+#  - INFO
+#  - WARNING
+#  - ERROR
+# Default: INFO
+loglevel: INFO
