@@ -30,3 +30,8 @@ do
         done
     done
 done
+
+# Test contry codes
+api_call countries.json \
+    | jq -r .DE \
+    | grep -i Germany

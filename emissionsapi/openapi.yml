@@ -11,8 +11,8 @@ info:
     url: https://emissions-api.org
     email: info@emissions-api.org
 externalDocs:
-  description: Source code documentation
-  url: https://docs.emissions-api.org
+  description: GitHub project
+  url: https://github.com/emissions-api/emissions-api
 paths:
   /api/v2/{product}/geo.json:
     get:
@@ -121,6 +121,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Products'
+  /api/v2/countries.json:
+    get:
+      operationId: emissionsapi.web.get_country_codes
+      description: |
+          Get list of valid country codes and names.
+      responses:
+        200:
+          description: Object with country codes and names.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Countries'
 
 components:
   parameters:
@@ -351,3 +363,11 @@ components:
             type: string
             example: carbonmonoxide_total_column
             description: Name of the variable as defined from the ESA from within the processed files.
+    Countries:
+      type: object
+      additionalProperties:
+        type: string
+      example:
+        BE: Belgium
+        DE: Germany
+        DEU: Germany
