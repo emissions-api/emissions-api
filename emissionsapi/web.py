@@ -367,8 +367,8 @@ def get_data_range(session, tbl=None, **kwargs):
 def get_products():
     """Get all products currently available from the API.
 
-    :return: Dictionary describing the available products.
-    :rtype: dict
+    :return: List of dictionaries describing the available products.
+    :rtype: list
     """
     return [
         {
