@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 # Global country shape storage
 __country_shapes__ = {}
+__country_names__ = {}
 
 
 class CountryNotFound(Exception):
@@ -39,6 +40,8 @@ def __load_country_shapes__():
         shape = country['geometry']
         __country_shapes__[country_codes.alpha2] = shape
         __country_shapes__[country_codes.alpha3] = shape
+        __country_names__[country_codes.alpha2] = country['name']
+        __country_names__[country_codes.alpha3] = country['name']
 
 
 def get_country_wkt(country):
@@ -57,3 +60,15 @@ def get_country_wkt(country):
         return __country_shapes__[country].wkt
     except KeyError:
         raise CountryNotFound
+
+
+def get_country_codes():
+    '''Get list of country codes and names.
+
+    :return: Map of country codes and names
+    :rtype: dict
+    '''
+    if not __country_shapes__:
+        __load_country_shapes__()
+
+    return __country_names__

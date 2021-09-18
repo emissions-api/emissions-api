@@ -17,6 +17,7 @@ from h3 import h3
 
 import emissionsapi.db
 from emissionsapi.country_shapes import CountryNotFound, get_country_wkt
+from emissionsapi.country_shapes import get_country_codes  # noqa - used in API
 from emissionsapi.utils import bounding_box_to_wkt, polygon_to_wkt, \
     RESTParamError
 
