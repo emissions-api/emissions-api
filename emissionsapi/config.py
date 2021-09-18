@@ -6,8 +6,12 @@
 Load and handle Emissions API configuration.
 '''
 
-import yaml
+import logging
 import os
+import yaml
+
+# Logger
+logger = logging.getLogger(__name__)
 
 __config = {}
 
@@ -40,6 +44,12 @@ def update_configuration():
     with open(cfgfile, 'r') as f:
         cfg = yaml.safe_load(f)
     globals()['__config'] = cfg
+
+    # update logger
+    loglevel = cfg.get('loglevel', 'INFO').upper()
+    logging.root.setLevel(loglevel)
+    logger.info('Log level set to %s', loglevel)
+
     return cfg
 
 
