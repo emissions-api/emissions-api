@@ -33,7 +33,9 @@ products = config('products') or {
     'carbonmonoxide': {
         'storage': 'data',
         'product': 'carbonmonoxide_total_column',
-        'product_key': 'L2__CO____'
+        'product_key': 'L2__CO____',
+        'description': 'Average atmosphere mole content of carbon monoxide in '
+                       '`mol m¯²`'
     }
 }
 
