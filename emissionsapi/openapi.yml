@@ -359,6 +359,10 @@ components:
             type: string
             example: carbonmonoxide
             description: Name of the product
+          description:
+            type: string
+            example: Average atmosphere mole content of carbon monoxide
+            description: Description of data type and unit.
           product_variable:
             type: string
             example: carbonmonoxide_total_column
