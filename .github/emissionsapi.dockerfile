@@ -1,4 +1,4 @@
-FROM registry.hub.docker.com/library/centos:8
+FROM quay.io/centos/centos:stream8
 
 # Prerequites
 RUN dnf install -y epel-release 'dnf-command(config-manager)'
