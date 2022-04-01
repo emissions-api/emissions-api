@@ -13,6 +13,10 @@ jobs:
         run: docker-compose -f .github/docker-compose.yml build emissionsapi
       - name: Spin up database and emissions-api web server
         run: docker-compose -f .github/docker-compose.yml up -d
+      - name: Log information about s5phub.copernicus.eu
+        run: dig +short s5phub.copernicus.eu
+      - name: Test connection to s5phub.copernicus.eu
+        run: curl -I https://s5phub.copernicus.eu
       - name: Wait for database
         run: until PGPASSWORD=user psql -h 127.0.0.1 -U user db -c '\q'; do sleep 1; done
       - name: Check if emissions-api web server is up
