@@ -1,5 +1,5 @@
 alembic==1.7.7
-connexion==2.14.0
+connexion==2.14.1
 Flask==2.1.1
 GeoAlchemy2==0.10.0
 geopandas==0.10.2
