@@ -11,5 +11,5 @@ python-dateutil==2.8.2
 PyYAML==6.0
 s5a==0.4
 sentinel5dl==1.1
-SQLAlchemy==1.4.35
+SQLAlchemy==1.4.40
 swagger-ui-bundle==0.0.9
