@@ -5,7 +5,8 @@
 
 
 class RESTParamError(ValueError):
-    """User-specific exception, used in :func:`~emissionsapi.utils.polygon_to_wkt`.
+    """User-specific exception, used in
+    :func:`~emissionsapi.utils.polygon_to_wkt`.
     """
     pass
 
