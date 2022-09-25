@@ -18,7 +18,9 @@ jobs:
         with:
           python-version: '3.8'
       - name: Install
-        run: pip install sphinx sphinx-rtd-theme
+        # temporary fix since sphinx-rtd-theme fails with the latest sphinx
+        # https://github.com/readthedocs/sphinx_rtd_theme/issues/1343
+        run: pip install sphinx!=5.2.0.post0 sphinx-rtd-theme
       - name: Build
         run: |
             make -C docs clean html
