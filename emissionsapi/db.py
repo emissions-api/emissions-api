@@ -10,7 +10,7 @@ import logging
 
 import sqlalchemy
 from sqlalchemy import and_, or_, create_engine, Column, DateTime, Float, \
-    String, PickleType
+    String, Integer, PickleType
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -65,6 +65,16 @@ class File(Base):
     __tablename__ = 'file'
     filename = Column(String, primary_key=True)
     """Name of processed data file"""
+
+
+class Counter(Base):
+    """ORM object for counting the number of requests
+    """
+    __tablename__ = 'counter'
+    function = Column(String, primary_key=True)
+    """Name of endpoint to count"""
+    counter = Column(Integer)
+    """Counter value"""
 
 
 class Cache(Base):

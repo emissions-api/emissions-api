@@ -12,17 +12,22 @@ import os.path
 
 import connexion
 import json
-from flask import redirect, request, jsonify
+from flask import redirect, request, jsonify, make_response
 from h3 import h3
+from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 
 import emissionsapi.db
 from emissionsapi.country_shapes import CountryNotFound, get_country_wkt
 from emissionsapi.country_shapes import get_country_codes  # noqa - used in API
 from emissionsapi.utils import bounding_box_to_wkt, polygon_to_wkt, \
     RESTParamError
+from emissionsapi.metrics.requests_collector import RequestsCollector
 
 # Logger
 logger = logging.getLogger(__name__)
+
+# Metics collectors for /metrics
+__metrics_collectors = {}
 
 
 def get_table(f):
@@ -48,6 +53,35 @@ def get_table(f):
             return 'Unsupported product specified', 400
 
         return f(*args, **kwargs, tbl=tbl)
+    return wrapper
+
+
+def request_counter(f):
+    '''Wrapper counting how often functions are called.
+    Make sure this is executed before caching kicks in.
+
+    :param f: Function to call
+    :type f: Function
+    :return: Result of f
+    '''
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+
+        with emissionsapi.db.get_session() as session:
+            with session.begin():
+                # Update counter in database
+                rows_affected = session\
+                    .query(emissionsapi.db.Counter)\
+                    .filter(emissionsapi.db.Counter.function == f.__name__)\
+                    .update({'counter': emissionsapi.db.Counter.counter + 1})
+
+                # We didn't modify anything. We need to insert the first value
+                if not rows_affected:
+                    session.add(emissionsapi.db.Counter(
+                            function=f.__name__,
+                            counter=1))
+
+        return f(*args, **kwargs)
     return wrapper
 
 
@@ -185,12 +219,13 @@ def cache_with_session(function):
     return wrapper
 
 
+@request_counter
 @get_table
 @parse_wkt
 @parse_date('begin', 'end')
 @emissionsapi.db.with_session
-def get_data(session, wkt=None, distance=None, begin=None, end=None,
-             limit=None, offset=None, tbl=None, **kwargs):
+def get_geo_data(session, wkt=None, distance=None, begin=None, end=None,
+                 limit=None, offset=None, tbl=None, **kwargs):
     """Get data in GeoJSON format.
 
     :param session: SQLAlchemy session
@@ -239,6 +274,7 @@ def get_data(session, wkt=None, distance=None, begin=None, end=None,
     })
 
 
+@request_counter
 @get_table
 @parse_wkt
 @cache_with_session
@@ -284,6 +320,7 @@ def get_average(session, wkt=None, distance=None, begin=None, end=None,
     return result
 
 
+@request_counter
 @get_table
 @parse_wkt
 @cache_with_session
@@ -346,6 +383,7 @@ def get_statistics(session, interval='day', wkt=None, distance=None,
         in query]
 
 
+@request_counter
 @get_table
 @emissionsapi.db.with_session
 def get_data_range(session, tbl=None, **kwargs):
@@ -365,6 +403,7 @@ def get_data_range(session, tbl=None, **kwargs):
                 'last': max_time}
 
 
+@request_counter
 def get_products():
     """Get all products currently available from the API.
 
@@ -390,6 +429,21 @@ app.add_api(os.path.join(os.path.abspath(
 
 # Create app to run with wsgi server
 application = app.app
+
+
+@app.route('/metrics')
+def prometheus_metrics():
+    '''Return metrics in OpenMetrics format for Prometheus.
+    Metrics are collected using the collectors from `emissionsapi.metrics`.
+
+    :return: OpenMetrics data
+    :rtype: werkzeug.wrappers.response.Response
+    '''
+    if not __metrics_collectors:
+        __metrics_collectors['requests_collector'] = RequestsCollector()
+    response = make_response(generate_latest())
+    response.content_type = CONTENT_TYPE_LATEST
+    return response
 
 
 @app.route('/')
