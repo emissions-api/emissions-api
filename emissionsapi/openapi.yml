@@ -16,7 +16,7 @@ externalDocs:
 paths:
   /api/v2/{product}/geo.json:
     get:
-      operationId: emissionsapi.web.get_data
+      operationId: emissionsapi.web.get_geo_data
       description: |
           Get all points in [GeoJSON](https://geojson.org/) format.
 
