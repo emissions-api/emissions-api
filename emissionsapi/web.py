@@ -7,6 +7,7 @@ the users.
 """
 from functools import wraps
 import dateutil.parser
+import hmac
 import logging
 import os.path
 
@@ -17,6 +18,7 @@ from h3 import h3
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 
 import emissionsapi.db
+from emissionsapi.config import config
 from emissionsapi.country_shapes import CountryNotFound, get_country_wkt
 from emissionsapi.country_shapes import get_country_codes  # noqa - used in API
 from emissionsapi.utils import bounding_box_to_wkt, polygon_to_wkt, \
@@ -434,8 +436,23 @@ def prometheus_metrics():
     :return: OpenMetrics data
     :rtype: werkzeug.wrappers.response.Response
     '''
+    # Check if we require authentication
+    username = config('metrics', 'username')
+    password = config('metrics', 'password')
+    if username and password:
+        # Compare to provided credentials
+        auth = request.authorization or {}
+        if not all((hmac.compare_digest(username, auth.get('username', '')),
+                    hmac.compare_digest(password, auth.get('password', '')))):
+            return ('Login required\n',
+                    401,
+                    {'WWW-Authenticate': 'Basic realm="Metrics"'})
+
+    # Initialize collectors if they are not yet initialized
     if not __metrics_collectors:
         __metrics_collectors['requests_collector'] = RequestsCollector()
+
+    # Build response
     response = make_response(generate_latest())
     response.content_type = CONTENT_TYPE_LATEST
     return response
