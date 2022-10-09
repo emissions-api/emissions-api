@@ -1,7 +1,7 @@
 from prometheus_client.core import CounterMetricFamily
 from prometheus_client.registry import REGISTRY
 
-import emissionsapi.db
+from emissionsapi.db import get_session, Metrics
 
 
 class RequestsCollector(object):
@@ -22,8 +22,12 @@ class RequestsCollector(object):
                 labels=['method'])
 
         # Get requests count from database
-        with emissionsapi.db.get_session() as session:
-            for counter in session.query(emissionsapi.db.Counter).all():
-                counters.add_metric([counter.function], counter.counter)
+        with get_session() as session:
+            metrics = session\
+                    .query(Metrics)\
+                    .filter(Metrics.metric == 'request_count')\
+                    .all()
+            for metric in metrics:
+                counters.add_metric([metric.label], metric.value)
 
         yield counters

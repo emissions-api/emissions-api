@@ -10,7 +10,7 @@ import logging
 
 import sqlalchemy
 from sqlalchemy import and_, or_, create_engine, Column, DateTime, Float, \
-    String, Integer, PickleType
+    String, PickleType
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -67,14 +67,44 @@ class File(Base):
     """Name of processed data file"""
 
 
-class Counter(Base):
-    """ORM object for counting the number of requests
+class Metrics(Base):
+    """ORM object for storing different metrics.
     """
-    __tablename__ = 'counter'
-    function = Column(String, primary_key=True)
+    __tablename__ = 'metrics'
+    metric = Column(String, primary_key=True)
     """Name of endpoint to count"""
-    counter = Column(Integer)
-    """Counter value"""
+    label = Column(String, primary_key=True, nullable=True)
+    """Label value for specific metric"""
+    value = Column(Float)
+    """Metric value"""
+
+    @classmethod
+    def update(cls, session, metric, label, value, initial_value=value):
+        """Update a metrics value.
+        If it does not yet exist, this will create a new metrics value.
+
+        :param session: SQLAlchemy Session
+        :type session: sqlalchemy.orm.session.Session
+        :param metric: Identifier of the metric to update
+        :type metric: str
+        :param label: Optional label for this metrics value
+        :type label: str or None
+        :param value: Value to update the metric to
+        :type value: float
+        :param initial_value: Value to set if the metic is newly created.
+                              Defaults to value.
+        :type initial_value: float
+        """
+        rows_affected = session.query(cls)\
+            .filter(and_(cls.metric == metric, cls.label == label))\
+            .update({'value': value})
+
+        # We didn't modify anything. We need to insert the first value
+        if not rows_affected:
+            session.add(cls(
+                    metric=metric,
+                    label=label,
+                    value=initial_value))
 
 
 class Cache(Base):
