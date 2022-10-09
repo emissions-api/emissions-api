@@ -45,3 +45,13 @@ products:
 #  - ERROR
 # Default: INFO
 loglevel: INFO
+
+# Configuration related to the OpenMetrics endpoint
+metrics:
+  # Username for enabling HTTP Basic authentication for the metrics endpoint.
+  # Both username and password must be set for authentication to be required.
+  username: prometheus
+
+  # Password for enabling HTTP Basic authentication for the metrics endpoint.
+  # Both username and password must be set for authentication to be required.
+  password: secret
