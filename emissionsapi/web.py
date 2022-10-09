@@ -70,17 +70,12 @@ def request_counter(f):
         with emissionsapi.db.get_session() as session:
             with session.begin():
                 # Update counter in database
-                rows_affected = session\
-                    .query(emissionsapi.db.Counter)\
-                    .filter(emissionsapi.db.Counter.function == f.__name__)\
-                    .update({'counter': emissionsapi.db.Counter.counter + 1})
-
-                # We didn't modify anything. We need to insert the first value
-                if not rows_affected:
-                    session.add(emissionsapi.db.Counter(
-                            function=f.__name__,
-                            counter=1))
-
+                emissionsapi.db.Metrics.update(
+                        session,
+                        'request_count',
+                        f.__name__,
+                        emissionsapi.db.Metrics.value + 1,
+                        1)
         return f(*args, **kwargs)
     return wrapper
 
