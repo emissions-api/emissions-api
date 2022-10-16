@@ -6,11 +6,11 @@ geopandas==0.11.1
 gunicorn==20.1.0
 iso3166==2.1.1
 pandas==1.5.0
-psycopg2==2.9.3
+psycopg2==2.9.4
 python-dateutil==2.8.2
 PyYAML==6.0
 s5a==0.4
 sentinel5dl==1.2
-SQLAlchemy==1.4.41
+SQLAlchemy==1.4.42
 swagger-ui-bundle==0.0.9
-prometheus_client==0.14.1
+prometheus_client==0.15.0
