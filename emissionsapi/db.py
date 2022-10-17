@@ -73,7 +73,7 @@ class Metrics(Base):
     __tablename__ = 'metrics'
     metric = Column(String, primary_key=True)
     """Name of endpoint to count"""
-    label = Column(String, primary_key=True, nullable=True)
+    label = Column(String, primary_key=True)
     """Label value for specific metric"""
     value = Column(Float)
     """Metric value"""
