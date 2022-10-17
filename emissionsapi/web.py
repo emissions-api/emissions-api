@@ -24,6 +24,7 @@ from emissionsapi.country_shapes import get_country_codes  # noqa - used in API
 from emissionsapi.utils import bounding_box_to_wkt, polygon_to_wkt, \
     RESTParamError
 from emissionsapi.metrics.requests_collector import RequestsCollector
+from emissionsapi.metrics.imports_collector import ImportsCollector
 
 # Logger
 logger = logging.getLogger(__name__)
@@ -451,6 +452,7 @@ def prometheus_metrics():
     # Initialize collectors if they are not yet initialized
     if not __metrics_collectors:
         __metrics_collectors['requests_collector'] = RequestsCollector()
+        __metrics_collectors['imports_collector'] = ImportsCollector()
 
     # Build response
     response = make_response(generate_latest())

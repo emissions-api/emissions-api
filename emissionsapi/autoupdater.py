@@ -164,16 +164,33 @@ def main():
                 )
                 product_files = result.get('products', [])
 
-                # Process product files
-                logger.info(
-                    'Processing found product files parallel with %d workers',
-                    workers)
-                with multiprocessing.Pool(workers, init_worker) as p:
-                    p.starmap(
-                        single_file_update,
-                        zip(product_files, itertools.repeat(tmp_dir),
-                            itertools.repeat(product))
-                    )
+                # update active imports
+                with db.get_session() as session:
+                    with session.begin():
+                        db.Metrics.update(session,
+                                          'active_imports',
+                                          name,
+                                          len(product_files))
+
+                try:
+                    # Process product files
+                    logger.info(
+                        'Processing product files in parallel with %d workers',
+                        workers)
+                    with multiprocessing.Pool(workers, init_worker) as p:
+                        p.starmap(
+                            single_file_update,
+                            zip(product_files, itertools.repeat(tmp_dir),
+                                itertools.repeat(product))
+                        )
+                finally:
+                    # reset active imports
+                    with db.get_session() as session:
+                        with session.begin():
+                            db.Metrics.update(session,
+                                              'active_imports',
+                                              name,
+                                              0)
             logger.info('Finished updating product %s', name)
     logger.info('Update complete')
 
