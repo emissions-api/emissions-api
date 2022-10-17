@@ -79,7 +79,7 @@ class Metrics(Base):
     """Metric value"""
 
     @classmethod
-    def update(cls, session, metric, label, value, initial_value=value):
+    def update(cls, session, metric, label, value, initial_value=None):
         """Update a metrics value.
         If it does not yet exist, this will create a new metrics value.
 
@@ -101,6 +101,8 @@ class Metrics(Base):
 
         # We didn't modify anything. We need to insert the first value
         if not rows_affected:
+            if initial_value is None:
+                initial_value = value
             session.add(cls(
                     metric=metric,
                     label=label,
