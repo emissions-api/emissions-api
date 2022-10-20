@@ -5,7 +5,7 @@ GeoAlchemy2==0.12.5
 geopandas==0.11.1
 gunicorn==20.1.0
 iso3166==2.1.1
-pandas==1.5.0
+pandas==1.5.1
 psycopg2==2.9.4
 python-dateutil==2.8.2
 PyYAML==6.0
