@@ -13,4 +13,4 @@ s5a==0.4
 sentinel5dl==1.2
 SQLAlchemy==1.4.45
 swagger-ui-bundle==0.0.9
-prometheus_client==0.15.0
+prometheus_client==0.16.0
