@@ -6,7 +6,7 @@ geopandas==0.12.2
 gunicorn==20.1.0
 iso3166==2.1.1
 pandas==1.5.3
-psycopg2==2.9.5
+psycopg2==2.9.6
 python-dateutil==2.8.2
 PyYAML==6.0
 s5a==0.4
