@@ -1,4 +1,4 @@
-alembic==1.9.1
+alembic==1.11.1
 connexion==2.14.2
 Flask==2.2.3
 GeoAlchemy2==0.13.1
