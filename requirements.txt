@@ -8,7 +8,7 @@ iso3166==2.1.1
 pandas==1.5.3
 psycopg2==2.9.5
 python-dateutil==2.8.2
-PyYAML==6.0
+PyYAML==6.0.1
 s5a==0.4
 sentinel5dl==1.2
 SQLAlchemy==1.4.45
