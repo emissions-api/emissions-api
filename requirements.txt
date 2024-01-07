@@ -1,11 +1,11 @@
-alembic==1.9.1
+alembic==1.13.1
 connexion==2.14.2
 Flask==2.2.3
 GeoAlchemy2==0.14.3
-geopandas==0.12.2
+geopandas==0.13.1
 gunicorn==21.2.0
 iso3166==2.1.1
-pandas==1.5.3
+pandas==2.0.3
 psycopg2==2.9.9
 python-dateutil==2.8.2
 PyYAML==6.0.1
