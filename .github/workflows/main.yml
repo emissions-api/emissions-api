@@ -8,9 +8,9 @@ on:
 
 jobs:
   install-autoupdate-api:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Build emissions-api
         run: docker-compose -f .github/docker-compose.yml build emissionsapi
       - name: Spin up database and emissions-api web server
