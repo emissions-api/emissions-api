@@ -1,6 +1,6 @@
 alembic==1.13.1
 connexion==2.14.2
-Flask==2.2.3
+Flask==3.0.1
 GeoAlchemy2==0.14.3
 geopandas==0.13.1
 gunicorn==21.2.0
