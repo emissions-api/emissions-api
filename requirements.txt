@@ -1,7 +1,7 @@
 alembic==1.13.1
 connexion==2.14.2
 Flask==2.2.3
-GeoAlchemy2==0.14.3
+GeoAlchemy2==0.14.6
 geopandas==0.13.1
 gunicorn==21.2.0
 iso3166==2.1.1
