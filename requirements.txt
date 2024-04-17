@@ -3,7 +3,7 @@ connexion==2.14.2
 Flask==2.2.3
 GeoAlchemy2==0.14.3
 geopandas==0.13.1
-gunicorn==21.2.0
+gunicorn==22.0.0
 iso3166==2.1.1
 pandas==2.0.3
 psycopg2==2.9.9
